@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Event from '../models/Event.js';
 import Venue from '../models/Venue.js';
 import Seat from '../models/Seat.js';
@@ -10,9 +11,15 @@ const router = express.Router();
 /**
  * Helper to generate event-specific seats from Venue sections
  */
-export async function generateSeatsForEvent(event, venue, pricingTiers = []) {
+export async function generateSeatsForEvent(eventParam, venue, pricingTiers = []) {
+  let event = eventParam;
+  if (typeof eventParam === 'string' || eventParam instanceof mongoose.Types.ObjectId) {
+    event = await Event.findById(eventParam);
+  }
+
+  const tiers = pricingTiers.length > 0 ? pricingTiers : event?.pricing || [];
   const priceMap = {};
-  pricingTiers.forEach((tier) => {
+  tiers.forEach((tier) => {
     priceMap[tier.category] = tier.price;
   });
 

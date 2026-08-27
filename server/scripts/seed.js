@@ -417,8 +417,8 @@ async function seedDatabase() {
     for (const evtData of eventsData) {
       const event = await Event.create(evtData);
       const venue = venues.find((v) => v._id.toString() === evtData.venue.toString());
-      const seats = await generateSeatsForEvent(event._id, venue);
-      console.log(`  🎟️ Event: "${event.title}" -> ${seats.length} seats generated in ${event.city}`);
+      const seatCount = await generateSeatsForEvent(event, venue, event.pricing);
+      console.log(`  🎟️ Event: "${event.title}" -> ${seatCount} seats generated in ${event.city}`);
     }
 
     console.log('\n=========================================');

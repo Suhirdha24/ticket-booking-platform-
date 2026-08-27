@@ -12,8 +12,14 @@ export default function Login() {
   const queryEmail = searchParams.get('email') || '';
   const { login, isLoading } = useAuthStore();
 
-  const [email, setEmail] = useState(queryEmail);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (queryEmail) {
+      setEmail(queryEmail);
+    }
+  }, [queryEmail]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -135,7 +141,7 @@ export default function Login() {
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <form onSubmit={handleLogin} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div className="input-group">
             <label className="input-label">Email Address</label>
             <div style={{ position: 'relative' }}>
@@ -153,9 +159,10 @@ export default function Login() {
                 type="email"
                 className="input-field"
                 style={{ paddingLeft: '2.75rem' }}
-                placeholder="name@example.com"
+                placeholder="e.g. user@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="off"
                 required
               />
             </div>
@@ -178,9 +185,10 @@ export default function Login() {
                 type="password"
                 className="input-field"
                 style={{ paddingLeft: '2.75rem' }}
-                placeholder="••••••••"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
                 required
               />
             </div>
