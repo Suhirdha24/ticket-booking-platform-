@@ -23,7 +23,7 @@ const MONGODB_URI =
 
 async function seedDatabase() {
   try {
-    console.log('🌱 Connecting to MongoDB for seeding...');
+    console.log('🌱 Connecting to MongoDB for seeding India events...');
     await mongoose.connect(MONGODB_URI);
     console.log('✅ Connected to database');
 
@@ -43,104 +43,157 @@ async function seedDatabase() {
       email: 'admin@example.com',
       password: 'Admin@123456',
       role: 'admin',
-      phone: '+1 (555) 019-2834',
+      phone: '+91 98765 43210',
     });
 
     const standardUser = await User.create({
-      name: 'Jane Doe',
+      name: 'Sudhir Kumar',
       email: 'user@example.com',
       password: 'User@123456',
       role: 'user',
-      phone: '+1 (555) 482-9102',
+      phone: '+91 91234 56789',
     });
 
     const testUser2 = await User.create({
-      name: 'Alex Rivera',
-      email: 'alex@example.com',
+      name: 'Ananya Sharma',
+      email: 'ananya@example.com',
       password: 'User@123456',
       role: 'user',
-      phone: '+1 (555) 392-1188',
+      phone: '+91 99887 76655',
     });
 
-    console.log('🏛️ Seeding Venues...');
+    console.log('🏛️ Seeding Iconic Indian Venues...');
     const venuesData = [
       {
-        name: 'Grand Symphony Hall',
-        address: '401 Van Ness Ave',
-        city: 'San Francisco',
-        state: 'CA',
-        zipCode: '94102',
-        capacity: 124,
-        imageUrl:
-          'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&auto=format&fit=crop&q=80',
-        sections: [
-          { name: 'Orchestra VIP', rows: 3, seatsPerRow: 8, category: 'VIP' },
-          { name: 'Mezzanine', rows: 4, seatsPerRow: 10, category: 'Premium' },
-          { name: 'Balcony Tier', rows: 5, seatsPerRow: 12, category: 'General' },
-        ],
-      },
-      {
-        name: 'Cyber Arena & Stadium',
-        address: '1100 Congress Ave',
-        city: 'Austin',
-        state: 'TX',
-        zipCode: '78701',
-        capacity: 162,
+        name: 'D.Y. Patil Sports Stadium',
+        address: 'Sector 7, Nerul',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        zipCode: '400706',
+        capacity: 154,
         imageUrl:
           'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&auto=format&fit=crop&q=80',
         sections: [
-          { name: 'Floor Stage Front', rows: 3, seatsPerRow: 10, category: 'VIP' },
-          { name: 'Lower Bowl Club', rows: 4, seatsPerRow: 12, category: 'Premium' },
-          { name: 'Upper Deck', rows: 6, seatsPerRow: 14, category: 'General' },
+          { name: 'VIP Front Stage Pitch', rows: 3, seatsPerRow: 10, category: 'VIP' },
+          { name: 'West Stand Club Lounge', rows: 4, seatsPerRow: 12, category: 'Premium' },
+          { name: 'East Grandstand Upper', rows: 5, seatsPerRow: 15, category: 'General' },
         ],
       },
       {
-        name: 'The Royal Broadway Playhouse',
-        address: '242 W 45th St',
-        city: 'New York',
-        state: 'NY',
-        zipCode: '10036',
-        capacity: 104,
+        name: 'Jawaharlal Nehru Stadium',
+        address: 'Pragati Vihar, Lodhi Road',
+        city: 'New Delhi',
+        state: 'Delhi',
+        zipCode: '110003',
+        capacity: 148,
+        imageUrl:
+          'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&auto=format&fit=crop&q=80',
+        sections: [
+          { name: 'Royal Symphony VIP', rows: 3, seatsPerRow: 10, category: 'VIP' },
+          { name: 'Pavilion Tier 1', rows: 4, seatsPerRow: 12, category: 'Premium' },
+          { name: 'North & South Stands', rows: 5, seatsPerRow: 14, category: 'General' },
+        ],
+      },
+      {
+        name: 'M.A. Chidambaram Stadium (Chepauk)',
+        address: 'Victoria Hostel Rd, Chepauk',
+        city: 'Chennai',
+        state: 'Tamil Nadu',
+        zipCode: '600005',
+        capacity: 160,
+        imageUrl:
+          'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1200&auto=format&fit=crop&q=80',
+        sections: [
+          { name: 'Pavilion Terrace VIP', rows: 3, seatsPerRow: 10, category: 'VIP' },
+          { name: 'Anna Pavilion Club', rows: 4, seatsPerRow: 12, category: 'Premium' },
+          { name: 'C & D Stand General', rows: 6, seatsPerRow: 14, category: 'General' },
+        ],
+      },
+      {
+        name: 'M. Chinnaswamy Stadium',
+        address: 'MG Road, Shivaji Nagar',
+        city: 'Bengaluru',
+        state: 'Karnataka',
+        zipCode: '560001',
+        capacity: 144,
+        imageUrl:
+          'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1200&auto=format&fit=crop&q=80',
+        sections: [
+          { name: 'VIP Diamond Box', rows: 3, seatsPerRow: 10, category: 'VIP' },
+          { name: 'Executive Corporate Stand', rows: 4, seatsPerRow: 11, category: 'Premium' },
+          { name: 'B Stand Fan Zone', rows: 5, seatsPerRow: 14, category: 'General' },
+        ],
+      },
+      {
+        name: 'Nita Mukesh Ambani Cultural Centre (NMACC)',
+        address: 'Bandra Kurla Complex (BKC)',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        zipCode: '400051',
+        capacity: 116,
         imageUrl:
           'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=1200&auto=format&fit=crop&q=80',
         sections: [
-          { name: 'Royal Stalls', rows: 3, seatsPerRow: 8, category: 'VIP' },
-          { name: 'Dress Circle', rows: 4, seatsPerRow: 10, category: 'Premium' },
-          { name: 'Upper Gallery', rows: 4, seatsPerRow: 10, category: 'General' },
+          { name: 'Diamond Royal Box', rows: 3, seatsPerRow: 8, category: 'VIP' },
+          { name: 'Grand Balcony Tier 1', rows: 4, seatsPerRow: 10, category: 'Premium' },
+          { name: 'Emerald Circle', rows: 4, seatsPerRow: 13, category: 'General' },
         ],
       },
       {
-        name: 'Neon Horizon Center',
-        address: '305 Harrison St',
-        city: 'Seattle',
-        state: 'WA',
-        zipCode: '98109',
-        capacity: 104,
+        name: 'Vagator Beach Arena',
+        address: 'Vagator Cliffside',
+        city: 'Goa',
+        state: 'Goa',
+        zipCode: '403509',
+        capacity: 150,
         imageUrl:
-          'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1200&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1200&auto=format&fit=crop&q=80',
         sections: [
-          { name: 'VIP Sky Lounge', rows: 2, seatsPerRow: 8, category: 'VIP' },
-          { name: 'Main Tier', rows: 4, seatsPerRow: 10, category: 'Premium' },
-          { name: 'Horizon General', rows: 4, seatsPerRow: 12, category: 'General' },
+          { name: 'VIP Oceanfront Deck', rows: 3, seatsPerRow: 10, category: 'VIP' },
+          { name: 'Platinum Dance Arena', rows: 4, seatsPerRow: 12, category: 'Premium' },
+          { name: 'General Sunset Zone', rows: 5, seatsPerRow: 14, category: 'General' },
+        ],
+      },
+      {
+        name: 'Gachibowli Indoor Stadium',
+        address: 'Old Mumbai Highway, Gachibowli',
+        city: 'Hyderabad',
+        state: 'Telangana',
+        zipCode: '500032',
+        capacity: 130,
+        imageUrl:
+          'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=1200&auto=format&fit=crop&q=80',
+        sections: [
+          { name: 'VIP Arena Front', rows: 3, seatsPerRow: 10, category: 'VIP' },
+          { name: 'Club Terrace', rows: 4, seatsPerRow: 10, category: 'Premium' },
+          { name: 'Upper Tier General', rows: 5, seatsPerRow: 12, category: 'General' },
         ],
       },
     ];
 
     const venues = await Venue.insertMany(venuesData);
-    const [sfHall, austinArena, nyTheatre, seattleCenter] = venues;
+    const [
+      dyPatilMumbai,
+      jnlStadiumDelhi,
+      chepaukChennai,
+      chinnaswamyBlr,
+      nmaccMumbai,
+      vagatorGoa,
+      gachibowliHyd,
+    ] = venues;
 
-    console.log('🎪 Seeding Events and generating Seat Layouts...');
+    console.log('🎪 Seeding Live Indian Events and generating Seat Layouts...');
     const now = new Date();
     const addDays = (d) => new Date(now.getTime() + d * 24 * 60 * 60 * 1000);
 
     const eventsData = [
       {
-        title: 'Neon Pulse Electric Music Festival 2026',
+        title: 'Coldplay: Music of the Spheres World Tour Live in Mumbai',
         description:
-          'Immerse yourself in a transcendent sensory journey featuring world-class electronic music producers, holographic laser installations, and cutting-edge spatial audio.',
+          'The historic return of Coldplay to India! Witness Chris Martin, Jonny Buckland, Guy Berryman, and Will Champion live in a mesmerizing 60,000+ stadium experience with synchronized LED wristbands, biodegradable confetti, laser fireworks, and legendary anthems like Yellow, Fix You, Viva La Vida, and Higher Power.',
         category: 'Concert',
-        venue: austinArena._id,
-        city: austinArena.city,
+        venue: dyPatilMumbai._id,
+        city: dyPatilMumbai.city,
         date: addDays(25),
         doorsOpen: addDays(25),
         bannerUrl:
@@ -148,143 +201,235 @@ async function seedDatabase() {
         thumbnailUrl:
           'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80',
         status: 'PUBLISHED',
+        featured: true,
         pricing: [
-          { category: 'VIP', price: 185 },
-          { category: 'Premium', price: 115 },
-          { category: 'General', price: 65 },
+          { category: 'VIP', price: 299 },
+          { category: 'Premium', price: 175 },
+          { category: 'General', price: 85 },
         ],
-        cancellationPolicy: { allowCancellation: true, cutoffHours: 24 },
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 24,
+        },
       },
       {
-        title: 'Global AI & Cloud Architecture Summit 2026',
+        title: 'A.R. Rahman: The Symphony of India Live in Concert',
         description:
-          'The premier annual gathering of distributed systems engineers, cloud architects, and AI researchers exploring autonomous agents, vector databases, and high-scale inference.',
-        category: 'Conference',
-        venue: sfHall._id,
-        city: sfHall.city,
-        date: addDays(35),
-        doorsOpen: addDays(35),
-        bannerUrl:
-          'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&auto=format&fit=crop&q=80',
-        thumbnailUrl:
-          'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop&q=80',
-        status: 'PUBLISHED',
-        pricing: [
-          { category: 'VIP', price: 349 },
-          { category: 'Premium', price: 219 },
-          { category: 'General', price: 99 },
-        ],
-        cancellationPolicy: { allowCancellation: true, cutoffHours: 48 },
-      },
-      {
-        title: 'The Phantom Symphony: Live Orchestra Experience',
-        description:
-          'A spellbinding live theatrical performance featuring 80 classical virtuosos performing timeless orchestral arrangements, gothic scores, and cinematic masterworks.',
-        category: 'Theatre',
-        venue: nyTheatre._id,
-        city: nyTheatre.city,
+          'Two-time Academy Award winner A.R. Rahman brings his monumental live concert to New Delhi! Accompanied by a 90-piece live orchestral ensemble and international vocalists, journey through three decades of iconic musical masterworks from Roja, Dil Se, Rockstar, Slumdog Millionaire, and Ponniyin Selvan.',
+        category: 'Concert',
+        venue: jnlStadiumDelhi._id,
+        city: jnlStadiumDelhi.city,
         date: addDays(18),
         doorsOpen: addDays(18),
         bannerUrl:
-          'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=1200&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&auto=format&fit=crop&q=80',
         thumbnailUrl:
-          'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=600&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80',
         status: 'PUBLISHED',
+        featured: true,
         pricing: [
-          { category: 'VIP', price: 165 },
-          { category: 'Premium', price: 105 },
+          { category: 'VIP', price: 220 },
+          { category: 'Premium', price: 130 },
+          { category: 'General', price: 65 },
+        ],
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 24,
+        },
+      },
+      {
+        title: 'IPL 2026 Grand Final: Chennai Super Kings vs Mumbai Indians',
+        description:
+          'The biggest cricket rivalry on planet Earth! The IPL 2026 Championship Grand Final takes place under the historic floodlights of Chepauk. Witness world-class batting, thrilling last-over finishes, and thunderous crowd energy as the titans clash for the coveted IPL trophy.',
+        category: 'Sports',
+        venue: chepaukChennai._id,
+        city: chepaukChennai.city,
+        date: addDays(40),
+        doorsOpen: addDays(40),
+        bannerUrl:
+          'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1200&auto=format&fit=crop&q=80',
+        thumbnailUrl:
+          'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&auto=format&fit=crop&q=80',
+        status: 'PUBLISHED',
+        featured: true,
+        pricing: [
+          { category: 'VIP', price: 350 },
+          { category: 'Premium', price: 190 },
+          { category: 'General', price: 75 },
+        ],
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 48,
+        },
+      },
+      {
+        title: 'Diljit Dosanjh: Dil-Luminati Tour Live in Bengaluru',
+        description:
+          'Global Punjabi superstar Diljit Dosanjh brings his record-breaking Dil-Luminati Tour to Namma Bengaluru! Get ready for high-octane Bhangra rhythms, sensational stage production, LED dancers, and chartbusters including Lover, Born to Shine, G.O.A.T., and Naina.',
+        category: 'Concert',
+        venue: chinnaswamyBlr._id,
+        city: chinnaswamyBlr.city,
+        date: addDays(30),
+        doorsOpen: addDays(30),
+        bannerUrl:
+          'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1200&auto=format&fit=crop&q=80',
+        thumbnailUrl:
+          'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop&q=80',
+        status: 'PUBLISHED',
+        featured: false,
+        pricing: [
+          { category: 'VIP', price: 210 },
+          { category: 'Premium', price: 125 },
+          { category: 'General', price: 60 },
+        ],
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 24,
+        },
+      },
+      {
+        title: 'Sunburn Goa Mega EDM Music Festival 2026',
+        description:
+          "Asia's premier electronic dance music festival returns to the sunny beaches of Vagator, Goa! 3 days, 4 massive stages, 80+ international DJs, mind-bending holographic stage lasers, beach carnivals, and sunset dance sessions till dawn.",
+        category: 'Festival',
+        venue: vagatorGoa._id,
+        city: vagatorGoa.city,
+        date: addDays(60),
+        doorsOpen: addDays(60),
+        bannerUrl:
+          'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1200&auto=format&fit=crop&q=80',
+        thumbnailUrl:
+          'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&auto=format&fit=crop&q=80',
+        status: 'PUBLISHED',
+        featured: true,
+        pricing: [
+          { category: 'VIP', price: 280 },
+          { category: 'Premium', price: 160 },
+          { category: 'General', price: 80 },
+        ],
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 48,
+        },
+      },
+      {
+        title: 'Anirudh Live in Concert: Hukum Symphony Tour',
+        description:
+          'Rockstar Anirudh Ravichander takes the stage in Chennai with a pulse-pounding, high-energy live performance! Experience thumping stadium basslines, synchronized visual effects, and blockbusters from Vikram, Leo, Jailer, Jawan, and Devara.',
+        category: 'Concert',
+        venue: chepaukChennai._id,
+        city: chepaukChennai.city,
+        date: addDays(35),
+        doorsOpen: addDays(35),
+        bannerUrl:
+          'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&auto=format&fit=crop&q=80',
+        thumbnailUrl:
+          'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80',
+        status: 'PUBLISHED',
+        featured: false,
+        pricing: [
+          { category: 'VIP', price: 195 },
+          { category: 'Premium', price: 115 },
           { category: 'General', price: 55 },
         ],
-        cancellationPolicy: { allowCancellation: true, cutoffHours: 24 },
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 24,
+        },
       },
       {
-        title: 'National Cyber Esports Grand Championship Finals',
+        title: 'Zakir Khan: Live Special Standup Tour — Tathastu & Beyond',
         description:
-          'Witness the top 8 international tactical gaming squads battle for $2,000,000 in prizes on a 360-degree holographic arena stage with live analyst commentary.',
-        category: 'Sports',
-        venue: seattleCenter._id,
-        city: seattleCenter.city,
-        date: addDays(14),
-        doorsOpen: addDays(14),
-        bannerUrl:
-          'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&auto=format&fit=crop&q=80',
-        thumbnailUrl:
-          'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=80',
-        status: 'PUBLISHED',
-        pricing: [
-          { category: 'VIP', price: 140 },
-          { category: 'Premium', price: 85 },
-          { category: 'General', price: 45 },
-        ],
-        cancellationPolicy: { allowCancellation: true, cutoffHours: 24 },
-      },
-      {
-        title: 'Laugh Riot: All-Stars Comedy Gala 2026',
-        description:
-          'An unforgettable night of non-stop laughter featuring 6 headline stand-up comedians from HBO, Netflix, and Comedy Central.',
+          "India's most beloved comedic storyteller Zakir Khan delivers his brand new 100-minute solo special live at the prestigious NMACC The Grand Theatre. An evening of heartwarming poetry, relatable nostalgia, and unstoppable laughter.",
         category: 'Comedy',
-        venue: sfHall._id,
-        city: sfHall.city,
-        date: addDays(8),
-        doorsOpen: addDays(8),
+        venue: nmaccMumbai._id,
+        city: nmaccMumbai.city,
+        date: addDays(12),
+        doorsOpen: addDays(12),
         bannerUrl:
           'https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=1200&auto=format&fit=crop&q=80',
         thumbnailUrl:
           'https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=600&auto=format&fit=crop&q=80',
         status: 'PUBLISHED',
+        featured: false,
         pricing: [
-          { category: 'VIP', price: 125 },
-          { category: 'Premium', price: 75 },
+          { category: 'VIP', price: 110 },
+          { category: 'Premium', price: 70 },
           { category: 'General', price: 40 },
         ],
-        cancellationPolicy: { allowCancellation: true, cutoffHours: 12 },
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 24,
+        },
       },
       {
-        title: 'Midnight Jazz & Soul Underground Sessions',
+        title: 'India Global AI & Tech Innovation Summit 2026',
         description:
-          'Intimate candlelit jazz quartet performing sultry neo-soul improvisations, vintage jazz standards, and modern brass grooves.',
-        category: 'Concert',
-        venue: nyTheatre._id,
-        city: nyTheatre.city,
-        date: addDays(40),
-        doorsOpen: addDays(40),
+          "India's flagship AI and Technology Conference. Join 4,000+ visionary researchers, CTOs, and founders exploring Generative AI, Autonomous Multi-Agent Workflows, Quantum Computing, and India's booming DeepTech ecosystem.",
+        category: 'Conference',
+        venue: chinnaswamyBlr._id,
+        city: chinnaswamyBlr.city,
+        date: addDays(50),
+        doorsOpen: addDays(50),
         bannerUrl:
-          'https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1200&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&auto=format&fit=crop&q=80',
         thumbnailUrl:
-          'https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop&q=80',
         status: 'PUBLISHED',
+        featured: false,
         pricing: [
-          { category: 'VIP', price: 130 },
-          { category: 'Premium', price: 80 },
-          { category: 'General', price: 45 },
+          { category: 'VIP', price: 260 },
+          { category: 'Premium', price: 150 },
+          { category: 'General', price: 75 },
         ],
-        cancellationPolicy: { allowCancellation: true, cutoffHours: 24 },
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 24,
+        },
+      },
+      {
+        title: 'Sunidhi Chauhan: I Am Home Tour Live in Hyderabad',
+        description:
+          'Bollywood powerhouse vocal queen Sunidhi Chauhan performs live at the Gachibowli Indoor Stadium! Featuring an explosive setlist of dance hits, soul-stirring melodies, energetic choreography, and a full live band.',
+        category: 'Concert',
+        venue: gachibowliHyd._id,
+        city: gachibowliHyd.city,
+        date: addDays(22),
+        doorsOpen: addDays(22),
+        bannerUrl:
+          'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=1200&auto=format&fit=crop&q=80',
+        thumbnailUrl:
+          'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=600&auto=format&fit=crop&q=80',
+        status: 'PUBLISHED',
+        featured: false,
+        pricing: [
+          { category: 'VIP', price: 165 },
+          { category: 'Premium', price: 95 },
+          { category: 'General', price: 50 },
+        ],
+        cancellationPolicy: {
+          allowCancellation: true,
+          cutoffHours: 24,
+        },
       },
     ];
 
-    for (const evt of eventsData) {
-      const createdEvent = await Event.create(evt);
-      const targetVenue = venues.find((v) => v._id.equals(createdEvent.venue));
-      const seatCount = await generateSeatsForEvent(
-        createdEvent,
-        targetVenue,
-        createdEvent.pricing
-      );
-      console.log(
-        `  -> Event created: "${createdEvent.title}" (${seatCount} seats generated)`
-      );
+    for (const evtData of eventsData) {
+      const event = await Event.create(evtData);
+      const venue = venues.find((v) => v._id.toString() === evtData.venue.toString());
+      const seats = await generateSeatsForEvent(event._id, venue);
+      console.log(`  🎟️ Event: "${event.title}" -> ${seats.length} seats generated in ${event.city}`);
     }
 
-    console.log('\n========================================');
-    console.log('🎉 Seed completed successfully!');
-    console.log('========================================');
-    console.log('DEMO ACCOUNTS:');
-    console.log('  Admin: admin@example.com / Admin@123456');
-    console.log('  User:  user@example.com  / User@123456');
-    console.log('  User2: alex@example.com  / User@123456');
-    console.log('========================================\n');
+    console.log('\n=========================================');
+    console.log('🎉 INDIA EVENTS DATABASE SEEDED SUCCESSFULLY!');
+    console.log('=========================================');
+    console.log('📍 Cities: Mumbai, New Delhi, Chennai, Bengaluru, Goa, Hyderabad');
+    console.log('🎟️ Featured: Coldplay, A.R. Rahman, IPL 2026 Final, Diljit Dosanjh, Sunburn Goa, Anirudh');
+    console.log('👤 Admin: admin@example.com / Admin@123456');
+    console.log('👤 User:  user@example.com  / User@123456');
+    console.log('=========================================\n');
 
-    await mongoose.disconnect();
     process.exit(0);
   } catch (error) {
     console.error('❌ Seeding failed:', error);

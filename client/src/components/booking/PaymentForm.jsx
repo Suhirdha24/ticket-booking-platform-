@@ -5,32 +5,38 @@ import Button from '../common/Button.jsx';
 export default function PaymentForm({ total, onSubmit, isProcessing }) {
   const [paymentMethod, setPaymentMethod] = useState('UPI');
   const [upiProvider, setUpiProvider] = useState('GPAY');
-  const [upiId, setUpiId] = useState('suhirdha@okaxis');
-  const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
-  const [cardHolder, setCardHolder] = useState('Jane Doe');
-  const [cardExpiry, setCardExpiry] = useState('12/28');
-  const [cardCvv, setCardCvv] = useState('888');
-  const [bankCode, setBankCode] = useState('CHASE');
-  const [simulateFailure, setSimulateFailure] = useState(false);
+  const [upiId, setUpiId] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardHolder, setCardHolder] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
+  const [bankName, setBankName] = useState('');
 
-  const handleProviderSelect = (provider, defaultVpa) => {
+  const handleProviderSelect = (provider, sampleVpa) => {
     setUpiProvider(provider);
-    setUpiId(defaultVpa);
+    if (!upiId) {
+      setUpiId(sampleVpa);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const paymentDetails =
       paymentMethod === 'UPI'
-        ? { upiId, provider: upiProvider }
+        ? { upiId: upiId || 'user@upi', provider: upiProvider }
         : paymentMethod === 'CARD'
-        ? { cardNumber, cardHolder, cardExpiry, cardCvv }
-        : { bankCode };
+        ? {
+            cardNumber: cardNumber || '4242 4242 4242 4242',
+            cardHolder: cardHolder || 'Cardholder Name',
+            cardExpiry: cardExpiry || '12/28',
+            cardCvv: cardCvv || '888',
+          }
+        : { bankCode: bankName || 'GENERAL_BANK', bankName: bankName || 'Online Banking' };
 
     onSubmit({
       paymentMethod,
       paymentDetails,
-      simulateFailure,
+      simulateFailure: false,
     });
   };
 
@@ -142,7 +148,6 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
       {/* UPI / GPay / Paytm Options */}
       {paymentMethod === 'UPI' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }} className="animate-fade-in">
-          {/* Fast App Selection Badges */}
           <div>
             <label className="input-label" style={{ marginBottom: '0.5rem', display: 'block' }}>
               Choose UPI App
@@ -150,7 +155,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
               <button
                 type="button"
-                onClick={() => handleProviderSelect('GPAY', 'user@okhdfcbank')}
+                onClick={() => handleProviderSelect('GPAY', 'yourname@okhdfcbank')}
                 style={{
                   padding: '0.65rem 0.5rem',
                   borderRadius: 'var(--radius-md)',
@@ -168,7 +173,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
 
               <button
                 type="button"
-                onClick={() => handleProviderSelect('PAYTM', 'user@paytm')}
+                onClick={() => handleProviderSelect('PAYTM', 'yourname@paytm')}
                 style={{
                   padding: '0.65rem 0.5rem',
                   borderRadius: 'var(--radius-md)',
@@ -186,7 +191,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
 
               <button
                 type="button"
-                onClick={() => handleProviderSelect('PHONEPE', 'user@ybl')}
+                onClick={() => handleProviderSelect('PHONEPE', 'yourname@ybl')}
                 style={{
                   padding: '0.65rem 0.5rem',
                   borderRadius: 'var(--radius-md)',
@@ -244,7 +249,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
               className="input-field"
               value={cardHolder}
               onChange={(e) => setCardHolder(e.target.value)}
-              placeholder="Full Name as on Card"
+              placeholder="e.g. John Doe"
               required
             />
           </div>
@@ -256,7 +261,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
               className="input-field"
               value={cardNumber}
               onChange={(e) => setCardNumber(e.target.value)}
-              placeholder="XXXX XXXX XXXX XXXX"
+              placeholder="e.g. 4532 8900 1234 5678"
               required
             />
           </div>
@@ -281,7 +286,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
                 value={cardCvv}
                 onChange={(e) => setCardCvv(e.target.value)}
                 maxLength={4}
-                placeholder="XXX"
+                placeholder="e.g. 888"
                 required
               />
             </div>
@@ -293,45 +298,45 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
       {paymentMethod === 'NET_BANKING' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} className="animate-fade-in">
           <div className="input-group">
-            <label className="input-label">Select Bank</label>
-            <select
+            <label className="input-label">Select or Type Bank Name</label>
+            <input
+              type="text"
               className="input-field"
-              value={bankCode}
-              onChange={(e) => setBankCode(e.target.value)}
-              style={{ cursor: 'pointer' }}
-            >
-              <option value="CHASE" style={{ backgroundColor: '#181a28' }}>JPMorgan Chase</option>
-              <option value="BOA" style={{ backgroundColor: '#181a28' }}>Bank of America</option>
-              <option value="WELLS" style={{ backgroundColor: '#181a28' }}>Wells Fargo</option>
-              <option value="CITI" style={{ backgroundColor: '#181a28' }}>Citibank</option>
-            </select>
+              value={bankName}
+              onChange={(e) => setBankName(e.target.value)}
+              placeholder="e.g. State Bank of India, HDFC Bank, ICICI, Chase, Bank of America..."
+              required
+            />
+          </div>
+
+          {/* Quick Bank Chips */}
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginBottom: '0.4rem' }}>
+              Popular Banks:
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+              {['HDFC Bank', 'State Bank of India', 'ICICI Bank', 'Axis Bank', 'Chase', 'Bank of America'].map((bank) => (
+                <button
+                  key={bank}
+                  type="button"
+                  onClick={() => setBankName(bank)}
+                  style={{
+                    padding: '0.35rem 0.65rem',
+                    borderRadius: 'var(--radius-sm)',
+                    background: bankName === bank ? 'rgba(99, 102, 241, 0.25)' : 'rgba(255, 255, 255, 0.04)',
+                    border: bankName === bank ? '1px solid #818cf8' : '1px solid var(--border-subtle)',
+                    color: bankName === bank ? '#ffffff' : 'var(--text-muted)',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {bank}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
-
-      {/* Test / Evaluation Simulator Option */}
-      <div
-        style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid var(--border-subtle)',
-          borderRadius: 'var(--radius-md)',
-          padding: '0.85rem 1rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
-        }}
-      >
-        <input
-          type="checkbox"
-          id="simulateFail"
-          checked={simulateFailure}
-          onChange={(e) => setSimulateFailure(e.target.checked)}
-          style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-        />
-        <label htmlFor="simulateFail" style={{ fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-muted)' }}>
-          <strong style={{ color: '#fb7185' }}>Test Mode:</strong> Simulate payment failure / bank decline
-        </label>
-      </div>
 
       {/* Submit Button */}
       <Button
@@ -339,7 +344,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
         variant="primary"
         size="lg"
         loading={isProcessing}
-        style={{ width: '100%', padding: '0.9rem', fontSize: '1rem' }}
+        style={{ width: '100%', padding: '0.9rem', fontSize: '1rem', marginTop: '0.5rem' }}
       >
         <span>Pay ${total.toFixed(2)} & Confirm Tickets</span>
       </Button>
