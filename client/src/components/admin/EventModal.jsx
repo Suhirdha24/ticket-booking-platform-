@@ -7,14 +7,14 @@ import { showErrorToast, showSuccessToast } from '../../store/toastStore.js';
 export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit, venues = [] }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('Concert');
+  const [category, setCategory] = useState('');
   const [venueName, setVenueName] = useState('');
   const [city, setCity] = useState('');
   const [date, setDate] = useState('');
-  const [vipPrice, setVipPrice] = useState(150);
-  const [premiumPrice, setPremiumPrice] = useState(90);
-  const [generalPrice, setGeneralPrice] = useState(50);
-  const [cutoffHours, setCutoffHours] = useState(24);
+  const [vipPrice, setVipPrice] = useState('');
+  const [premiumPrice, setPremiumPrice] = useState('');
+  const [generalPrice, setGeneralPrice] = useState('');
+  const [cutoffHours, setCutoffHours] = useState('');
   const [bannerUrl, setBannerUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -22,13 +22,13 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
     if (eventToEdit) {
       setTitle(eventToEdit.title || '');
       setDescription(eventToEdit.description || '');
-      setCategory(eventToEdit.category || 'Concert');
+      setCategory(eventToEdit.category || '');
       const venueObj = typeof eventToEdit.venue === 'object' ? eventToEdit.venue : venues.find((v) => v._id === eventToEdit.venue);
       setVenueName(venueObj?.name || eventToEdit.venueName || '');
       setCity(eventToEdit.city || venueObj?.city || '');
       setDate(eventToEdit.date ? new Date(eventToEdit.date).toISOString().slice(0, 16) : '');
       setBannerUrl(eventToEdit.bannerUrl || '');
-      setCutoffHours(eventToEdit.cancellationPolicy?.cutoffHours || 24);
+      setCutoffHours(eventToEdit.cancellationPolicy?.cutoffHours || '');
 
       if (eventToEdit.pricing) {
         const vip = eventToEdit.pricing.find((p) => p.category === 'VIP');
@@ -42,15 +42,15 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
       // Default clean values for new event (blank inputs)
       setTitle('');
       setDescription('');
-      setCategory('Concert');
+      setCategory('');
       setVenueName('');
       setCity('');
       setDate('');
       setBannerUrl('');
-      setVipPrice(150);
-      setPremiumPrice(90);
-      setGeneralPrice(50);
-      setCutoffHours(24);
+      setVipPrice('');
+      setPremiumPrice('');
+      setGeneralPrice('');
+      setCutoffHours('');
     }
   }, [eventToEdit, isOpen, venues]);
 
@@ -93,13 +93,13 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
         date: new Date(date),
         bannerUrl: bannerUrl.trim() || defaultFallbackImage,
         pricing: [
-          { category: 'VIP', price: Number(vipPrice) },
-          { category: 'Premium', price: Number(premiumPrice) },
-          { category: 'General', price: Number(generalPrice) },
+          { category: 'VIP', price: Number(vipPrice) || 150 },
+          { category: 'Premium', price: Number(premiumPrice) || 90 },
+          { category: 'General', price: Number(generalPrice) || 50 },
         ],
         cancellationPolicy: {
           allowCancellation: true,
-          cutoffHours: Number(cutoffHours),
+          cutoffHours: cutoffHours !== '' ? Number(cutoffHours) : 24,
         },
       };
 
@@ -155,19 +155,14 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div className="input-group">
             <label className="input-label">Category</label>
-            <select
+            <input
+              type="text"
               className="input-field"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              style={{ cursor: 'pointer' }}
-            >
-              <option value="Concert" style={{ backgroundColor: '#181a28' }}>Concert</option>
-              <option value="Conference" style={{ backgroundColor: '#181a28' }}>Conference</option>
-              <option value="Theatre" style={{ backgroundColor: '#181a28' }}>Theatre</option>
-              <option value="Sports" style={{ backgroundColor: '#181a28' }}>Sports</option>
-              <option value="Comedy" style={{ backgroundColor: '#181a28' }}>Comedy</option>
-              <option value="Festival" style={{ backgroundColor: '#181a28' }}>Festival</option>
-            </select>
+              placeholder="e.g. Concert, Sports, Tech, Comedy..."
+              required
+            />
           </div>
 
           <div className="input-group">
@@ -216,8 +211,7 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
             value={cutoffHours}
             onChange={(e) => setCutoffHours(e.target.value)}
             min={0}
-            placeholder="24"
-            required
+            placeholder="e.g. 24"
           />
         </div>
 
@@ -235,7 +229,7 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
                 value={vipPrice}
                 onChange={(e) => setVipPrice(e.target.value)}
                 min={1}
-                required
+                placeholder="e.g. 150"
               />
             </div>
             <div className="input-group">
@@ -246,7 +240,7 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
                 value={premiumPrice}
                 onChange={(e) => setPremiumPrice(e.target.value)}
                 min={1}
-                required
+                placeholder="e.g. 90"
               />
             </div>
             <div className="input-group">
@@ -257,7 +251,7 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
                 value={generalPrice}
                 onChange={(e) => setGeneralPrice(e.target.value)}
                 min={1}
-                required
+                placeholder="e.g. 50"
               />
             </div>
           </div>

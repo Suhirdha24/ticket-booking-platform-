@@ -46,15 +46,7 @@ const eventSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, 'Please provide event category'],
-      enum: [
-        'Concert',
-        'Conference',
-        'Theatre',
-        'Sports',
-        'Comedy',
-        'Festival',
-        'Other',
-      ],
+      trim: true,
       index: true,
     },
     venue: {
