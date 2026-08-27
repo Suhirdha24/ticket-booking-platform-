@@ -103,7 +103,7 @@ export default function OrderSummary({ reservation, event, seats }) {
                   {seat.category}
                 </span>
               </div>
-              <span style={{ fontWeight: 700 }}>${seat.price}</span>
+              <span style={{ fontWeight: 700 }}>₹{seat.price}</span>
             </div>
           ))}
         </div>
@@ -122,11 +122,11 @@ export default function OrderSummary({ reservation, event, seats }) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
           <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>₹{subtotal.toFixed(2)}</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
           <span>Convenience & Processing Fee (5%)</span>
-          <span>${convenienceFee.toFixed(2)}</span>
+          <span>₹{convenienceFee.toFixed(2)}</span>
         </div>
         <div
           style={{
@@ -141,7 +141,7 @@ export default function OrderSummary({ reservation, event, seats }) {
           }}
         >
           <span>Total Amount</span>
-          <span style={{ color: '#34d399' }}>${total.toFixed(2)}</span>
+          <span style={{ color: '#34d399' }}>₹{total.toFixed(2)}</span>
         </div>
       </div>
 

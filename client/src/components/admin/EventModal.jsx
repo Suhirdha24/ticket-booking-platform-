@@ -218,40 +218,40 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
         {/* Pricing Tiers */}
         <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1rem' }}>
           <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.65rem' }}>
-            Seat Tier Pricing ($ USD)
+            Seat Tier Pricing (₹ INR)
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
             <div className="input-group">
-              <label className="input-label" style={{ color: '#fbbf24' }}>VIP Tier ($)</label>
+              <label className="input-label" style={{ color: '#fbbf24' }}>VIP Tier (₹)</label>
               <input
                 type="number"
                 className="input-field"
                 value={vipPrice}
                 onChange={(e) => setVipPrice(e.target.value)}
                 min={1}
-                placeholder="e.g. 150"
+                placeholder="e.g. 4999"
               />
             </div>
             <div className="input-group">
-              <label className="input-label" style={{ color: '#c084fc' }}>Premium Tier ($)</label>
+              <label className="input-label" style={{ color: '#c084fc' }}>Premium Tier (₹)</label>
               <input
                 type="number"
                 className="input-field"
                 value={premiumPrice}
                 onChange={(e) => setPremiumPrice(e.target.value)}
                 min={1}
-                placeholder="e.g. 90"
+                placeholder="e.g. 2499"
               />
             </div>
             <div className="input-group">
-              <label className="input-label" style={{ color: '#22d3ee' }}>General Tier ($)</label>
+              <label className="input-label" style={{ color: '#22d3ee' }}>General Tier (₹)</label>
               <input
                 type="number"
                 className="input-field"
                 value={generalPrice}
                 onChange={(e) => setGeneralPrice(e.target.value)}
                 min={1}
-                placeholder="e.g. 50"
+                placeholder="e.g. 999"
               />
             </div>
           </div>

@@ -346,7 +346,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
         loading={isProcessing}
         style={{ width: '100%', padding: '0.9rem', fontSize: '1rem', marginTop: '0.5rem' }}
       >
-        <span>Pay ${total.toFixed(2)} & Confirm Tickets</span>
+        <span>Pay ₹{total.toFixed(2)} & Confirm Tickets</span>
       </Button>
     </form>
   );

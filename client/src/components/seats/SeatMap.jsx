@@ -120,7 +120,7 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
                   color: '#ffffff',
                 }}
               >
-                ${sec.price}
+                ₹{sec.price}
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginLeft: '4px' }}>
                   / seat
                 </span>
@@ -190,7 +190,7 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
                               }}
                               onMouseEnter={() => setHoveredSeat(seat)}
                               onMouseLeave={() => setHoveredSeat(null)}
-                              title={`${seat.section} • Row ${seat.row}, Seat ${seatDisplayNumber} • $${seat.price} (${selected ? 'Selected' : seat.status})`}
+                              title={`${seat.section} • Row ${seat.row}, Seat ${seatDisplayNumber} • ₹${seat.price} (${selected ? 'Selected' : seat.status})`}
                             >
                               {seatDisplayNumber.replace(/^[A-Z]+/, '')}
                             </div>

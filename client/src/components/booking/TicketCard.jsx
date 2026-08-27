@@ -249,7 +249,7 @@ export default function TicketCard({ booking, isNew = false }) {
 
           {/* Total Paid */}
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            Paid Total: <strong style={{ color: '#ffffff' }}>${booking.total?.toFixed(2)}</strong>
+            Paid Total: <strong style={{ color: '#ffffff' }}>₹{booking.total?.toFixed(2)}</strong>
           </div>
         </div>
       </div>

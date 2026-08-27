@@ -297,7 +297,7 @@ export default function EventDetails() {
                         color: '#ffffff',
                       }}
                     >
-                      ${tier.price}
+                      ₹{tier.price}
                     </div>
                   </Link>
                 ))}

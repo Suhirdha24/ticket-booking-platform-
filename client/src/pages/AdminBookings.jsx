@@ -223,7 +223,7 @@ export default function AdminBookings() {
                     </span>
                   </td>
                   <td style={{ padding: '1rem', fontWeight: 800, color: '#34d399' }}>
-                    ${b.total?.toFixed(2)}
+                    ₹{b.total?.toFixed(2)}
                   </td>
                   <td style={{ padding: '1rem' }}>
                     <span

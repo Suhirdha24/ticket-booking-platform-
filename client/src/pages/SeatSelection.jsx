@@ -258,7 +258,7 @@ export default function SeatSelection() {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <span style={{ fontWeight: 800, color: '#818cf8', fontSize: '0.95rem' }}>
-                        ${seat.price}
+                        ₹{seat.price}
                       </span>
                       <button
                         type="button"
@@ -310,7 +310,7 @@ export default function SeatSelection() {
                     color: '#ffffff',
                   }}
                 >
-                  ${subtotal}
+                  ₹{subtotal}
                 </div>
               </div>
             )}
@@ -348,7 +348,7 @@ export default function SeatSelection() {
               }}
             >
               {selectedSeats.length > 0
-                ? `Lock Seats & Pay ($${subtotal})`
+                ? `Lock Seats & Pay (₹${subtotal})`
                 : 'Select Seats on Map'}
             </Button>
           </div>

@@ -197,7 +197,7 @@ export default function EventCard({ event }) {
                 color: '#ffffff',
               }}
             >
-              ${minPrice}
+              ₹{minPrice}
             </div>
           </div>
 

@@ -275,13 +275,13 @@ export default function MyBookings() {
                     <div
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        fontSize: '1.3rem',
+                        fontSize: '1.2rem',
                         fontWeight: 800,
                         color: isConfirmed ? '#ffffff' : 'var(--text-subtle)',
                         textDecoration: isConfirmed ? 'none' : 'line-through',
                       }}
                     >
-                      ${booking.total?.toFixed(2)}
+                      ₹{booking.total?.toFixed(2)}
                     </div>
                   </div>
 
@@ -324,24 +324,23 @@ export default function MyBookings() {
         </Modal>
       )}
 
-      {/* Cancellation Confirmation Modal */}
+      {/* Cancel Confirmation Modal */}
       {cancelModalBooking && (
         <Modal
           isOpen={Boolean(cancelModalBooking)}
           onClose={() => setCancelModalBooking(null)}
-          title="Confirm Ticket Cancellation"
+          title="Confirm Booking Cancellation"
           maxWidth="500px"
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div
               style={{
                 display: 'flex',
-                alignItems: 'center',
                 gap: '0.75rem',
                 background: 'rgba(244, 63, 94, 0.1)',
-                border: '1px solid rgba(244, 63, 94, 0.3)',
-                borderRadius: 'var(--radius-md)',
+                border: '1px solid rgba(244, 63, 94, 0.25)',
                 padding: '1rem',
+                borderRadius: 'var(--radius-md)',
               }}
             >
               <AlertTriangle size={24} color="#fb7185" style={{ flexShrink: 0 }} />
@@ -352,7 +351,7 @@ export default function MyBookings() {
 
             <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
               <div>Event: <strong style={{ color: '#ffffff' }}>{cancelModalBooking.eventSnapshot?.title}</strong></div>
-              <div>Refund Amount: <strong style={{ color: '#34d399' }}>${cancelModalBooking.total?.toFixed(2)}</strong></div>
+              <div>Refund Amount: <strong style={{ color: '#34d399' }}>₹{cancelModalBooking.total?.toFixed(2)}</strong></div>
               <div style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--text-subtle)' }}>
                 * Refund policy requires cancellation at least 24 hours prior to event start.
               </div>

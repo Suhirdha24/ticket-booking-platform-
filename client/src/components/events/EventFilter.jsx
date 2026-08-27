@@ -1,8 +1,25 @@
 import React from 'react';
 import { Search, Filter, RotateCcw, MapPin } from 'lucide-react';
 
-const CATEGORIES = ['All', 'Concert', 'Conference', 'Theatre', 'Sports', 'Comedy'];
-const CITIES = ['All', 'San Francisco', 'Austin', 'New York', 'Seattle', 'Chicago', 'Boston'];
+const CATEGORIES = ['All', 'Concert', 'Conference', 'Theatre', 'Sports', 'Comedy', 'Festival'];
+const CITIES = [
+  'All',
+  'Mumbai',
+  'New Delhi',
+  'Bengaluru',
+  'Chennai',
+  'Hyderabad',
+  'Goa',
+  'Kolkata',
+  'Ahmedabad',
+  'Pune',
+  'Jaipur',
+  'Kochi',
+  'Chandigarh',
+  'Lucknow',
+  'Indore',
+  'Coimbatore',
+];
 
 export default function EventFilter({
   search,

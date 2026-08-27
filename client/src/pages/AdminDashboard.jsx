@@ -110,7 +110,7 @@ export default function AdminDashboard() {
       >
         <StatCard
           title="Total Gross Revenue"
-          value={`$${metrics?.totalRevenue?.toLocaleString() || '0.00'}`}
+          value={`₹${metrics?.totalRevenue?.toLocaleString() || '0.00'}`}
           subtext={`${metrics?.confirmedBookings || 0} paid bookings`}
           icon={DollarSign}
           color="#10b981"
@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                     }}
                   >
                     <span>{cat.category}</span>
-                    <span style={{ color: '#ffffff' }}>${cat.revenue.toLocaleString()}</span>
+                    <span style={{ color: '#ffffff' }}>₹{cat.revenue.toLocaleString()}</span>
                   </div>
                   {/* Visual Bar */}
                   <div
@@ -223,7 +223,7 @@ export default function AdminDashboard() {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#34d399' }}>
-                    ${b.total?.toFixed(2)}
+                    ₹{b.total?.toFixed(2)}
                   </div>
                   <span
                     className={`badge ${
