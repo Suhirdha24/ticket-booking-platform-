@@ -1,0 +1,41 @@
+{
+  "name": "event-ticket-booking-platform",
+  "version": "1.0.0",
+  "description": "Production-ready Event Ticket Booking Platform for Vercel Serverless and MongoDB Atlas",
+  "main": "server/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "node server/server.js",
+    "dev:client": "npm run dev --prefix client",
+    "build": "npm run build --prefix client",
+    "seed": "node server/scripts/seed.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.2",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.23.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "mongodb-memory-server": "^11.0.1",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.0"
+  },
+  "keywords": [
+    "ticket-booking",
+    "event-platform",
+    "vercel-serverless",
+    "mongodb-atlas",
+    "react",
+    "express"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}
