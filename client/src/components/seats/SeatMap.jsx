@@ -224,39 +224,44 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
           className="glass-panel animate-fade-in"
           style={{
             position: 'fixed',
-            bottom: '1.5rem',
+            bottom: '1.75rem',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: 'calc(100% - 3rem)',
-            maxWidth: '850px',
-            padding: '1rem 1.75rem',
+            width: 'calc(100% - 2.5rem)',
+            maxWidth: '820px',
+            padding: '1.1rem 1.75rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '1.5rem',
-            zIndex: 90,
-            backgroundColor: 'rgba(18, 20, 31, 0.95)',
-            borderColor: 'var(--border-highlight)',
-            boxShadow: '0 15px 40px -5px rgba(0, 0, 0, 0.8), 0 0 25px -5px var(--primary-glow)',
+            gap: '1.25rem',
+            zIndex: 99,
+            backgroundColor: 'rgba(15, 17, 26, 0.96)',
+            borderRadius: '20px',
+            border: '1.5px solid rgba(99, 102, 241, 0.45)',
+            boxShadow: '0 25px 50px -10px rgba(0, 0, 0, 0.9), 0 0 35px -5px rgba(99, 102, 241, 0.35)',
+            backdropFilter: 'blur(20px)',
           }}
         >
-          <div>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <div
               style={{
-                fontSize: '0.8rem',
-                color: 'var(--text-muted)',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                color: '#818cf8',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
                 marginBottom: '0.35rem',
               }}
             >
-              Selected Seats ({selectedSeats.length}):
+              Selected Seats ({selectedSeats.length})
             </div>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem',
+                gap: '0.45rem',
                 flexWrap: 'wrap',
-                maxHeight: '40px',
+                maxHeight: '48px',
                 overflowY: 'auto',
               }}
             >
@@ -264,24 +269,29 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
                 <span
                   key={s._id}
                   className="badge badge-primary"
-                  style={{ fontSize: '0.75rem' }}
+                  style={{
+                    fontSize: '0.75rem',
+                    padding: '0.3rem 0.6rem',
+                    background: 'rgba(99, 102, 241, 0.25)',
+                    border: '1px solid rgba(99, 102, 241, 0.5)',
+                  }}
                 >
-                  {s.seatNumber} (${s.price})
+                  {s.seatNumber} &bull; ${s.price}
                 </span>
               ))}
             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexShrink: 0 }}>
-            <div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', textAlign: 'right' }}>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-subtle)', textTransform: 'uppercase', fontWeight: 600 }}>
                 Total Est.
               </div>
               <div
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.4rem',
-                  fontWeight: 800,
+                  fontSize: '1.5rem',
+                  fontWeight: 900,
                   color: '#ffffff',
                 }}
               >
@@ -295,6 +305,12 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
               loading={isSubmitting}
               onClick={onLockReservation}
               icon={ArrowRight}
+              style={{
+                padding: '0.75rem 1.4rem',
+                fontSize: '0.95rem',
+                borderRadius: '12px',
+                boxShadow: '0 0 20px rgba(99, 102, 241, 0.5)',
+              }}
             >
               Lock Seats & Pay
             </Button>
