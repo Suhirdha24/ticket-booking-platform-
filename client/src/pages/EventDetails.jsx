@@ -265,14 +265,20 @@ export default function EventDetails() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {(event.pricing || []).map((tier) => (
-                  <div
+                  <Link
                     key={tier.category}
-                    className="glass-card"
+                    to={`/event/${event._id}/seats?tier=${tier.category}`}
+                    className="glass-card table-row-hover"
                     style={{
                       padding: '1rem 1.25rem',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: 'var(--radius-md)',
+                      transition: 'all 0.2s ease',
                     }}
                   >
                     <div>
@@ -280,7 +286,7 @@ export default function EventDetails() {
                         {tier.category} Tier
                       </span>
                       <div style={{ fontSize: '0.78rem', color: 'var(--text-subtle)', marginTop: '4px' }}>
-                        Reserved Assigned Seating
+                        Click to Select {tier.category} Seats &rarr;
                       </div>
                     </div>
                     <div
@@ -293,7 +299,7 @@ export default function EventDetails() {
                     >
                       ${tier.price}
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
 

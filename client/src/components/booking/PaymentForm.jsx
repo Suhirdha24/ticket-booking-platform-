@@ -3,22 +3,28 @@ import { CreditCard, Smartphone, Building, ShieldCheck, AlertCircle } from 'luci
 import Button from '../common/Button.jsx';
 
 export default function PaymentForm({ total, onSubmit, isProcessing }) {
-  const [paymentMethod, setPaymentMethod] = useState('CARD');
+  const [paymentMethod, setPaymentMethod] = useState('UPI');
+  const [upiProvider, setUpiProvider] = useState('GPAY');
+  const [upiId, setUpiId] = useState('suhirdha@okaxis');
   const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
   const [cardHolder, setCardHolder] = useState('Jane Doe');
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvv, setCardCvv] = useState('888');
-  const [upiId, setUpiId] = useState('user@okaxis');
   const [bankCode, setBankCode] = useState('CHASE');
   const [simulateFailure, setSimulateFailure] = useState(false);
+
+  const handleProviderSelect = (provider, defaultVpa) => {
+    setUpiProvider(provider);
+    setUpiId(defaultVpa);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const paymentDetails =
-      paymentMethod === 'CARD'
+      paymentMethod === 'UPI'
+        ? { upiId, provider: upiProvider }
+        : paymentMethod === 'CARD'
         ? { cardNumber, cardHolder, cardExpiry, cardCvv }
-        : paymentMethod === 'UPI'
-        ? { upiId }
         : { bankCode };
 
     onSubmit({
@@ -53,6 +59,33 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
       >
         <button
           type="button"
+          onClick={() => setPaymentMethod('UPI')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '1rem 0.75rem',
+            borderRadius: 'var(--radius-md)',
+            background:
+              paymentMethod === 'UPI'
+                ? 'rgba(99, 102, 241, 0.2)'
+                : 'var(--bg-surface)',
+            border:
+              paymentMethod === 'UPI'
+                ? '1.5px solid var(--primary)'
+                : '1px solid var(--border-subtle)',
+            color: paymentMethod === 'UPI' ? '#ffffff' : 'var(--text-muted)',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+          }}
+        >
+          <Smartphone size={22} color={paymentMethod === 'UPI' ? '#818cf8' : 'var(--text-subtle)'} />
+          <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>UPI / Apps</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setPaymentMethod('CARD')}
           style={{
             display: 'flex',
@@ -76,33 +109,6 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
         >
           <CreditCard size={22} color={paymentMethod === 'CARD' ? '#818cf8' : 'var(--text-subtle)'} />
           <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Card</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setPaymentMethod('UPI')}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '1rem 0.75rem',
-            borderRadius: 'var(--radius-md)',
-            background:
-              paymentMethod === 'UPI'
-                ? 'rgba(99, 102, 241, 0.2)'
-                : 'var(--bg-surface)',
-            border:
-              paymentMethod === 'UPI'
-                ? '1.5px solid var(--primary)'
-                : '1px solid var(--border-subtle)',
-            color: paymentMethod === 'UPI' ? '#ffffff' : 'var(--text-muted)',
-            cursor: 'pointer',
-            transition: 'all 0.2s',
-          }}
-        >
-          <Smartphone size={22} color={paymentMethod === 'UPI' ? '#818cf8' : 'var(--text-subtle)'} />
-          <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>UPI / QR</span>
         </button>
 
         <button
@@ -132,6 +138,101 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
           <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Net Banking</span>
         </button>
       </div>
+
+      {/* UPI / GPay / Paytm Options */}
+      {paymentMethod === 'UPI' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }} className="animate-fade-in">
+          {/* Fast App Selection Badges */}
+          <div>
+            <label className="input-label" style={{ marginBottom: '0.5rem', display: 'block' }}>
+              Choose UPI App
+            </label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => handleProviderSelect('GPAY', 'user@okhdfcbank')}
+                style={{
+                  padding: '0.65rem 0.5rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: upiProvider === 'GPAY' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                  border: upiProvider === 'GPAY' ? '1.5px solid #818cf8' : '1px solid var(--border-subtle)',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                }}
+              >
+                🔵 Google Pay
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleProviderSelect('PAYTM', 'user@paytm')}
+                style={{
+                  padding: '0.65rem 0.5rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: upiProvider === 'PAYTM' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                  border: upiProvider === 'PAYTM' ? '1.5px solid #22d3ee' : '1px solid var(--border-subtle)',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                }}
+              >
+                🔷 Paytm
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleProviderSelect('PHONEPE', 'user@ybl')}
+                style={{
+                  padding: '0.65rem 0.5rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: upiProvider === 'PHONEPE' ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                  border: upiProvider === 'PHONEPE' ? '1.5px solid #c084fc' : '1px solid var(--border-subtle)',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                }}
+              >
+                🟣 PhonePe
+              </button>
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Virtual Payment Address (VPA / UPI ID)</label>
+            <input
+              type="text"
+              className="input-field"
+              value={upiId}
+              onChange={(e) => setUpiId(e.target.value)}
+              placeholder="e.g. 9876543210@paytm or user@okaxis"
+              required
+            />
+          </div>
+
+          <div
+            style={{
+              padding: '0.75rem',
+              borderRadius: 'var(--radius-md)',
+              background: 'rgba(16, 185, 129, 0.08)',
+              border: '1px solid rgba(16, 185, 129, 0.25)',
+              fontSize: '0.82rem',
+              color: '#34d399',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            <ShieldCheck size={16} /> Instant verification via {upiProvider === 'GPAY' ? 'Google Pay' : upiProvider === 'PAYTM' ? 'Paytm' : 'PhonePe'}
+          </div>
+        </div>
+      )}
 
       {/* CARD Inputs */}
       {paymentMethod === 'CARD' && (
