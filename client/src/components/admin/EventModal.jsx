@@ -8,7 +8,11 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Concert');
+  const [venueMode, setVenueMode] = useState('select'); // 'select' or 'custom'
   const [venueId, setVenueId] = useState('');
+  const [customVenueName, setCustomVenueName] = useState('');
+  const [customCity, setCustomCity] = useState('');
+  const [customCapacity, setCustomCapacity] = useState(1000);
   const [city, setCity] = useState('');
   const [date, setDate] = useState('');
   const [vipPrice, setVipPrice] = useState(150);
@@ -23,6 +27,7 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
       setTitle(eventToEdit.title || '');
       setDescription(eventToEdit.description || '');
       setCategory(eventToEdit.category || 'Concert');
+      setVenueMode('select');
       setVenueId(eventToEdit.venue?._id || eventToEdit.venue || '');
       setCity(eventToEdit.city || '');
       setDate(eventToEdit.date ? new Date(eventToEdit.date).toISOString().slice(0, 16) : '');
@@ -38,14 +43,18 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
         if (gen) setGeneralPrice(gen.price);
       }
     } else {
-      // Default new event values
+      // Default clean values for new event (blank banner and clean inputs)
       setTitle('');
       setDescription('');
       setCategory('Concert');
+      setVenueMode('select');
       setVenueId(venues[0]?._id || '');
-      setCity(venues[0]?.city || 'San Francisco');
-      setDate(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16));
-      setBannerUrl('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&auto=format&fit=crop&q=80');
+      setCustomVenueName('');
+      setCustomCity('');
+      setCustomCapacity(1000);
+      setCity(venues[0]?.city || '');
+      setDate('');
+      setBannerUrl('');
       setVipPrice(150);
       setPremiumPrice(90);
       setGeneralPrice(50);
@@ -57,14 +66,37 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      let finalVenueId = venueId;
+      let finalCity = city;
+
+      // Handle custom venue creation if selected
+      if (venueMode === 'custom') {
+        if (!customVenueName.trim() || !customCity.trim()) {
+          throw new Error('Please enter a venue name and city for your custom venue');
+        }
+        const venueRes = await api.post('/venues', {
+          name: customVenueName.trim(),
+          city: customCity.trim(),
+          capacity: Number(customCapacity) || 1000,
+          address: `${customVenueName} Complex`,
+        });
+        finalVenueId = venueRes.data.data._id;
+        finalCity = customCity.trim();
+      } else {
+        finalCity = city || venues.find((v) => v._id === venueId)?.city || 'San Francisco';
+      }
+
+      const defaultFallbackImage =
+        'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&auto=format&fit=crop&q=80';
+
       const payload = {
         title,
         description,
         category,
-        venueId,
-        city: city || venues.find((v) => v._id === venueId)?.city || 'San Francisco',
+        venueId: finalVenueId,
+        city: finalCity,
         date: new Date(date),
-        bannerUrl,
+        bannerUrl: bannerUrl.trim() || defaultFallbackImage,
         pricing: [
           { category: 'VIP', price: Number(vipPrice) },
           { category: 'Premium', price: Number(premiumPrice) },
@@ -144,24 +176,74 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
           </div>
 
           <div className="input-group">
-            <label className="input-label">Venue</label>
-            <select
-              className="input-field"
-              value={venueId}
-              onChange={(e) => {
-                setVenueId(e.target.value);
-                const selectedVenue = venues.find((v) => v._id === e.target.value);
-                if (selectedVenue) setCity(selectedVenue.city);
-              }}
-              style={{ cursor: 'pointer' }}
-              required
-            >
-              {venues.map((v) => (
-                <option key={v._id} value={v._id} style={{ backgroundColor: '#181a28' }}>
-                  {v.name} ({v.city})
-                </option>
-              ))}
-            </select>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <label className="input-label" style={{ margin: 0 }}>Venue</label>
+              <button
+                type="button"
+                onClick={() => setVenueMode(venueMode === 'select' ? 'custom' : 'select')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--primary-light)',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                }}
+              >
+                {venueMode === 'select' ? '+ Add Custom Venue' : '← Select From List'}
+              </button>
+            </div>
+
+            {venueMode === 'select' ? (
+              <select
+                className="input-field"
+                value={venueId}
+                onChange={(e) => {
+                  setVenueId(e.target.value);
+                  const selectedVenue = venues.find((v) => v._id === e.target.value);
+                  if (selectedVenue) setCity(selectedVenue.city);
+                }}
+                style={{ cursor: 'pointer' }}
+                required
+              >
+                {venues.map((v) => (
+                  <option key={v._id} value={v._id} style={{ backgroundColor: '#181a28' }}>
+                    {v.name} ({v.city})
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={customVenueName}
+                  onChange={(e) => setCustomVenueName(e.target.value)}
+                  placeholder="Custom Venue Name (e.g. Royal Arena)"
+                  required
+                />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                  <input
+                    type="text"
+                    className="input-field"
+                    value={customCity}
+                    onChange={(e) => setCustomCity(e.target.value)}
+                    placeholder="City (e.g. Seattle)"
+                    required
+                  />
+                  <input
+                    type="number"
+                    className="input-field"
+                    value={customCapacity}
+                    onChange={(e) => setCustomCapacity(e.target.value)}
+                    placeholder="Capacity (e.g. 1500)"
+                    min={50}
+                    required
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
