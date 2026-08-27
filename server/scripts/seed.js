@@ -1,3 +1,4 @@
+import dns from 'node:dns';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import User from '../models/User.js';
@@ -9,6 +10,13 @@ import Booking from '../models/Booking.js';
 import { generateSeatsForEvent } from '../routes/eventRoutes.js';
 
 dotenv.config();
+
+// Ensure reliable DNS resolution for Atlas SRV records on Windows
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch (e) {
+  // Ignore in environments where setServers is restricted
+}
 
 const MONGODB_URI =
   process.env.MONGODB_URI || 'mongodb://localhost:27017/ticket-booking-platform';
