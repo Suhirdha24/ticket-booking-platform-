@@ -289,26 +289,6 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
         </div>
       )}
 
-      {/* UPI Inputs */}
-      {paymentMethod === 'UPI' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} className="animate-fade-in">
-          <div className="input-group">
-            <label className="input-label">UPI Virtual Payment Address (VPA)</label>
-            <input
-              type="text"
-              className="input-field"
-              value={upiId}
-              onChange={(e) => setUpiId(e.target.value)}
-              placeholder="e.g. yourname@okhdfcbank"
-              required
-            />
-          </div>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-subtle)' }}>
-            A mock payment approval notification will be automatically processed.
-          </p>
-        </div>
-      )}
-
       {/* NET BANKING Inputs */}
       {paymentMethod === 'NET_BANKING' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} className="animate-fade-in">

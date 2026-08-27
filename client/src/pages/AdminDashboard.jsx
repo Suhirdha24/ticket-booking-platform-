@@ -85,10 +85,15 @@ export default function AdminDashboard() {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           <Link to="/admin/events">
             <Button variant="primary" size="md" icon={Plus}>
               Manage Events
+            </Button>
+          </Link>
+          <Link to="/admin/bookings">
+            <Button variant="secondary" size="md" icon={Ticket}>
+              All Bookings
             </Button>
           </Link>
           <Link to="/admin/venues">
@@ -99,19 +104,19 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Metrics Row */}
+      {/* Metrics Row — Full Section 22 KPIs */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-          gap: '1.5rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '1.25rem',
           marginBottom: '3rem',
         }}
       >
         <StatCard
           title="Total Gross Revenue"
           value={`$${metrics?.totalRevenue?.toLocaleString() || '0.00'}`}
-          subtext={`${metrics?.confirmedBookings || 0} paid bookings`}
+          subtext={`${metrics?.confirmedBookings || 0} confirmed orders`}
           icon={DollarSign}
           color="#10b981"
         />
@@ -123,7 +128,14 @@ export default function AdminDashboard() {
           color="#6366f1"
         />
         <StatCard
-          title="Live Events"
+          title="Total Bookings"
+          value={metrics?.totalBookings || '0'}
+          subtext={`${metrics?.cancelledBookings || 0} cancelled`}
+          icon={TrendingUp}
+          color="#38bdf8"
+        />
+        <StatCard
+          title="Live & Upcoming Events"
           value={metrics?.upcomingEvents || '0'}
           subtext={`${metrics?.totalEvents || 0} total events created`}
           icon={Calendar}

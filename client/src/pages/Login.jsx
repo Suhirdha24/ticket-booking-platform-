@@ -9,9 +9,10 @@ export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
+  const queryEmail = searchParams.get('email') || '';
   const { login, isLoading } = useAuthStore();
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(queryEmail);
   const [password, setPassword] = useState('');
 
   const handleLogin = async (e) => {

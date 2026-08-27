@@ -18,6 +18,7 @@ import Register from './pages/Register.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import AdminEvents from './pages/AdminEvents.jsx';
 import AdminVenues from './pages/AdminVenues.jsx';
+import AdminBookings from './pages/AdminBookings.jsx';
 
 // Protected Route Component
 function ProtectedRoute({ children, adminOnly = false }) {
@@ -97,6 +98,14 @@ export default function App() {
               element={
                 <ProtectedRoute adminOnly={true}>
                   <AdminVenues />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/bookings"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AdminBookings />
                 </ProtectedRoute>
               }
             />
