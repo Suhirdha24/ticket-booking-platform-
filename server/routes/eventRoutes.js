@@ -30,11 +30,11 @@ export async function generateSeatsForEvent(eventParam, venueParam, pricingTiers
       name: 'Grand Arena',
       city: event.city || 'Chennai',
       address: 'Main Stadium Complex',
-      capacity: 130,
+      capacity: 160,
       sections: [
-        { name: 'VIP Front Row', category: 'VIP', rows: 2, seatsPerRow: 10 },
-        { name: 'Premium Central', category: 'Premium', rows: 3, seatsPerRow: 15 },
-        { name: 'General Upper Tier', category: 'General', rows: 5, seatsPerRow: 13 },
+        { name: 'VIP Front Row', category: 'VIP', rows: 5, seatsPerRow: 10 },
+        { name: 'Premium Central', category: 'Premium', rows: 5, seatsPerRow: 10 },
+        { name: 'General Upper Tier', category: 'General', rows: 5, seatsPerRow: 12 },
       ],
     });
   }
@@ -60,9 +60,9 @@ export async function generateSeatsForEvent(eventParam, venueParam, pricingTiers
     venue.sections && Array.isArray(venue.sections) && venue.sections.length > 0
       ? venue.sections
       : [
-          { name: 'VIP Front Row', category: 'VIP', rows: 2, seatsPerRow: 10 },
-          { name: 'Premium Central', category: 'Premium', rows: 3, seatsPerRow: 15 },
-          { name: 'General Upper Tier', category: 'General', rows: 5, seatsPerRow: 13 },
+          { name: 'VIP Front Row', category: 'VIP', rows: 5, seatsPerRow: 10 },
+          { name: 'Premium Central', category: 'Premium', rows: 5, seatsPerRow: 10 },
+          { name: 'General Upper Tier', category: 'General', rows: 5, seatsPerRow: 12 },
         ];
 
   // Remove any broken/incomplete seats for this event before recreating

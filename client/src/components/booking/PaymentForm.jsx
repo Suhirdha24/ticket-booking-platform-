@@ -21,9 +21,25 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    let formattedUpi = (upiId || '').trim();
+    if (!formattedUpi) {
+      formattedUpi = 'user@upi';
+    } else if (/^\d{10}$/.test(formattedUpi)) {
+      const suffix =
+        upiProvider === 'GPAY'
+          ? '@okhdfcbank'
+          : upiProvider === 'PAYTM'
+          ? '@paytm'
+          : upiProvider === 'PHONEPE'
+          ? '@ybl'
+          : '@upi';
+      formattedUpi = `${formattedUpi}${suffix}`;
+    }
+
     const paymentDetails =
       paymentMethod === 'UPI'
-        ? { upiId: upiId || 'user@upi', provider: upiProvider }
+        ? { upiId: formattedUpi, provider: upiProvider }
         : paymentMethod === 'CARD'
         ? {
             cardNumber: cardNumber || '4242 4242 4242 4242',

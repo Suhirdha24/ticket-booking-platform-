@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "node server/server.js",
+    "dev:server": "node --watch server/server.js",
     "dev:client": "npm run dev --prefix client",
     "build": "npm run build --prefix client",
     "seed": "node server/scripts/seed.js",

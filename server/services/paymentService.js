@@ -63,24 +63,25 @@ export class PaymentService {
         }
         break;
 
-      case 'UPI':
-        if (
-          paymentDetails.upiId &&
-          !/^[a-zA-Z0-9.\-_]{2,49}@[a-zA-Z._]{2,49}$/.test(
-            paymentDetails.upiId
-          )
-        ) {
+      case 'UPI': {
+        const rawUpi = (paymentDetails.upiId || '').trim();
+        // Support standard username@bank, 10-digit mobile number, or alphanumeric handle
+        const isVpa = /^[a-zA-Z0-9.\-_]{2,49}@[a-zA-Z._]{2,49}$/.test(rawUpi);
+        const isPhoneOrId = /^[a-zA-Z0-9.\-_]{3,50}$/.test(rawUpi);
+
+        if (rawUpi && !isVpa && !isPhoneOrId) {
           return {
             success: false,
             status: 'FAILED',
             transactionId,
             paymentMethod,
             amount,
-            message: 'Invalid UPI VPA ID format (e.g. username@bank)',
+            message: 'Invalid UPI format. Enter your UPI ID (username@bank) or 10-digit mobile number.',
             timestamp: new Date(),
           };
         }
         break;
+      }
 
       case 'NET_BANKING':
         // Netbanking dummy validation

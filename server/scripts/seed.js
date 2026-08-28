@@ -74,8 +74,8 @@ async function seedDatabase() {
 
     console.log('🏛️ Seeding Venues Across All Cities & Tamil Nadu Districts...');
     const defaultSections = [
-      { name: 'VIP Diamond Section', rows: 3, seatsPerRow: 10, category: 'VIP' },
-      { name: 'Club Premium Tier', rows: 4, seatsPerRow: 10, category: 'Premium' },
+      { name: 'VIP Diamond Section', rows: 5, seatsPerRow: 10, category: 'VIP' },
+      { name: 'Club Premium Tier', rows: 5, seatsPerRow: 10, category: 'Premium' },
       { name: 'General Enclosure', rows: 5, seatsPerRow: 12, category: 'General' },
     ];
 
