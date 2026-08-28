@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import api from '../api/client.js';
 import EventCard from '../components/events/EventCard.jsx';
 import EventFilter from '../components/events/EventFilter.jsx';
+import Pagination from '../components/common/Pagination.jsx';
 import { EventCardSkeleton } from '../components/common/Skeleton.jsx';
 import { Sparkles, Calendar, Frown } from 'lucide-react';
 
@@ -129,31 +130,14 @@ export default function Events() {
             ))}
           </div>
 
-          {/* Pagination */}
-          {pagination.pages > 1 && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-              }}
-            >
-              {Array.from({ length: pagination.pages }).map((_, i) => {
-                const pageNum = i + 1;
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setPage(pageNum)}
-                    className={page === pageNum ? 'btn btn-primary' : 'btn btn-secondary'}
-                    style={{ width: '40px', height: '40px', padding: 0 }}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          {/* Smart Pagination with Range Display & Jump Dialog */}
+          <Pagination
+            currentPage={page}
+            totalPages={pagination.pages}
+            totalItems={pagination.total}
+            pageSize={12}
+            onPageChange={(newPage) => setPage(newPage)}
+          />
         </>
       )}
     </div>

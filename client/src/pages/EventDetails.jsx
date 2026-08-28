@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api/client.js';
 import Button from '../components/common/Button.jsx';
+import { getEventImage } from '../utils/categoryImages.js';
 import {
   Calendar,
   Clock,
@@ -93,7 +94,7 @@ export default function EventDetails() {
         }}
       >
         <img
-          src={event.bannerUrl}
+          src={getEventImage(event)}
           alt={event.title}
           style={{
             width: '100%',

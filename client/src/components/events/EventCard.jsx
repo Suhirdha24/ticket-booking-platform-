@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Ticket, ArrowRight } from 'lucide-react';
+import { getEventImage } from '../../utils/categoryImages.js';
 
 export default function EventCard({ event }) {
   const minPrice =
@@ -78,7 +79,7 @@ export default function EventCard({ event }) {
         }}
       >
         <img
-          src={event.thumbnailUrl || event.bannerUrl}
+          src={getEventImage(event)}
           alt={event.title}
           style={{
             width: '100%',
@@ -87,6 +88,7 @@ export default function EventCard({ event }) {
             transition: 'transform 0.5s ease',
           }}
           className="event-thumb"
+          loading="lazy"
         />
         <div
           style={{
