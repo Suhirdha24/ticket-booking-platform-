@@ -1,4 +1,11 @@
-# EventHub — Serverless Event Ticket Booking Platform
+# EventLinqs — Serverless Event Ticket Booking Platform
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://ticket-booking-platform-cj998r7iz-suhirdha24s-projects.vercel.app)
+[![Node.js](https://img.shields.io/badge/Node.js-24.x-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_ReplicaSet-forestgreen?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/atlas)
+
+> 🌐 **Live Production Website**: **[https://ticket-booking-platform-cj998r7iz-suhirdha24s-projects.vercel.app](https://ticket-booking-platform-cj998r7iz-suhirdha24s-projects.vercel.app)**
 
 A production-grade, high-concurrency **Event Ticket Booking Platform** engineered specifically for **Vercel's Node.js Serverless / Fluid Functions** architecture backed by **MongoDB Atlas**.
 
