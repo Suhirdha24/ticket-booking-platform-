@@ -292,6 +292,14 @@ a {
   color: var(--text-subtle);
 }
 
+.input-field:-webkit-autofill,
+.input-field:-webkit-autofill:hover, 
+.input-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0px 1000px #12151e inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Pulse Timer Animation */
 @keyframes timerPulse {
   0%, 100% {

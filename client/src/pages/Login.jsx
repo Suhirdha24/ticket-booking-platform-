@@ -256,77 +256,152 @@ export default function Login() {
             </p>
           </div>
 
-          {/* 1-Click Demo Logins for Evaluators */}
+          {/* Explicit Example Credentials Box */}
           <div
             style={{
-              background: 'rgba(234, 179, 8, 0.08)',
+              background: 'rgba(234, 179, 8, 0.06)',
               border: '1px solid rgba(234, 179, 8, 0.25)',
-              borderRadius: '14px',
-              padding: '1rem',
+              borderRadius: '16px',
+              padding: '1.2rem',
               marginBottom: '1.75rem',
             }}
           >
             <div
               style={{
-                fontSize: '0.74rem',
-                fontWeight: 800,
-                color: '#eab308',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                marginBottom: '0.65rem',
-                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '0.85rem',
               }}
             >
-              ⚡ 1-Click Demo Credentials
+              <div
+                style={{
+                  fontSize: '0.76rem',
+                  fontWeight: 800,
+                  color: '#eab308',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <Sparkles size={14} /> Example Login Credentials
+              </div>
+              <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Click to Auto-Fill</span>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
-              <button
-                type="button"
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '0.75rem' }}>
+              {/* Admin Example Card */}
+              <div
                 onClick={fillAdmin}
                 style={{
-                  padding: '0.55rem 0.75rem',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                  background: 'rgba(234, 179, 8, 0.15)',
-                  border: '1px solid rgba(234, 179, 8, 0.4)',
-                  color: '#eab308',
-                  borderRadius: '10px',
+                  padding: '0.85rem 1rem',
+                  borderRadius: '12px',
+                  background:
+                    email === 'admin@example.com'
+                      ? 'rgba(234, 179, 8, 0.18)'
+                      : 'rgba(255, 255, 255, 0.04)',
+                  border:
+                    email === 'admin@example.com'
+                      ? '1.5px solid #eab308'
+                      : '1px solid rgba(255, 255, 255, 0.1)',
                   cursor: 'pointer',
-                  transition: 'all 0.2s',
+                  transition: 'all 0.2s ease',
                 }}
               >
-                <Shield size={14} /> Admin
-              </button>
-              <button
-                type="button"
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#eab308', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <Shield size={13} /> Admin Account
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.65rem',
+                      fontWeight: 700,
+                      color: '#000000',
+                      background: '#eab308',
+                      padding: '0.15rem 0.45rem',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    Use Admin
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#cbd5e1', lineHeight: 1.4 }}>
+                  <span style={{ color: '#94a3b8' }}>Email:</span> <strong style={{ color: '#ffffff' }}>admin@example.com</strong>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#cbd5e1', lineHeight: 1.4, marginTop: '0.2rem' }}>
+                  <span style={{ color: '#94a3b8' }}>Password:</span> <strong style={{ color: '#ffffff' }}>Admin@123456</strong>
+                </div>
+              </div>
+
+              {/* Standard User Example Card */}
+              <div
                 onClick={fillUser}
                 style={{
-                  padding: '0.55rem 0.75rem',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.85rem 1rem',
+                  borderRadius: '12px',
+                  background:
+                    email === 'user@example.com'
+                      ? 'rgba(234, 179, 8, 0.18)'
+                      : 'rgba(255, 255, 255, 0.04)',
+                  border:
+                    email === 'user@example.com'
+                      ? '1.5px solid #eab308'
+                      : '1px solid rgba(255, 255, 255, 0.1)',
                   cursor: 'pointer',
-                  transition: 'all 0.2s',
+                  transition: 'all 0.2s ease',
                 }}
               >
-                <UserCheck size={14} /> Standard User
-              </button>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <UserCheck size={13} /> Standard User
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.65rem',
+                      fontWeight: 700,
+                      color: '#ffffff',
+                      background: 'rgba(255, 255, 255, 0.15)',
+                      padding: '0.15rem 0.45rem',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    Use User
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#cbd5e1', lineHeight: 1.4 }}>
+                  <span style={{ color: '#94a3b8' }}>Email:</span> <strong style={{ color: '#ffffff' }}>user@example.com</strong>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#cbd5e1', lineHeight: 1.4, marginTop: '0.2rem' }}>
+                  <span style={{ color: '#94a3b8' }}>Password:</span> <strong style={{ color: '#ffffff' }}>User@123456</strong>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Form Fields */}
-          <form onSubmit={handleLogin} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <form
+            onSubmit={handleLogin}
+            autoComplete="off"
+            style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+          >
+            {/* Decoy fields to trap browser autofill algorithms */}
+            <input
+              type="text"
+              name="fake_username_prevent_autofill"
+              style={{ display: 'none' }}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+            <input
+              type="password"
+              name="fake_password_prevent_autofill"
+              style={{ display: 'none' }}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+
             <div className="input-group">
               <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>
                 Email Address
@@ -344,17 +419,23 @@ export default function Login() {
                 />
                 <input
                   type="email"
+                  name="eventlinqs_login_email_input"
+                  id="eventlinqs_login_email_input"
                   className="input-field"
                   style={{
                     paddingLeft: '2.75rem',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    borderColor: 'rgba(255, 255, 255, 0.12)',
+                    background: '#12151e',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.15)',
                     fontSize: '0.95rem',
                   }}
                   placeholder="e.g. admin@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="none"
+                  spellCheck="false"
                   required
                 />
               </div>
@@ -379,18 +460,21 @@ export default function Login() {
                 />
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  name="eventlinqs_login_password_input"
+                  id="eventlinqs_login_password_input"
                   className="input-field"
                   style={{
                     paddingLeft: '2.75rem',
                     paddingRight: '2.75rem',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    borderColor: 'rgba(255, 255, 255, 0.12)',
+                    background: '#12151e',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.15)',
                     fontSize: '0.95rem',
                   }}
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                 />
                 <button
