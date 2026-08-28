@@ -1,71 +1,86 @@
-# EventLinqs — Serverless Event Ticket Booking Platform
+# 🎟️ EventLinqs — Serverless Event Ticket Booking Platform
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://ticket-booking-platform-cj998r7iz-suhirdha24s-projects.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://ticket-booking-platform-rouge.vercel.app/)
 [![Node.js](https://img.shields.io/badge/Node.js-24.x-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
 [![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_ReplicaSet-forestgreen?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/atlas)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-> 🌐 **Live Production Website**: **[https://ticket-booking-platform-cj998r7iz-suhirdha24s-projects.vercel.app](https://ticket-booking-platform-cj998r7iz-suhirdha24s-projects.vercel.app)**
+> 🌐 **Live Production Website**: **[https://ticket-booking-platform-rouge.vercel.app/](https://ticket-booking-platform-rouge.vercel.app/)**
 
-A production-grade, high-concurrency **Event Ticket Booking Platform** engineered specifically for **Vercel's Node.js Serverless / Fluid Functions** architecture backed by **MongoDB Atlas**.
-
----
-
-## 🌟 Key Highlights & Engineering Features
-
-- **⚡ Zero Always-Running Server Dependencies**: Built entirely for Vercel's serverless model (`api/index.js` wrapping Express `server/app.js`). No persistent `app.listen()` daemon required in production.
-- **🍃 Serverless Cached Mongoose Pool**: Global connection cache manager in `server/config/db.js` prevents connection exhaustion across serverless function lifecycles and cold starts.
-- **🔒 MongoDB-Authoritative Atomic Concurrency**: Strict atomic seat reservation locking with optimistic version checks. If two users simultaneously attempt to claim the exact same seat, **exactly one succeeds (`HTTP 201`)** and the losing request immediately receives **`HTTP 409 Conflict` (`SEAT_ALREADY_HELD`)**.
-- **⏱️ Lazy 5-Minute Hold Expiry (No `setInterval`)**: Seat locks expire strictly after 5 minutes based on authoritative server timestamps (`heldExpiresAt <= Date.now()`). No background timer process required.
-- **💳 Multi-Step Transactional Booking & Mock Payments**: ACID multi-document MongoDB transactions transition reservation -> `COMPLETED`, seats -> `BOOKED`, and create `Booking` snapshots with cryptographic QR verification tokens.
-- **🎫 Verifiable Digital E-Ticket Passes**: Scannable HMAC-SHA256 signed QR codes rendered dynamically on canvas, instant `.ics` Apple/Google calendar export, and print/PDF ready layouts.
-- **🛡️ Configurable 24-Hour Cancellation Cutoff**: Enforces organizer cancellation cutoff policies before triggering seat releases and payment refunds.
-- **📊 MongoDB Aggregation Admin Analytics**: Multi-facet pipelines calculate gross revenue, ticket sales, category breakdowns, and recent order streams.
-- **✨ Premium Glassmorphic Design System**: Rich dark-mode aesthetics, luminous gradients, micro-animations, skeleton loaders, and interactive stadium/theatre seat maps.
+A full-stack, production-grade, high-concurrency **Event Ticket Booking Platform** engineered specifically for **Vercel's Node.js Serverless Functions** architecture backed by **MongoDB Atlas Replica Sets**.
 
 ---
 
-## 🏗️ Architecture
+## 🌟 Key Highlights & Features
+
+- **⚡ Serverless Architecture**: Powered by Vercel Serverless Functions (`api/index.js` wrapping Express 4 backend) with zero persistent server dependencies.
+- **🍃 Connection-Pooled Mongoose**: Global cached connection manager in `server/config/db.js` prevents connection exhaustion across serverless cold starts.
+- **🔒 Atomic Concurrency & 5-Minute Seat Locking**: Strict atomic seat reservation locking with optimistic version checks. If two attendees simultaneously attempt to claim the exact same seat, **exactly one succeeds (`HTTP 201`)** and the other immediately receives **`HTTP 409 Conflict` (`SEAT_ALREADY_HELD`)**.
+- **⏱️ Lazy Expiration (No Cron / setInterval Required)**: Seat locks expire strictly after 5 minutes based on authoritative server timestamps (`heldExpiresAt <= Date.now()`).
+- **💺 Interactive 160-Seat Stadium Map**: Visual seating grid with 50+ seats per tier:
+  - 👑 **VIP Front Row**: **50 Seats** (Rows A to E × 10 seats)
+  - ⭐ **Premium Central**: **50 Seats** (Rows A to E × 10 seats)
+  - 🎟️ **General Upper Tier**: **60 Seats** (Rows A to E × 12 seats)
+- **🏷️ Real-Time Tier Filter Pills**: Switch between All Sections, VIP, Premium, and General with real-time seat availability counts.
+- **💳 Multi-Method Mock Payments**:
+  - **UPI / Apps**: Google Pay, Paytm, PhonePe with smart 10-digit mobile number auto-formatting (e.g. `9876543290` → `9876543290@okhdfcbank`) and standard VPA support.
+  - **Credit / Debit Cards**: Card simulation with test failure modes.
+  - **Net Banking**: Instant bank checkout clearance.
+- **🎫 Cryptographic Digital E-Ticket Passes**: Scannable HMAC-SHA256 signed QR codes rendered on canvas, instant `.ics` Apple/Google calendar export, and print/PDF ready ticket passes.
+- **🛡️ 24-Hour Cancellation & Automated Refunds**: Enforces event cancellation cutoff windows before releasing seats back to `AVAILABLE` status.
+- **🔐 Dedicated Authentication Portals**:
+  - Attendee Sign-In: `/login` (and `/user/login`)
+  - Administrator Sign-In: `/admin/login`
+  - Anti-autofill security and duplicate user validation alerts with 1-click Sign-In redirection.
+- **📊 Admin Analytics & Event Management**: Multi-facet MongoDB aggregation pipeline computing gross revenue, category distributions, occupancy rates, and recent transaction logs.
+- **✨ Luxury Golden Glassmorphism**: Tailored dark-mode styling with amber gold accents, skeleton loaders, and micro-animations.
+
+---
+
+## 🏗️ Architecture & Request Flow
 
 ```
-GitHub
-  ↓
-Vercel Deployment
-  ├── React / Vite Frontend (SPA Routing)
-  │     ├── /                      (Hero showcase & trending events)
-  │     ├── /events                (Filter catalog by category, city, date, price)
-  │     ├── /event/:id             (Event overview & pricing tiers)
-  │     ├── /event/:id/seats       (Interactive visual seat map)
-  │     ├── /checkout/:id          (5-min lock timer & mock payment form)
-  │     ├── /success/:id           (Confirmed digital pass with QR code)
-  │     ├── /my-bookings           (Upcoming/past tickets with 24h cancellation)
-  │     └── /admin/*               (Analytics metrics & event management)
-  │
-  └── Express API (Serverless Handler in api/index.js)
-        ├── /api/auth/*            (JWT registration, login, profile)
-        ├── /api/events/*          (Event discovery & admin CRUD)
-        ├── /api/venues/*          (Venues & layout configurations)
-        ├── /api/events/:id/seats  (Dynamic seat effective status)
-        ├── /api/reservations/*    (Atomic concurrency claiming)
-        ├── /api/bookings/*        (Transactional booking & payment)
-        ├── /api/admin/*           (Aggregation dashboard & oversight)
-        └── /api/health            (Status check)
-        ↓
+User Browser / Client
+   ↓
+Vercel Edge Network
+   ├── React / Vite Single Page Application (client/dist)
+   │     ├── /                      (Hero showcase & trending events)
+   │     ├── /events                (Catalog filters by category, city, date, price)
+   │     ├── /event/:id             (Event overview & pricing tiers)
+   │     ├── /event/:id/seats       (Interactive visual seat map & tier filters)
+   │     ├── /checkout/:id          (5-min reservation timer & mock payment form)
+   │     ├── /success/:id           (Confirmed digital pass with QR verification)
+   │     ├── /my-bookings           (Active & past tickets with cancellation)
+   │     ├── /login                 (Attendee authentication)
+   │     ├── /admin/login           (Dedicated administrator authentication)
+   │     └── /admin/*               (Analytics metrics & event management)
+   │
+   └── Express API (Serverless Handler in api/index.js)
+         ├── /api/auth/*            (JWT registration, login, profile)
+         ├── /api/events/*          (Event discovery & admin CRUD)
+         ├── /api/venues/*          (Venues & layout configurations)
+         ├── /api/events/:id/seats  (Dynamic seat effective status & auto-generation)
+         ├── /api/reservations/*    (Atomic concurrency locking)
+         ├── /api/bookings/*        (Transactional booking & payment)
+         ├── /api/admin/*           (Aggregation dashboard & oversight)
+         └── /api/health            (Status check)
+         ↓
    MongoDB Atlas (Replica Set)
 ```
 
 ---
 
-## 📁 Folder Structure
+## 📁 Repository Structure
 
 ```
 ├── api/
 │   └── index.js                      # Vercel serverless function entrypoint
 ├── server/
-│   ├── app.js                        # Express setup, CORS, Helmet, routes, centralized error handling
+│   ├── app.js                        # Express app, CORS, Helmet, routes, centralized error handling
 │   ├── server.js                     # Local development server ONLY (app.listen)
 │   ├── config/
-│   │   └── db.js                     # Serverless-cached Mongoose connection manager
+│   │   └── db.js                     # Serverless-cached Mongoose connection pool
 │   ├── models/
 │   │   ├── User.js                   # User model with bcrypt hashing & roles
 │   │   ├── Venue.js                  # Venue model with section layout blueprints
@@ -76,27 +91,27 @@ Vercel Deployment
 │   ├── middleware/
 │   │   ├── auth.js                   # JWT authenticate & requireAdmin middlewares
 │   │   ├── validate.js               # Payload validation middlewares
-│   │   └── errorHandler.js          # Centralized error handler with standardized error envelope
+│   │   └── errorHandler.js          # Centralized error handler with standardized JSON envelopes
 │   ├── routes/
 │   │   ├── authRoutes.js             # /api/auth
-│   │   ├── eventRoutes.js            # /api/events
+│   │   ├── eventRoutes.js            # /api/events (seat generator helper)
 │   │   ├── venueRoutes.js            # /api/venues
-│   │   ├── seatRoutes.js             # /api/events/:eventId/seats
+│   │   ├── seatRoutes.js             # /api/events/:eventId/seats (effective status)
 │   │   ├── reservationRoutes.js      # /api/reservations (atomic concurrency lock)
 │   │   ├── bookingRoutes.js          # /api/bookings (transactional payment & booking)
 │   │   └── adminRoutes.js            # /api/admin (aggregations)
 │   ├── services/
-│   │   ├── paymentService.js         # Mock payment service (CARD, UPI, NET_BANKING)
-│   │   └── qrService.js              # Cryptographic QR token generator & verifier
+│   │   ├── paymentService.js         # Mock payment service (UPI, CARD, NET_BANKING)
+│   │   └── qrService.js              # Cryptographic QR HMAC token generator & verifier
 │   ├── scripts/
-│   │   └── seed.js                   # Database seeder (Admin, User, Venues, Events, Seats)
+│   │   └── seed.js                   # Database seeder (Admin, Users, Venues, Events, Seats)
 │   └── tests/
 │       ├── setup.js                  # MongoMemoryServer test harness
 │       ├── auth.test.js              # Auth & RBAC tests
 │       ├── events.test.js            # Event search & filter tests
 │       ├── seats.test.js             # Computed effective seat status tests
 │       ├── reservation.test.js       # Atomic reservation & 5-min expiry tests
-│       ├── concurrency.test.js       # CRITICAL: 2-user 1-seat concurrent collision test
+│       ├── concurrency.test.js       # CRITICAL: 2-user simultaneous collision test
 │       ├── booking.test.js           # Transactional booking & payment failure tests
 │       └── cancellation.test.js      # 24h cutoff cancellation tests
 ├── client/
@@ -105,14 +120,14 @@ Vercel Deployment
 │   ├── src/
 │   │   ├── main.jsx                  # React DOM mount point
 │   │   ├── App.jsx                   # React Router registry & protected routes
-│   │   ├── index.css                 # Glassmorphic custom CSS design system
+│   │   ├── index.css                 # Amber Gold Luxury design system tokens
 │   │   ├── api/client.js             # Axios client using relative /api baseURL
 │   │   ├── store/                    # Zustand state stores (auth, reservation, toast)
 │   │   ├── components/               # UI components (SeatMap, TicketCard, OrderSummary, etc.)
-│   │   └── pages/                    # Application pages (Home, Events, SeatSelection, etc.)
+│   │   └── pages/                    # Routed pages (Home, Events, SeatSelection, etc.)
 ├── vercel.json                       # Vercel serverless routing, build command, SPA fallback
 ├── package.json                      # Root configuration with dev, test, and build scripts
-└── README.md                         # Project documentation
+└── README.md                         # Documentation
 ```
 
 ---
@@ -120,14 +135,14 @@ Vercel Deployment
 ## 🚀 Quickstart & Local Development
 
 ### 1. Prerequisites
-- **Node.js**: v18.0.0 or higher (v20+ recommended)
-- **MongoDB**: Local MongoDB instance or free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
+- **Node.js**: v20.x or v22+ (tested up to Node 24)
+- **MongoDB**: Local MongoDB instance or [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
 
 ### 2. Installation
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ticket-booking-platform.git
-cd ticket-booking-platform
+git clone https://github.com/Suhirdha24/ticket-booking-platform-.git
+cd ticket-booking-platform-
 
 # Install root dependencies
 npm install
@@ -139,54 +154,42 @@ cd client && npm install && cd ..
 ### 3. Environment Configuration
 Create a `.env` file in the project root:
 ```env
-MONGODB_URI=mongodb://localhost:27017/ticket-booking-platform
-# For MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/ticket-booking-platform?retryWrites=true&w=majority
-
-JWT_SECRET=super_secret_jwt_key_for_development_2026
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/ticket-booking-platform?retryWrites=true&w=majority
+JWT_SECRET=eventhub_jwt_super_secret_key_2026
 JWT_EXPIRES_IN=7d
-QR_SECRET=super_secret_qr_hmac_key_2026
+QR_SECRET=eventhub_qr_hmac_secret_2026
 ADMIN_SECRET=eventhub_admin_secret_key_2026
 PORT=5000
 NODE_ENV=development
 ```
 
 ### 4. Database Seeding
-Populate realistic venues, events, seat layouts, and demo accounts:
+Populate realistic venues, events across Indian cities, complete 160-seat stadium layouts, and demo accounts:
 ```bash
 npm run seed
 ```
 
-**Demo Accounts Created:**
-| Role | Email | Password |
-|---|---|---|
-| **Admin** | `admin@example.com` | `Admin@123456` |
-| **Standard User** | `user@example.com` | `User@123456` |
-| **Test User 2** | `alex@example.com` | `User@123456` |
-
-*(Note: 1-Click login buttons are available on the Login page for instant evaluator sign-in).*
-
 ### 5. Running the Local Dev Environment
 ```bash
-# Runs both Express backend (Port 5000) and Vite frontend (Port 3000) concurrently
+# Runs Express backend (Port 5000) and Vite frontend (Port 3000) concurrently with watch mode
 npm run dev
 ```
 
 Visit:
-- **Frontend App**: `http://localhost:3000`
+- **Frontend**: `http://localhost:3000`
 - **Backend API Health**: `http://localhost:5000/api/health`
 
 ---
 
-## 🧪 Automated Testing Suite
+## 🧪 Automated Test Suite (15 Test Suites)
 
-The project includes a comprehensive automated test suite powered by **Vitest**, **Supertest**, and **MongoMemoryServer**:
+The project includes an automated test suite powered by **Vitest**, **Supertest**, and **MongoMemoryServer**:
 
 ```bash
 npm test
 ```
 
-### Verified Test Suites (15 Core Scenarios):
+### Core Verified Scenarios:
 1. **User Registration** (`POST /api/auth/register`)
 2. **User Login** (`POST /api/auth/login`)
 3. **Invalid Login Rejection** (Bad password / non-existent email)
@@ -215,9 +218,9 @@ sequenceDiagram
     participant API as Vercel Serverless Function
     participant DB as MongoDB Atlas
 
-    Note over User A, User B: Simultaneously click Seat A1
-    User A->>API: POST /api/reservations (seat A1)
-    User B->>API: POST /api/reservations (seat A1)
+    Note over User A, User B: Simultaneously click Seat VIP-A1
+    User A->>API: POST /api/reservations (seat VIP-A1)
+    User B->>API: POST /api/reservations (seat VIP-A1)
     
     API->>DB: Atomic findOneAndUpdate with status: AVAILABLE or expired HELD
     Note over DB: Lock claimed by User A (version incremented)
@@ -229,62 +232,27 @@ sequenceDiagram
     API-->>User B: HTTP 409 Conflict {"error": {"code": "SEAT_ALREADY_HELD"}}
 ```
 
-### Error Response Envelope:
-All API errors return a uniform, machine-readable JSON structure:
-```json
-{
-  "success": false,
-  "error": {
-    "code": "SEAT_ALREADY_HELD",
-    "message": "One or more selected seats are no longer available."
-  }
-}
-```
-
 ---
 
-## ☁️ Vercel Production Deployment Guide
+## ☁️ Vercel Production Deployment
 
 ### 1. Push to GitHub
 ```bash
 git add .
-git commit -m "feat: complete serverless event ticket booking platform"
-git push origin main
+git commit -m "chore: deploy to vercel"
+git push -u origin main
 ```
 
-### 2. Deploy on Vercel
-1. Log in to [Vercel](https://vercel.com) and click **"Add New Project"**.
-2. Import your GitHub repository.
-3. In **Project Settings**:
-   - **Framework Preset**: Vite
-   - **Root Directory**: `./` (leave default)
-   - **Build Command**: `cd client && npm install && npm run build`
-   - **Output Directory**: `client/dist`
-4. Add the following **Environment Variables** in the Vercel Dashboard:
-   - `MONGODB_URI`: Your MongoDB Atlas cluster connection string
-   - `JWT_SECRET`: A secure random 64-character secret
-   - `QR_SECRET`: A secure random 64-character secret
-   - `ADMIN_SECRET`: Secret for admin provisioning (optional)
+### 2. Configure on Vercel
+1. Import repository on [vercel.com/new](https://vercel.com/new).
+2. Set Environment Variables:
+   - `MONGODB_URI`: MongoDB Atlas connection string
+   - `JWT_SECRET`: Secret key for JWT signing
+   - `QR_SECRET`: HMAC key for QR codes
    - `NODE_ENV`: `production`
-5. Click **Deploy**.
-
-### 3. Verification on Vercel:
-- `https://your-app.vercel.app/` loads the React frontend.
-- `https://your-app.vercel.app/api/health` returns `{"status":"ok"}`.
-- `https://your-app.vercel.app/api/events` returns live events from MongoDB Atlas.
-- Client-side routes (e.g. `/events`, `/my-bookings`) reload without 404s due to `vercel.json` SPA rewrites.
-
----
-
-## 💳 Mock Payment Modes
-
-| Method | Test Instructions |
-|---|---|
-| **CARD** | Enter any 16-digit card number (e.g. `4242 4242 4242 4242`). Check *"Test Mode"* to simulate card decline. |
-| **UPI** | Enter standard VPA (e.g. `user@okhdfcbank`). Use `fail@upi` to simulate bank timeout. |
-| **NET_BANKING** | Select any supported bank from the dropdown for instant mock clearance. |
+3. Click **Deploy**.
 
 ---
 
 ## 📄 License
-MIT License. Built with ❤️ by the Antigravity engineering team.
+MIT License. Built with ❤️ for EventLinqs.
