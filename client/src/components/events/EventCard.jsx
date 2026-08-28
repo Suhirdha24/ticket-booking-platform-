@@ -40,6 +40,20 @@ export default function EventCard({ event }) {
         return 'badge-vip';
       case 'Comedy':
         return 'badge-success';
+      case 'Festival':
+        return 'badge-primary';
+      case 'Workshop':
+        return 'badge-general';
+      case 'Gaming':
+        return 'badge-vip';
+      case 'Meetup':
+        return 'badge-premium';
+      case 'Wellness':
+        return 'badge-success';
+      case 'Nightlife':
+        return 'badge-primary';
+      case 'Kids & Family':
+        return 'badge-success';
       default:
         return 'badge-primary';
     }

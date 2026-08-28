@@ -1,7 +1,22 @@
 import React from 'react';
 import { Search, Filter, RotateCcw, MapPin } from 'lucide-react';
 
-const CATEGORIES = ['All', 'Concert', 'Sports', 'Comedy', 'Festival', 'Theatre', 'Conference', 'Exhibition'];
+const CATEGORIES = [
+  'All',
+  'Concert',
+  'Sports',
+  'Comedy',
+  'Festival',
+  'Theatre',
+  'Conference',
+  'Exhibition',
+  'Workshop',
+  'Gaming',
+  'Meetup',
+  'Wellness',
+  'Nightlife',
+  'Kids & Family',
+];
 const CITIES = [
   'All',
   'Ahmedabad',
