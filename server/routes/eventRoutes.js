@@ -11,10 +11,37 @@ const router = express.Router();
 /**
  * Helper to generate event-specific seats from Venue sections
  */
-export async function generateSeatsForEvent(eventParam, venue, pricingTiers = []) {
+export async function generateSeatsForEvent(eventParam, venueParam, pricingTiers = []) {
   let event = eventParam;
   if (typeof eventParam === 'string' || eventParam instanceof mongoose.Types.ObjectId) {
     event = await Event.findById(eventParam);
+  }
+  if (!event) return 0;
+
+  let venue = venueParam;
+  if (!venue && event.venue) {
+    venue = await Venue.findById(event.venue);
+  }
+  if (!venue) {
+    venue = await Venue.findOne();
+  }
+  if (!venue) {
+    venue = await Venue.create({
+      name: 'Grand Arena',
+      city: event.city || 'Chennai',
+      address: 'Main Stadium Complex',
+      capacity: 130,
+      sections: [
+        { name: 'VIP Front Row', category: 'VIP', rows: 2, seatsPerRow: 10 },
+        { name: 'Premium Central', category: 'Premium', rows: 3, seatsPerRow: 15 },
+        { name: 'General Upper Tier', category: 'General', rows: 5, seatsPerRow: 13 },
+      ],
+    });
+  }
+
+  if (!event.venue || event.venue.toString() !== venue._id.toString()) {
+    event.venue = venue._id;
+    await event.save();
   }
 
   const tiers = pricingTiers.length > 0 ? pricingTiers : event?.pricing || [];
@@ -26,19 +53,35 @@ export async function generateSeatsForEvent(eventParam, venue, pricingTiers = []
   const defaultPrices = {
     VIP: 150,
     Premium: 90,
-    General: 45,
+    General: 50,
   };
+
+  const sections =
+    venue.sections && Array.isArray(venue.sections) && venue.sections.length > 0
+      ? venue.sections
+      : [
+          { name: 'VIP Front Row', category: 'VIP', rows: 2, seatsPerRow: 10 },
+          { name: 'Premium Central', category: 'Premium', rows: 3, seatsPerRow: 15 },
+          { name: 'General Upper Tier', category: 'General', rows: 5, seatsPerRow: 13 },
+        ];
+
+  // Remove any broken/incomplete seats for this event before recreating
+  await Seat.deleteMany({ event: event._id });
 
   const seatsToInsert = [];
 
-  for (const section of venue.sections || []) {
-    const category = section.category || 'General';
+  for (const section of sections) {
+    let category = section.category || 'General';
+    if (!['VIP', 'Premium', 'General'].includes(category)) {
+      category = 'General';
+    }
     const price = priceMap[category] || defaultPrices[category] || 50;
 
     for (let r = 1; r <= section.rows; r++) {
       const rowLetter = String.fromCharCode(64 + r); // A, B, C...
       for (let s = 1; s <= section.seatsPerRow; s++) {
-        const seatNumber = `${section.name}-${rowLetter}${s}`;
+        const sectionPrefix = section.name.split(' ')[0] || 'S';
+        const seatNumber = `${sectionPrefix}-${rowLetter}${s}`;
         seatsToInsert.push({
           event: event._id,
           venue: venue._id,

@@ -307,48 +307,32 @@ export default function Navbar() {
             />
           </button>
 
-          {/* 4. SELL TICKET POPUP TOGGLE */}
-          <button
-            onClick={() => togglePopup('sell')}
+          {/* 4. MY BOOKINGS / MY TICKETS DIRECT LINK */}
+          <Link
+            to="/my-bookings"
+            onClick={closePopups}
             style={{
-              background: 'transparent',
-              border: 'none',
               fontSize: '0.95rem',
               fontWeight: 600,
-              color: activeNavPopup === 'sell' ? '#eab308' : '#e2e8f0',
-              cursor: 'pointer',
+              color: location.pathname === '/my-bookings' ? '#eab308' : '#e2e8f0',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem',
+              gap: '0.4rem',
               padding: '0.4rem 0.6rem',
               borderRadius: '6px',
+              textDecoration: 'none',
               transition: 'all 0.2s ease',
             }}
+            onMouseEnter={(e) => {
+              if (location.pathname !== '/my-bookings') e.currentTarget.style.color = '#eab308';
+            }}
+            onMouseLeave={(e) => {
+              if (location.pathname !== '/my-bookings') e.currentTarget.style.color = '#e2e8f0';
+            }}
           >
-            <span>Sell Ticket</span>
-            <ChevronDown
-              size={15}
-              style={{
-                transform: activeNavPopup === 'sell' ? 'rotate(180deg)' : 'none',
-                transition: 'transform 0.2s ease',
-              }}
-            />
-          </button>
-
-          {isAuthenticated && (
-            <Link
-              to="/my-bookings"
-              onClick={closePopups}
-              style={{
-                fontSize: '0.95rem',
-                fontWeight: 500,
-                color: location.pathname === '/my-bookings' ? '#eab308' : 'var(--text-muted)',
-                transition: 'color 0.2s',
-              }}
-            >
-              My Tickets
-            </Link>
-          )}
+            <Ticket size={16} color={location.pathname === '/my-bookings' ? '#eab308' : '#94a3b8'} />
+            <span>My Bookings</span>
+          </Link>
 
           {user?.role === 'admin' && (
             <Link
@@ -357,14 +341,18 @@ export default function Navbar() {
               style={{
                 fontSize: '0.95rem',
                 fontWeight: 600,
-                color: '#eab308',
+                color: location.pathname.startsWith('/admin') ? '#eab308' : 'var(--text-muted)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.35rem',
+                padding: '0.4rem 0.6rem',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                transition: 'color 0.2s',
               }}
             >
-              <Shield size={16} />
-              Admin Portal
+              <Shield size={16} color="#eab308" />
+              <span>Admin Portal</span>
             </Link>
           )}
         </div>
@@ -962,10 +950,10 @@ export default function Navbar() {
           <div className="container" style={{ maxWidth: '850px' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#eab308', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.4rem' }}>
-                Sell Tickets with Zero Friction
+                Host & Launch with Zero Friction
               </div>
               <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#ffffff' }}>
-                List Your Event on EventLinqs in 3 Easy Steps
+                List & Manage Your Event in 3 Easy Steps
               </h3>
             </div>
 

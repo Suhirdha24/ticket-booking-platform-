@@ -27,14 +27,37 @@ router.get('/', optionalAuth, async (req, res, next) => {
       .lean();
 
     // Auto-generate seats from venue sections if not yet populated
-    if (seats.length === 0 && event.venue) {
-      const venue = await Venue.findById(event.venue);
-      if (venue) {
-        await generateSeatsForEvent(event, venue, event.pricing);
-        seats = await Seat.find({ event: eventId })
-          .sort({ section: 1, row: 1, seatNumber: 1 })
-          .lean();
+    if (seats.length === 0) {
+      let venue = null;
+      if (event.venue) {
+        venue = await Venue.findById(event.venue);
       }
+      if (!venue) {
+        venue = await Venue.findOne();
+      }
+      if (!venue) {
+        venue = await Venue.create({
+          name: 'Grand Arena',
+          city: event.city || 'Chennai',
+          address: 'Main Stadium Complex',
+          capacity: 130,
+          sections: [
+            { name: 'VIP Front Row', category: 'VIP', rows: 2, seatsPerRow: 10 },
+            { name: 'Premium Central', category: 'Premium', rows: 3, seatsPerRow: 15 },
+            { name: 'General Upper Tier', category: 'General', rows: 5, seatsPerRow: 13 },
+          ],
+        });
+      }
+
+      if (!event.venue) {
+        event.venue = venue._id;
+        await event.save();
+      }
+
+      await generateSeatsForEvent(event, venue, event.pricing);
+      seats = await Seat.find({ event: eventId })
+        .sort({ section: 1, row: 1, seatNumber: 1 })
+        .lean();
     }
 
     const now = new Date();

@@ -55,11 +55,6 @@ export default function AdminLogin() {
     }
   };
 
-  const fillAdmin = () => {
-    setEmail('admin@example.com');
-    setPassword('Admin@123456');
-  };
-
   return (
     <div
       style={{
@@ -296,71 +291,9 @@ export default function AdminLogin() {
             <h2 className="font-serif-editorial" style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff' }}>
               Admin Sign In
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '0.3rem', marginBottom: '1.75rem' }}>
               Enter your administrative credentials to access the management portal
             </p>
-          </div>
-
-          {/* Single Admin Example Credential Card */}
-          <div
-            onClick={fillAdmin}
-            style={{
-              background:
-                email === 'admin@example.com'
-                  ? 'rgba(234, 179, 8, 0.18)'
-                  : 'rgba(234, 179, 8, 0.08)',
-              border:
-                email === 'admin@example.com'
-                  ? '1.5px solid #eab308'
-                  : '1px solid rgba(234, 179, 8, 0.3)',
-              borderRadius: '16px',
-              padding: '1.15rem 1.25rem',
-              marginBottom: '1.75rem',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '0.6rem',
-              }}
-            >
-              <span
-                style={{
-                  fontSize: '0.82rem',
-                  fontWeight: 800,
-                  color: '#eab308',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.35rem',
-                }}
-              >
-                <Sparkles size={14} /> Example Admin Account
-              </span>
-              <span
-                style={{
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  color: '#000000',
-                  background: '#eab308',
-                  padding: '0.15rem 0.5rem',
-                  borderRadius: '6px',
-                }}
-              >
-                Click to Auto-Fill
-              </span>
-            </div>
-            <div style={{ fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.5 }}>
-              <span style={{ color: '#94a3b8' }}>Email:</span>{' '}
-              <strong style={{ color: '#ffffff' }}>admin@example.com</strong>
-            </div>
-            <div style={{ fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.5, marginTop: '0.2rem' }}>
-              <span style={{ color: '#94a3b8' }}>Password:</span>{' '}
-              <strong style={{ color: '#ffffff' }}>Admin@123456</strong>
-            </div>
           </div>
 
           {/* Form Fields */}

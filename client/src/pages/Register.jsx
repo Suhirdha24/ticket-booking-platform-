@@ -15,6 +15,7 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
+  AlertTriangle,
 } from 'lucide-react';
 
 export default function Register() {
@@ -38,10 +39,18 @@ export default function Register() {
       showSuccessToast('Registration Successful!', `Welcome to EventLinqs, ${user.name}`);
       navigate(redirect);
     } catch (err) {
-      if (err.message && err.message.toLowerCase().includes('already exists')) {
+      const errorMsg = err.message || '';
+      if (
+        errorMsg.toLowerCase().includes('already exists') ||
+        errorMsg.toLowerCase().includes('duplicate') ||
+        errorMsg.toLowerCase().includes('user_exists') ||
+        err.code === 'USER_EXISTS'
+      ) {
         setAlreadyExists(true);
+        showErrorToast('User Already Exists', `An account with ${email} is already registered. Please sign in.`);
+      } else {
+        showErrorToast('Registration Failed', errorMsg);
       }
-      showErrorToast('Registration Failed', err.message);
     }
   };
 
@@ -247,33 +256,44 @@ export default function Register() {
 
           {alreadyExists && (
             <div
+              className="animate-fade-in"
               style={{
                 background: 'rgba(234, 179, 8, 0.12)',
-                border: '1px solid rgba(234, 179, 8, 0.35)',
-                borderRadius: '12px',
-                padding: '1rem',
+                border: '1.5px solid #eab308',
+                borderRadius: '16px',
+                padding: '1.25rem',
                 marginBottom: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '0.65rem',
+                gap: '0.75rem',
               }}
             >
-              <div style={{ fontSize: '0.88rem', color: '#fbbf24', fontWeight: 600 }}>
-                ⚠️ An account with <strong>{email}</strong> already exists.
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#eab308', fontWeight: 800, fontSize: '0.95rem' }}>
+                <AlertTriangle size={18} /> User / Account Already Exists
+              </div>
+              <div style={{ fontSize: '0.88rem', color: '#e2e8f0', lineHeight: 1.5 }}>
+                An account with the email <strong style={{ color: '#ffffff' }}>{email}</strong> is already registered in the system.
               </div>
               <Link
                 to={`/login?email=${encodeURIComponent(email)}&redirect=${encodeURIComponent(redirect)}`}
                 style={{
-                  fontSize: '0.85rem',
-                  padding: '0.5rem 0.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  padding: '0.65rem 1rem',
                   background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
                   color: '#000000',
-                  fontWeight: 700,
-                  borderRadius: '8px',
+                  fontWeight: 800,
+                  borderRadius: '10px',
                   textAlign: 'center',
+                  textDecoration: 'none',
+                  fontSize: '0.88rem',
+                  boxShadow: '0 4px 12px rgba(234, 179, 8, 0.3)',
                 }}
               >
-                👉 Sign In with {email} instead
+                <span>Sign In with {email} Now</span>
+                <ArrowRight size={15} />
               </Link>
             </div>
           )}
@@ -297,8 +317,9 @@ export default function Register() {
                   className="input-field"
                   style={{
                     paddingLeft: '2.75rem',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    borderColor: 'rgba(255, 255, 255, 0.12)',
+                    background: '#12151e',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.15)',
                   }}
                   placeholder="Jane Doe"
                   value={name}
@@ -319,7 +340,7 @@ export default function Register() {
                     left: '1rem',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    color: 'var(--text-subtle)',
+                    color: alreadyExists ? '#eab308' : 'var(--text-subtle)',
                   }}
                 />
                 <input
@@ -327,16 +348,26 @@ export default function Register() {
                   className="input-field"
                   style={{
                     paddingLeft: '2.75rem',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    borderColor: 'rgba(255, 255, 255, 0.12)',
+                    background: '#12151e',
+                    color: '#ffffff',
+                    borderColor: alreadyExists ? '#eab308' : 'rgba(255, 255, 255, 0.15)',
+                    boxShadow: alreadyExists ? '0 0 0 2px rgba(234, 179, 8, 0.3)' : 'none',
                   }}
                   placeholder="name@example.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (alreadyExists) setAlreadyExists(false);
+                  }}
                   autoComplete="off"
                   required
                 />
               </div>
+              {alreadyExists && (
+                <div style={{ color: '#fbbf24', fontSize: '0.78rem', marginTop: '0.35rem', fontWeight: 600 }}>
+                  ⚠️ This email is already registered. Please sign in instead.
+                </div>
+              )}
             </div>
 
             <div className="input-group">

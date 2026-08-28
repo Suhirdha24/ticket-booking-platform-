@@ -24,6 +24,20 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
     sectionMap[seat.section].rows[seat.row].push(seat);
   });
 
+  if (!seats || seats.length === 0) {
+    return (
+      <div style={{ padding: '4rem 2rem', textAlign: 'center', color: '#94a3b8' }}>
+        <Sparkles size={36} color="#eab308" style={{ margin: '0 auto 1rem auto', opacity: 0.8 }} />
+        <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>
+          No Seats in this View
+        </h4>
+        <p style={{ fontSize: '0.88rem', maxWidth: '400px', margin: '0 auto' }}>
+          Select &ldquo;All Sections&rdquo; in the tier filter above to view the full stadium seating map.
+        </p>
+      </div>
+    );
+  }
+
   const isSelected = (seat) => selectedSeats.some((s) => s._id === seat._id);
 
   const subtotal = selectedSeats.reduce((sum, s) => sum + s.price, 0);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import api from '../api/client.js';
 import { useAuthStore } from '../store/authStore.js';
 import { useReservationStore } from '../store/reservationStore.js';
@@ -8,12 +8,29 @@ import SeatMap from '../components/seats/SeatMap.jsx';
 import SeatLegend from '../components/seats/SeatLegend.jsx';
 import ReservationTimer from '../components/seats/ReservationTimer.jsx';
 import { SeatMapSkeleton } from '../components/common/Skeleton.jsx';
-import { Calendar, MapPin, ArrowLeft, RefreshCw, Ticket, ShieldCheck, ArrowRight, X, Clock } from 'lucide-react';
+import {
+  Calendar,
+  MapPin,
+  ArrowLeft,
+  RefreshCw,
+  Ticket,
+  ShieldCheck,
+  ArrowRight,
+  X,
+  Clock,
+  Crown,
+  Sparkles,
+  Layers,
+  AlertCircle,
+} from 'lucide-react';
 import Button from '../components/common/Button.jsx';
 
 export default function SeatSelection() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTier = searchParams.get('tier') || 'ALL';
+
   const { isAuthenticated } = useAuthStore();
   const { createReservation, clearSelectedSeats, selectedSeats, toggleSeatSelection, activeReservation } =
     useReservationStore();
@@ -21,9 +38,13 @@ export default function SeatSelection() {
   const [event, setEvent] = useState(null);
   const [seats, setSeats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedTier, setSelectedTier] = useState(initialTier);
 
   const fetchEventAndSeats = async () => {
+    setLoading(true);
+    setFetchError(null);
     try {
       const [eventRes, seatsRes] = await Promise.all([
         api.get(`/events/${id}`),
@@ -32,6 +53,7 @@ export default function SeatSelection() {
       setEvent(eventRes.data.data);
       setSeats(seatsRes.data.data || []);
     } catch (err) {
+      setFetchError(err.message || 'Failed to load seating map');
       showErrorToast('Failed to load seating map', err.message);
     } finally {
       setLoading(false);
@@ -41,6 +63,23 @@ export default function SeatSelection() {
   useEffect(() => {
     fetchEventAndSeats();
   }, [id]);
+
+  useEffect(() => {
+    const tierFromUrl = searchParams.get('tier');
+    if (tierFromUrl) {
+      setSelectedTier(tierFromUrl);
+    }
+  }, [searchParams]);
+
+  const handleTierFilterChange = (tierName) => {
+    setSelectedTier(tierName);
+    if (tierName === 'ALL') {
+      searchParams.delete('tier');
+      setSearchParams(searchParams);
+    } else {
+      setSearchParams({ tier: tierName });
+    }
+  };
 
   const handleLockReservation = async () => {
     if (!isAuthenticated) {
@@ -87,6 +126,39 @@ export default function SeatSelection() {
       </div>
     );
   }
+
+  if (fetchError || !event) {
+    return (
+      <div className="container" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
+        <div className="glass-panel" style={{ padding: '3rem', maxWidth: '520px', margin: '0 auto' }}>
+          <AlertCircle size={40} color="#fb7185" style={{ margin: '0 auto 1rem auto' }} />
+          <h2 style={{ fontSize: '1.4rem', marginBottom: '0.8rem', color: '#fb7185' }}>
+            Unable to Load Seat Map
+          </h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+            {fetchError || 'Could not retrieve seating layout for this event.'}
+          </p>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+            <Button variant="primary" onClick={fetchEventAndSeats}>
+              Retry Loading Seats
+            </Button>
+            <Link to={`/event/${id}`}>
+              <Button variant="secondary">Back to Event</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Filter seats if a specific tier is selected
+  const displayedSeats =
+    selectedTier && selectedTier !== 'ALL'
+      ? seats.filter((s) => s.category?.toUpperCase() === selectedTier.toUpperCase())
+      : seats;
+
+  // Extract unique tiers for filter pills
+  const availableTiers = ['ALL', ...new Set(seats.map((s) => s.category).filter(Boolean))];
 
   return (
     <div className="container" style={{ padding: '2.5rem 1.5rem', paddingBottom: '6rem' }}>
@@ -162,6 +234,68 @@ export default function SeatSelection() {
         <SeatLegend />
       </div>
 
+      {/* Tier Filter Pills Bar */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          marginBottom: '1.75rem',
+          flexWrap: 'wrap',
+          background: 'rgba(14, 17, 24, 0.8)',
+          padding: '0.75rem 1.25rem',
+          borderRadius: '16px',
+          border: '1px solid rgba(234, 179, 8, 0.2)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 700, color: '#eab308', marginRight: '0.5rem' }}>
+          <Layers size={16} /> View Tier:
+        </div>
+        {availableTiers.map((tierName) => {
+          const isSelected = selectedTier === tierName;
+          const tierSeats = tierName === 'ALL' ? seats : seats.filter((s) => s.category?.toUpperCase() === tierName.toUpperCase());
+          const availableCount = tierSeats.filter((s) => s.status === 'AVAILABLE').length;
+
+          return (
+            <button
+              key={tierName}
+              type="button"
+              onClick={() => handleTierFilterChange(tierName)}
+              style={{
+                background: isSelected
+                  ? 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)'
+                  : 'rgba(255, 255, 255, 0.05)',
+                color: isSelected ? '#000000' : '#e2e8f0',
+                border: isSelected ? 'none' : '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '10px',
+                padding: '0.45rem 0.9rem',
+                fontSize: '0.85rem',
+                fontWeight: isSelected ? 800 : 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {tierName === 'VIP' && <Crown size={14} />}
+              {tierName === 'Premium' && <Sparkles size={14} />}
+              {tierName === 'General' && <Ticket size={14} />}
+              <span>{tierName === 'ALL' ? 'All Sections' : `${tierName} Tier`}</span>
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  opacity: isSelected ? 0.85 : 0.6,
+                  marginLeft: '2px',
+                }}
+              >
+                ({availableCount} avail)
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Main Seat Map Area + Floating Sticky Checkout Panel */}
       <div
         style={{
@@ -172,13 +306,11 @@ export default function SeatSelection() {
         }}
         className="seat-selection-layout"
       >
-        {/* Interactive Interactive Stadium / Hall Seating Grid */}
+        {/* Interactive Stadium / Hall Seating Grid */}
         <div className="glass-panel" style={{ padding: '2rem 1.5rem', minHeight: '600px' }}>
           <SeatMap
-            seats={seats}
-            selectedSeatIds={selectedSeatIds}
-            onToggleSeat={toggleSeatSelection}
-            disabled={activeReservation !== null}
+            seats={displayedSeats}
+            selectedTier={selectedTier}
           />
         </div>
 
