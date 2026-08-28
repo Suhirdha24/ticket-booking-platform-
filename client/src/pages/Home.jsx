@@ -51,7 +51,7 @@ const VISUAL_CATEGORIES = [
   {
     name: 'Sports',
     category: 'Sports',
-    image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&auto=format&fit=crop&q=80',
   },
   {
     name: 'Comedy',
@@ -459,7 +459,15 @@ export default function Home() {
         >
           {VISUAL_CATEGORIES.map((cat, idx) => (
             <Link key={idx} to={`/events?category=${cat.category}`} className="category-tile-card">
-              <img src={cat.image} alt={cat.name} loading="lazy" />
+              <img
+                src={cat.image}
+                alt={cat.name}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src =
+                    'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&auto=format&fit=crop&q=80';
+                }}
+              />
               <div className="tile-overlay" />
               <span>{cat.name}</span>
             </Link>

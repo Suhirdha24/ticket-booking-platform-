@@ -1,11 +1,13 @@
 import dns from 'node:dns';
 import mongoose from 'mongoose';
 
-// Ensure reliable DNS resolution for Atlas SRV records on Windows local dev
-try {
-  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
-} catch (e) {
-  // Ignore in environments where setServers is restricted
+// Ensure reliable DNS resolution for Atlas SRV records on Windows local dev ONLY
+if (process.env.NODE_ENV !== 'production') {
+  try {
+    dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+  } catch (e) {
+    // Ignore in environments where setServers is restricted
+  }
 }
 
 /**
@@ -31,7 +33,7 @@ export async function connectDB() {
     );
   }
 
-  if (cached.conn) {
+  if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
   }
 
@@ -39,7 +41,7 @@ export async function connectDB() {
     const opts = {
       bufferCommands: false,
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
     };
 
