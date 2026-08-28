@@ -207,7 +207,7 @@ export default function EventFilter({
           alignItems: 'center',
           gap: '0.6rem',
           flexWrap: 'wrap',
-          borderTop: '1px solid var(--border-subtle)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
           paddingTop: '1.25rem',
         }}
       >
@@ -216,7 +216,7 @@ export default function EventFilter({
             fontSize: '0.85rem',
             color: 'var(--text-subtle)',
             marginRight: '0.5rem',
-            fontWeight: 600,
+            fontWeight: 700,
           }}
         >
           Categories:
@@ -229,18 +229,19 @@ export default function EventFilter({
               onClick={() => setCategory(cat)}
               style={{
                 background: isSelected
-                  ? 'linear-gradient(135deg, #6366f1, #a855f7)'
-                  : 'var(--bg-surface)',
-                color: isSelected ? '#ffffff' : 'var(--text-muted)',
+                  ? 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)'
+                  : 'rgba(255, 255, 255, 0.05)',
+                color: isSelected ? '#000000' : 'rgba(255, 255, 255, 0.75)',
                 border: isSelected
-                  ? '1px solid #818cf8'
-                  : '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-full)',
-                padding: '0.4rem 1rem',
+                  ? '1px solid #eab308'
+                  : '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '9999px',
+                padding: '0.4rem 1.1rem',
                 fontSize: '0.85rem',
-                fontWeight: 600,
+                fontWeight: isSelected ? 800 : 600,
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
+                boxShadow: isSelected ? '0 4px 12px rgba(234, 179, 8, 0.3)' : 'none',
               }}
             >
               {cat}

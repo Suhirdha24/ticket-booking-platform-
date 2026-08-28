@@ -75,18 +75,18 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
             borderRadius: 'var(--radius-md)',
             background:
               paymentMethod === 'UPI'
-                ? 'rgba(99, 102, 241, 0.2)'
+                ? 'rgba(234, 179, 8, 0.15)'
                 : 'var(--bg-surface)',
             border:
               paymentMethod === 'UPI'
-                ? '1.5px solid var(--primary)'
+                ? '1.5px solid #eab308'
                 : '1px solid var(--border-subtle)',
             color: paymentMethod === 'UPI' ? '#ffffff' : 'var(--text-muted)',
             cursor: 'pointer',
             transition: 'all 0.2s',
           }}
         >
-          <Smartphone size={22} color={paymentMethod === 'UPI' ? '#818cf8' : 'var(--text-subtle)'} />
+          <Smartphone size={22} color={paymentMethod === 'UPI' ? '#eab308' : 'var(--text-subtle)'} />
           <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>UPI / Apps</span>
         </button>
 
@@ -102,18 +102,18 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
             borderRadius: 'var(--radius-md)',
             background:
               paymentMethod === 'CARD'
-                ? 'rgba(99, 102, 241, 0.2)'
+                ? 'rgba(234, 179, 8, 0.15)'
                 : 'var(--bg-surface)',
             border:
               paymentMethod === 'CARD'
-                ? '1.5px solid var(--primary)'
+                ? '1.5px solid #eab308'
                 : '1px solid var(--border-subtle)',
             color: paymentMethod === 'CARD' ? '#ffffff' : 'var(--text-muted)',
             cursor: 'pointer',
             transition: 'all 0.2s',
           }}
         >
-          <CreditCard size={22} color={paymentMethod === 'CARD' ? '#818cf8' : 'var(--text-subtle)'} />
+          <CreditCard size={22} color={paymentMethod === 'CARD' ? '#eab308' : 'var(--text-subtle)'} />
           <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Card</span>
         </button>
 
@@ -129,18 +129,18 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
             borderRadius: 'var(--radius-md)',
             background:
               paymentMethod === 'NET_BANKING'
-                ? 'rgba(99, 102, 241, 0.2)'
+                ? 'rgba(234, 179, 8, 0.15)'
                 : 'var(--bg-surface)',
             border:
               paymentMethod === 'NET_BANKING'
-                ? '1.5px solid var(--primary)'
+                ? '1.5px solid #eab308'
                 : '1px solid var(--border-subtle)',
             color: paymentMethod === 'NET_BANKING' ? '#ffffff' : 'var(--text-muted)',
             cursor: 'pointer',
             transition: 'all 0.2s',
           }}
         >
-          <Building size={22} color={paymentMethod === 'NET_BANKING' ? '#818cf8' : 'var(--text-subtle)'} />
+          <Building size={22} color={paymentMethod === 'NET_BANKING' ? '#eab308' : 'var(--text-subtle)'} />
           <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Net Banking</span>
         </button>
       </div>
@@ -159,8 +159,8 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
                 style={{
                   padding: '0.65rem 0.5rem',
                   borderRadius: 'var(--radius-md)',
-                  background: upiProvider === 'GPAY' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.03)',
-                  border: upiProvider === 'GPAY' ? '1.5px solid #818cf8' : '1px solid var(--border-subtle)',
+                  background: upiProvider === 'GPAY' ? 'rgba(234, 179, 8, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+                  border: upiProvider === 'GPAY' ? '1.5px solid #eab308' : '1px solid var(--border-subtle)',
                   color: '#ffffff',
                   fontSize: '0.8rem',
                   fontWeight: 700,
@@ -323,9 +323,9 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
                   style={{
                     padding: '0.35rem 0.65rem',
                     borderRadius: 'var(--radius-sm)',
-                    background: bankName === bank ? 'rgba(99, 102, 241, 0.25)' : 'rgba(255, 255, 255, 0.04)',
-                    border: bankName === bank ? '1px solid #818cf8' : '1px solid var(--border-subtle)',
-                    color: bankName === bank ? '#ffffff' : 'var(--text-muted)',
+                    background: bankName === bank ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                    border: bankName === bank ? '1px solid #eab308' : '1px solid var(--border-subtle)',
+                    color: bankName === bank ? '#eab308' : 'var(--text-muted)',
                     fontSize: '0.75rem',
                     cursor: 'pointer',
                   }}

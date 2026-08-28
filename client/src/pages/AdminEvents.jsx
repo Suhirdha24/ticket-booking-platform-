@@ -177,7 +177,7 @@ export default function AdminEvents() {
                         style={{
                           padding: '6px',
                           border: 'none',
-                          color: '#818cf8',
+                          color: '#eab308',
                           cursor: 'pointer',
                           borderRadius: '6px',
                         }}

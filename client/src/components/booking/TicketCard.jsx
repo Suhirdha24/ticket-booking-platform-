@@ -13,7 +13,7 @@ export default function TicketCard({ booking, isNew = false }) {
         particleCount: 80,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#6366f1', '#a855f7', '#06b6d4', '#10b981'],
+        colors: ['#eab308', '#f59e0b', '#fbbf24', '#10b981'],
       });
     }
   }, [isNew]);
@@ -159,7 +159,7 @@ export default function TicketCard({ booking, isNew = false }) {
             >
               {booking.eventSnapshot?.title}
             </h2>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#818cf8', fontSize: '0.9rem', fontWeight: 600 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#eab308', fontSize: '0.9rem', fontWeight: 600 }}>
               <Calendar size={15} />
               <span>
                 {formatDate(booking.eventSnapshot?.date)} &bull; {formatTime(booking.eventSnapshot?.date)}
@@ -240,7 +240,7 @@ export default function TicketCard({ booking, isNew = false }) {
                 fontSize: '1.15rem',
                 fontWeight: 800,
                 letterSpacing: '0.1em',
-                color: '#818cf8',
+                color: '#eab308',
               }}
             >
               {booking.bookingReference}

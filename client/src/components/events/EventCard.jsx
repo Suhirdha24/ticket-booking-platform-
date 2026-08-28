@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Ticket, ArrowRight } from 'lucide-react';
+import { Calendar, MapPin, Ticket, ArrowRight, Heart } from 'lucide-react';
 import { getEventImage } from '../../utils/categoryImages.js';
 
 export default function EventCard({ event }) {
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const minPrice =
     event.pricing && event.pricing.length > 0
       ? Math.min(...event.pricing.map((p) => p.price))
-      : 50;
+      : 499;
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -29,51 +31,13 @@ export default function EventCard({ event }) {
     });
   };
 
-  const getCategoryClass = (category) => {
-    switch (category) {
-      case 'Concert':
-        return 'badge-primary';
-      case 'Conference':
-        return 'badge-general';
-      case 'Theatre':
-        return 'badge-premium';
-      case 'Sports':
-        return 'badge-vip';
-      case 'Comedy':
-        return 'badge-success';
-      case 'Festival':
-        return 'badge-primary';
-      case 'Workshop':
-        return 'badge-general';
-      case 'Gaming':
-        return 'badge-vip';
-      case 'Meetup':
-        return 'badge-premium';
-      case 'Wellness':
-        return 'badge-success';
-      case 'Nightlife':
-        return 'badge-primary';
-      case 'Kids & Family':
-        return 'badge-success';
-      default:
-        return 'badge-primary';
-    }
-  };
-
   return (
-    <div
-      className="glass-card"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
-    >
-      {/* Banner Thumbnail with Category Overlay */}
+    <div className="eventlinqs-card" style={{ height: '100%' }}>
+      {/* Banner Thumbnail with Category Overlay & Heart Action */}
       <div
         style={{
           position: 'relative',
-          height: '200px',
+          height: '210px',
           width: '100%',
           overflow: 'hidden',
         }}
@@ -95,9 +59,11 @@ export default function EventCard({ event }) {
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(to top, rgba(18, 20, 31, 1) 0%, rgba(18, 20, 31, 0.2) 60%, transparent 100%)',
+              'linear-gradient(to top, rgba(14, 17, 23, 0.95) 0%, rgba(14, 17, 23, 0.2) 60%, transparent 100%)',
           }}
         />
+
+        {/* Top-Left Category Badge */}
         <div
           style={{
             position: 'absolute',
@@ -105,29 +71,73 @@ export default function EventCard({ event }) {
             left: '0.85rem',
           }}
         >
-          <span className={`badge ${getCategoryClass(event.category)}`}>
+          <span
+            style={{
+              padding: '0.35rem 0.75rem',
+              borderRadius: '9999px',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              letterSpacing: '0.03em',
+              background: 'rgba(234, 179, 8, 0.9)',
+              color: '#000000',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+            }}
+          >
             {event.category}
           </span>
         </div>
+
+        {/* Top-Right Favorite Heart Button */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsFavorite(!isFavorite);
+          }}
+          style={{
+            position: 'absolute',
+            top: '0.85rem',
+            right: '0.85rem',
+            width: '34px',
+            height: '34px',
+            borderRadius: '50%',
+            background: 'rgba(0, 0, 0, 0.55)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: isFavorite ? '#f43f5e' : '#ffffff',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+          }}
+          title={isFavorite ? 'Remove from favorites' : 'Save to favorites'}
+        >
+          <Heart size={16} fill={isFavorite ? '#f43f5e' : 'none'} />
+        </button>
+
+        {/* Available seats chip */}
         {event.availableSeats !== undefined && (
           <div
             style={{
               position: 'absolute',
-              top: '0.85rem',
-              right: '0.85rem',
+              bottom: '0.75rem',
+              left: '0.85rem',
             }}
           >
             <span
-              className="badge"
               style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                backdropFilter: 'blur(4px)',
-                color: event.availableSeats > 10 ? '#34d399' : '#fb7185',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: 'rgba(255, 255, 255, 0.85)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
               }}
             >
-              <Ticket size={12} />
-              {event.availableSeats} Left
+              <Ticket size={12} color="#eab308" />
+              {event.availableSeats} Seats Left
             </span>
           </div>
         )}
@@ -149,9 +159,9 @@ export default function EventCard({ event }) {
             alignItems: 'center',
             gap: '0.4rem',
             fontSize: '0.82rem',
-            color: '#818cf8',
+            color: '#eab308',
             fontWeight: 600,
-            marginBottom: '0.5rem',
+            marginBottom: '0.45rem',
           }}
         >
           <Calendar size={14} />
@@ -163,11 +173,15 @@ export default function EventCard({ event }) {
         {/* Title */}
         <h3
           style={{
-            fontSize: '1.15rem',
+            fontSize: '1.12rem',
             fontWeight: 700,
             lineHeight: 1.35,
             marginBottom: '0.5rem',
             color: '#ffffff',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
           }}
         >
           {event.title}
@@ -181,12 +195,12 @@ export default function EventCard({ event }) {
             gap: '0.4rem',
             fontSize: '0.85rem',
             color: 'var(--text-muted)',
-            marginBottom: '1rem',
+            marginBottom: '1.25rem',
           }}
         >
-          <MapPin size={14} color="var(--text-subtle)" />
+          <MapPin size={14} color="#eab308" />
           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {event.venue?.name || 'Venue'}, {event.city}
+            {event.venue?.name || 'Grand Arena'}, {event.city}
           </span>
         </div>
 
@@ -197,30 +211,44 @@ export default function EventCard({ event }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderTop: '1px solid var(--border-subtle)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             paddingTop: '0.85rem',
           }}
         >
           <div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               From
             </div>
             <div
               style={{
-                fontFamily: 'var(--font-heading)',
                 fontSize: '1.25rem',
                 fontWeight: 800,
                 color: '#ffffff',
               }}
             >
-              ₹{minPrice}
+              ₹{minPrice.toLocaleString('en-IN')}
             </div>
           </div>
 
           <Link to={`/event/${event._id}`}>
-            <button className="btn btn-primary" style={{ padding: '0.55rem 1rem', fontSize: '0.85rem' }}>
-              <span>Select Seats</span>
-              <ArrowRight size={14} />
+            <button
+              style={{
+                width: '42px',
+                height: '42px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
+                color: '#000000',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(234, 179, 8, 0.3)',
+                transition: 'all 0.2s ease',
+              }}
+              title="Select Seats"
+            >
+              <ArrowRight size={18} />
             </button>
           </Link>
         </div>
@@ -228,3 +256,4 @@ export default function EventCard({ event }) {
     </div>
   );
 }
+

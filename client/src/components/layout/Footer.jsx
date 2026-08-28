@@ -35,13 +35,13 @@ export default function Footer() {
                   width: '32px',
                   height: '32px',
                   borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+                  background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <Ticket size={18} color="#ffffff" />
+                <Ticket size={18} color="#000000" />
               </div>
               <span
                 style={{
@@ -51,7 +51,7 @@ export default function Footer() {
                   color: '#ffffff',
                 }}
               >
-                EventHub
+                Event<span style={{ color: '#eab308' }}>Linqs</span>
               </span>
             </div>
             <p
@@ -62,7 +62,7 @@ export default function Footer() {
                 marginBottom: '1.25rem',
               }}
             >
-              The premier serverless event ticketing platform designed for high-concurrency seat reservation and instant verified digital passes.
+              Every Culture, Every Event, One Platform. Real-time ticket reservations, interactive seat maps, and secure digital event passes across India.
             </p>
             <div
               style={{

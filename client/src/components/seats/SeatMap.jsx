@@ -44,9 +44,9 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
             width: '70%',
             maxWidth: '650px',
             height: '14px',
-            background: 'linear-gradient(90deg, transparent 0%, #6366f1 50%, transparent 100%)',
+            background: 'linear-gradient(90deg, transparent 0%, #eab308 50%, transparent 100%)',
             borderRadius: '100px 100px 0 0',
-            boxShadow: '0 -10px 25px rgba(99, 102, 241, 0.6)',
+            boxShadow: '0 -10px 25px rgba(234, 179, 8, 0.6)',
             marginBottom: '0.75rem',
           }}
         />
@@ -57,7 +57,7 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
             fontWeight: 700,
             textTransform: 'uppercase',
             letterSpacing: '0.2em',
-            color: '#818cf8',
+            color: '#eab308',
           }}
         >
           STAGE / PERFORMANCE AREA

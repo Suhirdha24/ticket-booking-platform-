@@ -205,7 +205,7 @@ export default function MyBookings() {
                         fontFamily: 'monospace',
                         fontWeight: 700,
                         fontSize: '0.88rem',
-                        color: '#818cf8',
+                        color: '#eab308',
                       }}
                     >
                       {booking.bookingReference}
@@ -238,7 +238,7 @@ export default function MyBookings() {
                     }}
                   >
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <Calendar size={14} color="#818cf8" />
+                      <Calendar size={14} color="#eab308" />
                       {eventDate.toLocaleDateString('en-US', {
                         weekday: 'short',
                         month: 'short',
@@ -248,12 +248,12 @@ export default function MyBookings() {
                     </span>
                     <span>&bull;</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <MapPin size={14} color="#818cf8" />
+                      <MapPin size={14} color="#eab308" />
                       {booking.venueSnapshot?.name || 'Venue'}, {booking.venueSnapshot?.city}
                     </span>
                     <span>&bull;</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <Ticket size={14} color="#818cf8" />
+                      <Ticket size={14} color="#eab308" />
                       {booking.priceSnapshot?.length || booking.seats?.length} Seats
                     </span>
                   </div>

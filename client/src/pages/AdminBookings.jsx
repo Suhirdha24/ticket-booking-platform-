@@ -198,7 +198,7 @@ export default function AdminBookings() {
                   }}
                   className="table-row-hover"
                 >
-                  <td style={{ padding: '1rem 1.25rem', fontFamily: 'monospace', fontWeight: 700, color: '#818cf8' }}>
+                  <td style={{ padding: '1rem 1.25rem', fontFamily: 'monospace', fontWeight: 700, color: '#eab308' }}>
                     {b.bookingReference}
                   </td>
                   <td style={{ padding: '1rem' }}>

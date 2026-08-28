@@ -167,8 +167,8 @@ export default function EventDetails() {
                   style={{
                     padding: '10px',
                     borderRadius: '12px',
-                    background: 'rgba(99, 102, 241, 0.15)',
-                    color: '#818cf8',
+                    background: 'rgba(234, 179, 8, 0.15)',
+                    color: '#eab308',
                   }}
                 >
                   <Calendar size={22} />
@@ -192,8 +192,8 @@ export default function EventDetails() {
                   style={{
                     padding: '10px',
                     borderRadius: '12px',
-                    background: 'rgba(168, 85, 247, 0.15)',
-                    color: '#c084fc',
+                    background: 'rgba(234, 179, 8, 0.15)',
+                    color: '#eab308',
                   }}
                 >
                   <Building size={22} />
@@ -325,7 +325,7 @@ export default function EventDetails() {
                   color: 'var(--text-subtle)',
                 }}
               >
-                <Clock size={14} color="#818cf8" />
+                <Clock size={14} color="#eab308" />
                 <span>Selected seats are locked for 5 minutes during checkout</span>
               </div>
             </div>

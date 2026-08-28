@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function StatCard({ title, value, subtext, icon: Icon, color = '#6366f1' }) {
+export default function StatCard({ title, value, subtext, icon: Icon, color = '#eab308' }) {
   return (
     <div
       className="glass-card"
@@ -16,7 +16,7 @@ export default function StatCard({ title, value, subtext, icon: Icon, color = '#
         <div
           style={{
             fontSize: '0.82rem',
-            fontWeight: 600,
+            fontWeight: 700,
             color: 'var(--text-subtle)',
             textTransform: 'uppercase',
             letterSpacing: '0.05em',
@@ -54,8 +54,8 @@ export default function StatCard({ title, value, subtext, icon: Icon, color = '#
           width: '50px',
           height: '50px',
           borderRadius: '14px',
-          background: `rgba(${color === '#6366f1' ? '99, 102, 241' : color === '#10b981' ? '16, 185, 129' : color === '#a855f7' ? '168, 85, 247' : '245, 158, 11'}, 0.15)`,
-          border: `1px solid rgba(${color === '#6366f1' ? '99, 102, 241' : color === '#10b981' ? '16, 185, 129' : color === '#a855f7' ? '168, 85, 247' : '245, 158, 11'}, 0.3)`,
+          background: `rgba(${color === '#eab308' ? '234, 179, 8' : color === '#10b981' ? '16, 185, 129' : '245, 158, 11'}, 0.15)`,
+          border: `1px solid rgba(${color === '#eab308' ? '234, 179, 8' : color === '#10b981' ? '16, 185, 129' : '245, 158, 11'}, 0.3)`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

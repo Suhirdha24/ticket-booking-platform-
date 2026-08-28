@@ -57,14 +57,30 @@ export default function Events() {
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
       {/* Page Header */}
       <div style={{ marginBottom: '2.5rem' }}>
-        <div className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            background: 'rgba(234, 179, 8, 0.15)',
+            color: '#eab308',
+            border: '1px solid rgba(234, 179, 8, 0.3)',
+            padding: '0.35rem 0.85rem',
+            borderRadius: '9999px',
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            marginBottom: '0.75rem',
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+          }}
+        >
           <Calendar size={13} /> Live Event Catalog
         </div>
-        <h1 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.5rem' }}>
+        <h1 className="font-serif-editorial" style={{ fontSize: '2.8rem', fontWeight: 800, marginBottom: '0.5rem', color: '#ffffff' }}>
           Explore Upcoming Events
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
-          Filter through live concerts, conferences, comedy shows, and tournaments.
+        <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>
+          Filter through concerts, conferences, comedy shows, festivals, and cultural celebrations across India.
         </p>
       </div>
 

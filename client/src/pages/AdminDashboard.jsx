@@ -120,21 +120,21 @@ export default function AdminDashboard() {
           value={metrics?.ticketsSold?.toLocaleString() || '0'}
           subtext="Allocated seats confirmed"
           icon={Ticket}
-          color="#6366f1"
+          color="#eab308"
         />
         <StatCard
           title="Live Events"
           value={metrics?.upcomingEvents || '0'}
           subtext={`${metrics?.totalEvents || 0} total events created`}
           icon={Calendar}
-          color="#a855f7"
+          color="#f59e0b"
         />
         <StatCard
           title="Active Attendees"
           value={metrics?.totalUsers || '0'}
           subtext="Registered customer profiles"
           icon={Users}
-          color="#f59e0b"
+          color="#eab308"
         />
       </div>
 
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
                       style={{
                         width: `${percent}%`,
                         height: '100%',
-                        background: 'linear-gradient(90deg, #6366f1, #a855f7)',
+                        background: 'linear-gradient(90deg, #eab308, #f59e0b)',
                         borderRadius: '4px',
                       }}
                     />

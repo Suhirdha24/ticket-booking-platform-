@@ -67,9 +67,9 @@ export default function Pagination({
               marginRight: '0.5rem',
               background: 'transparent',
               border: 'none',
-              color: '#818cf8',
+              color: '#eab308',
               fontSize: '0.98rem',
-              fontWeight: 600,
+              fontWeight: 700,
               cursor: 'pointer',
               borderRadius: '8px',
               transition: 'all 0.2s ease',
@@ -115,17 +115,17 @@ export default function Pagination({
                 justifyContent: 'center',
                 fontSize: '1rem',
                 fontWeight: isCurrent ? 800 : 500,
-                color: isCurrent ? '#ffffff' : '#94a3b8',
+                color: isCurrent ? '#000000' : '#94a3b8',
                 background: isCurrent
-                  ? 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)'
+                  ? 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)'
                   : 'transparent',
                 border: isCurrent
-                  ? '1px solid rgba(255, 255, 255, 0.2)'
+                  ? '1px solid #eab308'
                   : '1px solid transparent',
                 borderRadius: '8px',
                 cursor: isCurrent ? 'default' : 'pointer',
                 boxShadow: isCurrent
-                  ? '0 0 16px rgba(99, 102, 241, 0.45)'
+                  ? '0 4px 14px rgba(234, 179, 8, 0.4)'
                   : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -148,9 +148,9 @@ export default function Pagination({
               marginLeft: '0.5rem',
               background: 'transparent',
               border: 'none',
-              color: '#818cf8',
+              color: '#eab308',
               fontSize: '0.98rem',
-              fontWeight: 600,
+              fontWeight: 700,
               cursor: 'pointer',
               borderRadius: '8px',
               transition: 'all 0.2s ease',

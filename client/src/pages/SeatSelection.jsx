@@ -129,7 +129,7 @@ export default function SeatSelection() {
             }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Calendar size={14} color="#818cf8" />
+              <Calendar size={14} color="#eab308" />
               {new Date(event?.date).toLocaleDateString('en-US', {
                 weekday: 'short',
                 month: 'short',
@@ -138,7 +138,7 @@ export default function SeatSelection() {
             </span>
             <span>&bull;</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <MapPin size={14} color="#818cf8" />
+              <MapPin size={14} color="#eab308" />
               {event?.venue?.name}, {event?.city}
             </span>
           </div>
@@ -158,61 +158,58 @@ export default function SeatSelection() {
       <ReservationTimer onExpire={fetchEventAndSeats} />
 
       {/* Legend */}
-      <div style={{ marginBottom: '2rem' }}>
+      <div style={{ marginBottom: '3rem' }}>
         <SeatLegend />
       </div>
 
-      {/* Responsive 2-Column Main Section */}
+      {/* Main Seat Map Area + Floating Sticky Checkout Panel */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '2rem',
+          gridTemplateColumns: 'minmax(0, 1fr) 340px',
+          gap: '2.5rem',
           alignItems: 'start',
         }}
+        className="seat-selection-layout"
       >
-        {/* Left Column: Interactive Seat Map */}
-        <div style={{ minWidth: 0 }}>
+        {/* Interactive Interactive Stadium / Hall Seating Grid */}
+        <div className="glass-panel" style={{ padding: '2rem 1.5rem', minHeight: '600px' }}>
           <SeatMap
             seats={seats}
-            onLockReservation={handleLockReservation}
-            isSubmitting={isSubmitting}
+            selectedSeatIds={selectedSeatIds}
+            onToggleSeat={toggleSeatSelection}
+            disabled={activeReservation !== null}
           />
         </div>
 
-        {/* Right Column: Dedicated Sticky Selected Seats & Checkout Card */}
-        <div
-          style={{
-            position: 'sticky',
-            top: '90px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.25rem',
-          }}
-        >
+        {/* Sticky Sidebar: Order Summary & 5-Min Lock CTA */}
+        <div style={{ position: 'sticky', top: '100px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div
             className="glass-panel"
             style={{
-              padding: '1.75rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1.25rem',
-              borderColor: selectedSeats.length > 0 ? 'rgba(99, 102, 241, 0.4)' : 'var(--border-subtle)',
-              boxShadow: selectedSeats.length > 0 ? '0 15px 35px -5px rgba(0, 0, 0, 0.6), 0 0 25px -5px var(--primary-glow)' : 'none',
+              padding: '1.5rem',
+              borderColor: selectedSeats.length > 0 ? 'rgba(234, 179, 8, 0.4)' : 'var(--border-subtle)',
+              boxShadow: selectedSeats.length > 0 ? '0 15px 35px -5px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(234, 179, 8, 0.2)' : 'none',
               transition: 'all 0.3s ease',
             }}
           >
             {/* Card Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Ticket size={20} color="#818cf8" />
+                <Ticket size={20} color="#eab308" />
                 <h3 style={{ fontSize: '1.2rem', fontWeight: 800 }}>
                   Selected Seats
                 </h3>
               </div>
               <span
-                className={`badge ${selectedSeats.length > 0 ? 'badge-primary' : 'badge-general'}`}
-                style={{ fontSize: '0.75rem' }}
+                style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  padding: '0.25rem 0.6rem',
+                  borderRadius: '9999px',
+                  background: selectedSeats.length > 0 ? 'linear-gradient(135deg, #eab308, #f59e0b)' : 'rgba(255, 255, 255, 0.08)',
+                  color: selectedSeats.length > 0 ? '#000000' : '#ffffff',
+                }}
               >
                 {selectedSeats.length} {selectedSeats.length === 1 ? 'Seat' : 'Seats'}
               </span>
@@ -257,7 +254,7 @@ export default function SeatSelection() {
                       </div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <span style={{ fontWeight: 800, color: '#818cf8', fontSize: '0.95rem' }}>
+                      <span style={{ fontWeight: 800, color: '#eab308', fontSize: '0.95rem' }}>
                         ₹{seat.price}
                       </span>
                       <button
@@ -323,12 +320,12 @@ export default function SeatSelection() {
                 gap: '0.5rem',
                 fontSize: '0.78rem',
                 color: 'var(--text-subtle)',
-                background: 'rgba(99, 102, 241, 0.06)',
+                background: 'rgba(234, 179, 8, 0.08)',
                 padding: '0.65rem 0.85rem',
                 borderRadius: 'var(--radius-md)',
               }}
             >
-              <Clock size={15} color="#818cf8" style={{ flexShrink: 0 }} />
+              <Clock size={15} color="#eab308" style={{ flexShrink: 0 }} />
               <span>Seats are locked exclusively for you for 5 minutes during checkout</span>
             </div>
 

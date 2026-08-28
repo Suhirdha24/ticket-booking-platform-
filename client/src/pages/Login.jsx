@@ -2,8 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore.js';
 import { showSuccessToast, showErrorToast } from '../store/toastStore.js';
-import Button from '../components/common/Button.jsx';
-import { Ticket, Lock, Mail, UserCheck, Shield } from 'lucide-react';
+import {
+  Ticket,
+  Lock,
+  Mail,
+  UserCheck,
+  Shield,
+  Eye,
+  EyeOff,
+  Sparkles,
+  CheckCircle2,
+  Zap,
+  ShieldCheck,
+  ArrowRight,
+  Star,
+} from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,6 +27,7 @@ export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (queryEmail) {
@@ -44,183 +58,408 @@ export default function Login() {
 
   return (
     <div
-      className="container"
       style={{
+        minHeight: 'calc(100vh - 160px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '4rem 1.5rem',
+        padding: '3rem 1.5rem',
+        position: 'relative',
       }}
     >
+      {/* Background ambient gold aura */}
       <div
-        className="glass-panel"
         style={{
-          width: '100%',
-          maxWidth: '450px',
-          padding: '2.5rem',
-          backgroundColor: '#12141f',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px -10px var(--primary-glow)',
+          position: 'absolute',
+          top: '20%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '750px',
+          height: '450px',
+          background: 'radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <div
+        className="container"
+        style={{
+          maxWidth: '1080px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+          gap: '2.5rem',
+          alignItems: 'stretch',
+          position: 'relative',
+          zIndex: 2,
         }}
       >
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        {/* 🌟 LEFT SHOWCASE COLUMN: BRANDING & SOCIAL PROOF */}
+        <div
+          className="glass-panel"
+          style={{
+            padding: '3rem 2.5rem',
+            backgroundColor: 'rgba(14, 17, 24, 0.9)',
+            border: '1px solid rgba(234, 179, 8, 0.2)',
+            borderRadius: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            position: 'relative',
+            overflow: 'hidden',
+            backgroundImage: `
+              linear-gradient(to bottom, rgba(14, 17, 24, 0.85) 0%, rgba(14, 17, 24, 0.98) 100%),
+              url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1000&auto=format&fit=crop&q=80')
+            `,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Top Brand Header */}
+          <div>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: 'rgba(234, 179, 8, 0.15)',
+                border: '1px solid rgba(234, 179, 8, 0.35)',
+                color: '#eab308',
+                padding: '0.35rem 0.85rem',
+                borderRadius: '9999px',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                marginBottom: '1.5rem',
+              }}
+            >
+              <Sparkles size={13} /> VIP Member Access
+            </div>
+
+            <h1
+              className="font-serif-editorial"
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 2.7rem)',
+                fontWeight: 800,
+                color: '#ffffff',
+                lineHeight: 1.2,
+                marginBottom: '1.25rem',
+              }}
+            >
+              Every Culture.<br />
+              Every Event.<br />
+              <span className="gold-gradient-text" style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)' }}>
+                One Seamless Pass.
+              </span>
+            </h1>
+
+            <p style={{ color: '#cbd5e1', fontSize: '0.98rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
+              Sign in to reserve premium seats across 60+ Indian cities with instant QR tickets and zero double-booking locks.
+            </p>
+
+            {/* Feature Highlights */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Zap size={15} color="#eab308" />
+                </div>
+                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                  Live 130-Seat Interactive Stadium Grid
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <ShieldCheck size={15} color="#eab308" />
+                </div>
+                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                  5-Minute Atomic Concurrency Hold Protection
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Ticket size={15} color="#eab308" />
+                </div>
+                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                  Instant Cryptographic Mobile Passes & Receipts
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Proof Footer Pill */}
           <div
             style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+              padding: '1rem 1.25rem',
+              borderRadius: '16px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 1rem auto',
-              boxShadow: '0 0 20px rgba(99, 102, 241, 0.5)',
+              justifyContent: 'space-between',
             }}
           >
-            <Ticket size={24} color="#ffffff" />
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#eab308', marginBottom: '0.2rem' }}>
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={13} fill="#eab308" />
+                ))}
+              </div>
+              <div style={{ fontSize: '0.82rem', color: '#ffffff', fontWeight: 700 }}>
+                Trusted by 350,000+ Fans
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#94a3b8' }}>
+              Across <strong style={{ color: '#eab308' }}>60+ Cities</strong>
+            </div>
           </div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Welcome Back</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-            Sign in to manage and view your tickets
-          </p>
         </div>
 
-        {/* 1-Click Demo Logins for Evaluators */}
+        {/* 🔐 RIGHT FORM COLUMN: SIGN IN CARD */}
         <div
+          className="glass-panel"
           style={{
-            background: 'rgba(99, 102, 241, 0.08)',
-            border: '1px solid rgba(99, 102, 241, 0.25)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1rem',
-            marginBottom: '1.5rem',
+            padding: '3rem 2.5rem',
+            backgroundColor: '#0c0f16',
+            border: '1px solid rgba(234, 179, 8, 0.3)',
+            borderRadius: '24px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(234, 179, 8, 0.25)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
           }}
         >
+          {/* Form Header */}
+          <div style={{ marginBottom: '1.75rem' }}>
+            <div
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1rem',
+                boxShadow: '0 0 20px rgba(234, 179, 8, 0.45)',
+              }}
+            >
+              <Ticket size={22} color="#000000" />
+            </div>
+            <h2 className="font-serif-editorial" style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff' }}>
+              Sign In
+            </h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
+              Enter your credentials to access your tickets and reservations
+            </p>
+          </div>
+
+          {/* 1-Click Demo Logins for Evaluators */}
           <div
             style={{
-              fontSize: '0.78rem',
-              fontWeight: 700,
-              color: '#818cf8',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              marginBottom: '0.6rem',
-              textAlign: 'center',
+              background: 'rgba(234, 179, 8, 0.08)',
+              border: '1px solid rgba(234, 179, 8, 0.25)',
+              borderRadius: '14px',
+              padding: '1rem',
+              marginBottom: '1.75rem',
             }}
           >
-            🚀 1-Click Demo Credentials
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-            <button
-              type="button"
-              onClick={fillAdmin}
-              className="btn btn-secondary"
+            <div
               style={{
-                padding: '0.45rem 0.65rem',
-                fontSize: '0.78rem',
-                justifyContent: 'center',
-                borderColor: 'rgba(168, 85, 247, 0.4)',
-                color: '#c084fc',
+                fontSize: '0.74rem',
+                fontWeight: 800,
+                color: '#eab308',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                marginBottom: '0.65rem',
+                textAlign: 'center',
               }}
             >
-              <Shield size={14} /> Admin
-            </button>
-            <button
-              type="button"
-              onClick={fillUser}
-              className="btn btn-secondary"
-              style={{
-                padding: '0.45rem 0.65rem',
-                fontSize: '0.78rem',
-                justifyContent: 'center',
-                borderColor: 'rgba(6, 182, 212, 0.4)',
-                color: '#22d3ee',
-              }}
-            >
-              <UserCheck size={14} /> Standard User
-            </button>
-          </div>
-        </div>
-
-        {/* Login Form */}
-        <form onSubmit={handleLogin} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <div className="input-group">
-            <label className="input-label">Email Address</label>
-            <div style={{ position: 'relative' }}>
-              <Mail
-                size={18}
+              ⚡ 1-Click Demo Credentials
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
+              <button
+                type="button"
+                onClick={fillAdmin}
                 style={{
-                  position: 'absolute',
-                  left: '1rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-subtle)',
+                  padding: '0.55rem 0.75rem',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  background: 'rgba(234, 179, 8, 0.15)',
+                  border: '1px solid rgba(234, 179, 8, 0.4)',
+                  color: '#eab308',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
                 }}
-              />
-              <input
-                type="email"
-                className="input-field"
-                style={{ paddingLeft: '2.75rem' }}
-                placeholder="e.g. user@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="off"
-                required
-              />
+              >
+                <Shield size={14} /> Admin
+              </button>
+              <button
+                type="button"
+                onClick={fillUser}
+                style={{
+                  padding: '0.55rem 0.75rem',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <UserCheck size={14} /> Standard User
+              </button>
             </div>
           </div>
 
-          <div className="input-group">
-            <label className="input-label">Password</label>
-            <div style={{ position: 'relative' }}>
-              <Lock
-                size={18}
-                style={{
-                  position: 'absolute',
-                  left: '1rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-subtle)',
-                }}
-              />
-              <input
-                type="password"
-                className="input-field"
-                style={{ paddingLeft: '2.75rem' }}
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="new-password"
-                required
-              />
+          {/* Form Fields */}
+          <form onSubmit={handleLogin} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div className="input-group">
+              <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>
+                Email Address
+              </label>
+              <div style={{ position: 'relative' }}>
+                <Mail
+                  size={18}
+                  style={{
+                    position: 'absolute',
+                    left: '1rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--text-subtle)',
+                  }}
+                />
+                <input
+                  type="email"
+                  className="input-field"
+                  style={{
+                    paddingLeft: '2.75rem',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    borderColor: 'rgba(255, 255, 255, 0.12)',
+                    fontSize: '0.95rem',
+                  }}
+                  placeholder="e.g. admin@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="off"
+                  required
+                />
+              </div>
             </div>
+
+            <div className="input-group">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>
+                  Password
+                </label>
+              </div>
+              <div style={{ position: 'relative' }}>
+                <Lock
+                  size={18}
+                  style={{
+                    position: 'absolute',
+                    left: '1rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--text-subtle)',
+                  }}
+                />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="input-field"
+                  style={{
+                    paddingLeft: '2.75rem',
+                    paddingRight: '2.75rem',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    borderColor: 'rgba(255, 255, 255, 0.12)',
+                    fontSize: '0.95rem',
+                  }}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '1rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--text-subtle)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              style={{
+                width: '100%',
+                marginTop: '0.75rem',
+                background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
+                color: '#000000',
+                fontWeight: 800,
+                fontSize: '1.02rem',
+                padding: '0.9rem 1.5rem',
+                borderRadius: '9999px',
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 4px 15px rgba(234, 179, 8, 0.4)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <span>{isLoading ? 'Signing In...' : 'Sign In to EventLinqs'}</span>
+              <ArrowRight size={18} />
+            </button>
+          </form>
+
+          {/* Footer Switch */}
+          <div
+            style={{
+              textAlign: 'center',
+              fontSize: '0.9rem',
+              color: 'var(--text-muted)',
+              marginTop: '2rem',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              paddingTop: '1.25rem',
+            }}
+          >
+            Don't have an account?{' '}
+            <Link
+              to={`/register?redirect=${encodeURIComponent(redirect)}`}
+              style={{ color: '#eab308', fontWeight: 700 }}
+            >
+              Create an Account &rarr;
+            </Link>
           </div>
-
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            loading={isLoading}
-            style={{ width: '100%', marginTop: '0.5rem' }}
-          >
-            Sign In
-          </Button>
-        </form>
-
-        {/* Footer Link */}
-        <div
-          style={{
-            textAlign: 'center',
-            fontSize: '0.88rem',
-            color: 'var(--text-muted)',
-            marginTop: '1.75rem',
-          }}
-        >
-          Don't have an account?{' '}
-          <Link
-            to={`/register?redirect=${encodeURIComponent(redirect)}`}
-            style={{ color: '#818cf8', fontWeight: 600 }}
-          >
-            Create an Account
-          </Link>
         </div>
       </div>
     </div>
