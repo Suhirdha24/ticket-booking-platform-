@@ -1,6 +1,8 @@
 import express from 'express';
 import Seat from '../models/Seat.js';
 import Event from '../models/Event.js';
+import Venue from '../models/Venue.js';
+import { generateSeatsForEvent } from './eventRoutes.js';
 import { optionalAuth } from '../middleware/auth.js';
 import { AppError } from '../middleware/errorHandler.js';
 
@@ -20,9 +22,20 @@ router.get('/', optionalAuth, async (req, res, next) => {
       return next(new AppError('Event not found', 404, 'EVENT_NOT_FOUND'));
     }
 
-    const seats = await Seat.find({ event: eventId })
+    let seats = await Seat.find({ event: eventId })
       .sort({ section: 1, row: 1, seatNumber: 1 })
       .lean();
+
+    // Auto-generate seats from venue sections if not yet populated
+    if (seats.length === 0 && event.venue) {
+      const venue = await Venue.findById(event.venue);
+      if (venue) {
+        await generateSeatsForEvent(event, venue, event.pricing);
+        seats = await Seat.find({ event: eventId })
+          .sort({ section: 1, row: 1, seatNumber: 1 })
+          .lean();
+      }
+    }
 
     const now = new Date();
     const currentUserId = req.user ? req.user._id.toString() : null;
