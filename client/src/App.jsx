@@ -14,6 +14,7 @@ import Checkout from './pages/Checkout.jsx';
 import BookingSuccess from './pages/BookingSuccess.jsx';
 import MyBookings from './pages/MyBookings.jsx';
 import Login from './pages/Login.jsx';
+import AdminLogin from './pages/AdminLogin.jsx';
 import Register from './pages/Register.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import AdminEvents from './pages/AdminEvents.jsx';
@@ -25,7 +26,7 @@ function ProtectedRoute({ children, adminOnly = false }) {
   const { user, isAuthenticated } = useAuthStore();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={adminOnly ? "/admin/login" : "/login"} replace />;
   }
 
   if (adminOnly && user?.role !== 'admin') {
@@ -74,6 +75,9 @@ export default function App() {
 
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
+            <Route path="/user/login" element={<Login />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/register" element={<Register />} />
 
             {/* Admin Portal Routes */}

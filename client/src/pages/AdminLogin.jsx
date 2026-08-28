@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore.js';
 import { showSuccessToast, showErrorToast } from '../store/toastStore.js';
 import {
-  Ticket,
+  Shield,
   Lock,
   Mail,
   UserCheck,
@@ -14,40 +14,50 @@ import {
   ShieldCheck,
   ArrowRight,
   Star,
-  Shield,
+  Layers,
+  BarChart3,
+  Users,
 } from 'lucide-react';
 
-export default function Login() {
+export default function AdminLogin() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
-  const queryEmail = searchParams.get('email') || '';
-  const { login, isLoading } = useAuthStore();
+  const redirect = searchParams.get('redirect') || '/admin';
+  const { login, isAuthenticated, user, isLoading } = useAuthStore();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  // If already logged in as admin, redirect to /admin
   useEffect(() => {
-    if (queryEmail) {
-      setEmail(queryEmail);
+    if (isAuthenticated && user?.role === 'admin') {
+      navigate('/admin');
     }
-  }, [queryEmail]);
+  }, [isAuthenticated, user, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const user = await login(email, password);
-      showSuccessToast('Welcome Back!', `Logged in as ${user.name}`);
+      const loggedUser = await login(email, password);
+      if (loggedUser.role !== 'admin') {
+        showErrorToast(
+          'Access Restricted',
+          'This account does not have Admin privileges. Please use the User Sign In portal.'
+        );
+        navigate('/');
+        return;
+      }
+      showSuccessToast('Admin Authorized', `Welcome back, Administrator ${loggedUser.name}`);
       navigate(redirect);
     } catch (err) {
-      showErrorToast('Login Failed', err.message);
+      showErrorToast('Admin Login Failed', err.message);
     }
   };
 
-  const fillUser = () => {
-    setEmail('user@example.com');
-    setPassword('User@123456');
+  const fillAdmin = () => {
+    setEmail('admin@example.com');
+    setPassword('Admin@123456');
   };
 
   return (
@@ -70,7 +80,7 @@ export default function Login() {
           transform: 'translate(-50%, -50%)',
           width: '750px',
           height: '450px',
-          background: 'radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(234, 179, 8, 0.12) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -87,13 +97,13 @@ export default function Login() {
           zIndex: 2,
         }}
       >
-        {/* 🌟 LEFT SHOWCASE COLUMN: BRANDING & SOCIAL PROOF */}
+        {/* 🌟 LEFT SHOWCASE COLUMN: ADMIN OPERATIONS */}
         <div
           className="glass-panel"
           style={{
             padding: '3rem 2.5rem',
             backgroundColor: 'rgba(14, 17, 24, 0.9)',
-            border: '1px solid rgba(234, 179, 8, 0.2)',
+            border: '1px solid rgba(234, 179, 8, 0.3)',
             borderRadius: '24px',
             display: 'flex',
             flexDirection: 'column',
@@ -101,8 +111,8 @@ export default function Login() {
             position: 'relative',
             overflow: 'hidden',
             backgroundImage: `
-              linear-gradient(to bottom, rgba(14, 17, 24, 0.85) 0%, rgba(14, 17, 24, 0.98) 100%),
-              url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1000&auto=format&fit=crop&q=80')
+              linear-gradient(to bottom, rgba(10, 12, 16, 0.9) 0%, rgba(14, 17, 24, 0.98) 100%),
+              url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000&auto=format&fit=crop&q=80')
             `,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -127,7 +137,7 @@ export default function Login() {
                 marginBottom: '1.5rem',
               }}
             >
-              <Sparkles size={13} /> Attendee Member Access
+              <Shield size={13} /> Admin & Organizer Portal
             </div>
 
             <h1
@@ -140,25 +150,33 @@ export default function Login() {
                 marginBottom: '1.25rem',
               }}
             >
-              Every Culture.<br />
-              Every Event.<br />
+              Control Center for<br />
               <span className="gold-gradient-text" style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)' }}>
-                One Seamless Pass.
+                Live Experiences & Venues.
               </span>
             </h1>
 
             <p style={{ color: '#cbd5e1', fontSize: '0.98rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-              Sign in to reserve premium seats across 60+ Indian cities with instant QR tickets and zero double-booking locks.
+              Manage 4,750+ live events across 60+ Indian cities, oversee 130-seat atomic reservations, monitor real-time ticket revenue, and validate QR gate passes.
             </p>
 
             {/* Feature Highlights */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Zap size={15} color="#eab308" />
+                  <BarChart3 size={15} color="#eab308" />
                 </div>
                 <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
-                  Live 130-Seat Interactive Stadium Grid
+                  Live Revenue Breakdown & Event Category Metrics
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Layers size={15} color="#eab308" />
+                </div>
+                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                  Full Event Creation & Tiered Stadium Pricing Management
                 </span>
               </div>
 
@@ -167,22 +185,13 @@ export default function Login() {
                   <ShieldCheck size={15} color="#eab308" />
                 </div>
                 <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
-                  5-Minute Atomic Concurrency Hold Protection
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Ticket size={15} color="#eab308" />
-                </div>
-                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
-                  Instant Cryptographic Mobile Passes & Receipts
+                  Cryptographic QR Pass Verification & Audit Stream
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Social Proof Footer Pill */}
+          {/* Admin Badge Footer */}
           <div
             style={{
               padding: '1rem 1.25rem',
@@ -195,31 +204,29 @@ export default function Login() {
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#eab308', marginBottom: '0.2rem' }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} fill="#eab308" />
-                ))}
+              <div style={{ fontSize: '0.85rem', color: '#ffffff', fontWeight: 700 }}>
+                🛡️ Role-Based Access Control (RBAC)
               </div>
-              <div style={{ fontSize: '0.82rem', color: '#ffffff', fontWeight: 700 }}>
-                Trusted by 350,000+ Fans
+              <div style={{ fontSize: '0.76rem', color: '#94a3b8', marginTop: '0.15rem' }}>
+                Restricted to verified system operators
               </div>
             </div>
 
-            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#94a3b8' }}>
-              Across <strong style={{ color: '#eab308' }}>60+ Cities</strong>
+            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#eab308', fontWeight: 700 }}>
+              v2.5 Security
             </div>
           </div>
         </div>
 
-        {/* 🔐 RIGHT FORM COLUMN: USER SIGN IN CARD */}
+        {/* 🔐 RIGHT FORM COLUMN: ADMIN SIGN IN CARD */}
         <div
           className="glass-panel"
           style={{
             padding: '3rem 2.5rem',
             backgroundColor: '#0c0f16',
-            border: '1px solid rgba(234, 179, 8, 0.3)',
+            border: '1px solid rgba(234, 179, 8, 0.35)',
             borderRadius: '24px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(234, 179, 8, 0.25)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(234, 179, 8, 0.3)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -238,6 +245,21 @@ export default function Login() {
               border: '1px solid rgba(255, 255, 255, 0.08)',
             }}
           >
+            <Link
+              to="/login"
+              style={{
+                textAlign: 'center',
+                padding: '0.55rem',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                color: '#94a3b8',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+            >
+              👤 User Sign In
+            </Link>
             <div
               style={{
                 textAlign: 'center',
@@ -250,23 +272,8 @@ export default function Login() {
                 boxShadow: '0 2px 10px rgba(234, 179, 8, 0.35)',
               }}
             >
-              👤 User Sign In
-            </div>
-            <Link
-              to="/admin/login"
-              style={{
-                textAlign: 'center',
-                padding: '0.55rem',
-                fontSize: '0.82rem',
-                fontWeight: 600,
-                color: '#94a3b8',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                transition: 'all 0.2s',
-              }}
-            >
               🛡️ Admin Portal
-            </Link>
+            </div>
           </div>
 
           {/* Form Header */}
@@ -284,28 +291,28 @@ export default function Login() {
                 boxShadow: '0 0 20px rgba(234, 179, 8, 0.45)',
               }}
             >
-              <Ticket size={22} color="#000000" />
+              <Shield size={24} color="#000000" />
             </div>
             <h2 className="font-serif-editorial" style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff' }}>
-              Attendee Sign In
+              Admin Sign In
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-              Sign in to manage your tickets, bookings, and digital passes
+              Enter your administrative credentials to access the management portal
             </p>
           </div>
 
-          {/* Single User Example Credential Card */}
+          {/* Single Admin Example Credential Card */}
           <div
-            onClick={fillUser}
+            onClick={fillAdmin}
             style={{
               background:
-                email === 'user@example.com'
+                email === 'admin@example.com'
                   ? 'rgba(234, 179, 8, 0.18)'
                   : 'rgba(234, 179, 8, 0.08)',
               border:
-                email === 'user@example.com'
+                email === 'admin@example.com'
                   ? '1.5px solid #eab308'
-                  : '1px solid rgba(234, 179, 8, 0.25)',
+                  : '1px solid rgba(234, 179, 8, 0.3)',
               borderRadius: '16px',
               padding: '1.15rem 1.25rem',
               marginBottom: '1.75rem',
@@ -331,7 +338,7 @@ export default function Login() {
                   gap: '0.35rem',
                 }}
               >
-                <Sparkles size={14} /> Example User Account
+                <Sparkles size={14} /> Example Admin Account
               </span>
               <span
                 style={{
@@ -348,11 +355,11 @@ export default function Login() {
             </div>
             <div style={{ fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.5 }}>
               <span style={{ color: '#94a3b8' }}>Email:</span>{' '}
-              <strong style={{ color: '#ffffff' }}>user@example.com</strong>
+              <strong style={{ color: '#ffffff' }}>admin@example.com</strong>
             </div>
             <div style={{ fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.5, marginTop: '0.2rem' }}>
               <span style={{ color: '#94a3b8' }}>Password:</span>{' '}
-              <strong style={{ color: '#ffffff' }}>User@123456</strong>
+              <strong style={{ color: '#ffffff' }}>Admin@123456</strong>
             </div>
           </div>
 
@@ -365,14 +372,14 @@ export default function Login() {
             {/* Decoy fields to trap browser autofill algorithms */}
             <input
               type="text"
-              name="fake_user_username_prevent_autofill"
+              name="fake_admin_username_prevent_autofill"
               style={{ display: 'none' }}
               tabIndex={-1}
               autoComplete="off"
             />
             <input
               type="password"
-              name="fake_user_password_prevent_autofill"
+              name="fake_admin_password_prevent_autofill"
               style={{ display: 'none' }}
               tabIndex={-1}
               autoComplete="off"
@@ -380,7 +387,7 @@ export default function Login() {
 
             <div className="input-group">
               <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>
-                Email Address
+                Admin Email Address
               </label>
               <div style={{ position: 'relative' }}>
                 <Mail
@@ -395,8 +402,8 @@ export default function Login() {
                 />
                 <input
                   type="email"
-                  name="eventlinqs_user_login_email_input"
-                  id="eventlinqs_user_login_email_input"
+                  name="eventlinqs_admin_login_email_input"
+                  id="eventlinqs_admin_login_email_input"
                   className="input-field"
                   style={{
                     paddingLeft: '2.75rem',
@@ -405,7 +412,7 @@ export default function Login() {
                     borderColor: 'rgba(255, 255, 255, 0.15)',
                     fontSize: '0.95rem',
                   }}
-                  placeholder="e.g. user@example.com"
+                  placeholder="e.g. admin@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="off"
@@ -419,7 +426,7 @@ export default function Login() {
 
             <div className="input-group">
               <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>
-                Password
+                Admin Password
               </label>
               <div style={{ position: 'relative' }}>
                 <Lock
@@ -434,8 +441,8 @@ export default function Login() {
                 />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  name="eventlinqs_user_login_password_input"
-                  id="eventlinqs_user_login_password_input"
+                  name="eventlinqs_admin_login_password_input"
+                  id="eventlinqs_admin_login_password_input"
                   className="input-field"
                   style={{
                     paddingLeft: '2.75rem',
@@ -445,7 +452,7 @@ export default function Login() {
                     borderColor: 'rgba(255, 255, 255, 0.15)',
                     fontSize: '0.95rem',
                   }}
-                  placeholder="Enter your password"
+                  placeholder="Enter administrator password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
@@ -494,7 +501,7 @@ export default function Login() {
                 transition: 'all 0.2s ease',
               }}
             >
-              <span>{isLoading ? 'Signing In...' : 'Sign In to EventLinqs'}</span>
+              <span>{isLoading ? 'Authorizing...' : 'Sign In as Administrator'}</span>
               <ArrowRight size={18} />
             </button>
           </form>
@@ -502,32 +509,18 @@ export default function Login() {
           {/* Footer Switch */}
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.75rem',
               textAlign: 'center',
               fontSize: '0.9rem',
               color: 'var(--text-muted)',
-              marginTop: '1.75rem',
+              marginTop: '2rem',
               borderTop: '1px solid rgba(255, 255, 255, 0.08)',
               paddingTop: '1.25rem',
             }}
           >
-            <div>
-              Don't have an account?{' '}
-              <Link
-                to={`/register?redirect=${encodeURIComponent(redirect)}`}
-                style={{ color: '#eab308', fontWeight: 700 }}
-              >
-                Create an Account &rarr;
-              </Link>
-            </div>
-            <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
-              Are you an Event Organizer / Administrator?{' '}
-              <Link to="/admin/login" style={{ color: '#eab308', fontWeight: 700 }}>
-                Admin Sign In &rarr;
-              </Link>
-            </div>
+            Looking for attendee ticket booking?{' '}
+            <Link to="/login" style={{ color: '#eab308', fontWeight: 700 }}>
+              Go to User Sign In &rarr;
+            </Link>
           </div>
         </div>
       </div>
