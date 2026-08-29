@@ -1,128 +1,170 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MapPin, Heart, ArrowUpRight, Check, Utensils, Trophy, Music, Sparkles } from 'lucide-react';
-import { getEventImage } from '../../utils/categoryImages.js';
-import { useFavoritesStore } from '../../store/favoritesStore.js';
+import { Link } from 'react-router-dom';
+import { Calendar, MapPin, Ticket, Star, Users, ArrowRight } from 'lucide-react';
 
-export default function EventCard({ event, compact = false }) {
-  const navigate = useNavigate();
-  const { isFavorite, toggleFavorite } = useFavoritesStore();
-  const favorite = isFavorite(event?._id);
-
+export default function EventCard({ event }) {
   if (!event) return null;
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return '15 Sep 2024';
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
-  };
+  const eventDate = event.startDate ? new Date(event.startDate) : new Date();
+  const formattedDate = eventDate.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 
-  // Generate capacity numbers matching the ( 14 / 50 ) style
-  const totalCapacity = event.totalSeats || 50;
-  const available = event.availableSeats !== undefined ? event.availableSeats : 24;
-  const booked = Math.max(1, totalCapacity - available);
-
-  const getCategoryEmoji = (cat) => {
-    switch (cat?.toLowerCase()) {
-      case 'sports':
-        return '🏀';
-      case 'food':
-      case 'festival':
-        return '🍴';
-      case 'concert':
-      case 'music':
-        return '🎵';
-      case 'comedy':
-        return '🎤';
-      case 'workshop':
-        return '🎨';
-      default:
-        return '✨';
-    }
-  };
+  const lowestPrice = event.tiers?.length
+    ? Math.min(...event.tiers.map((t) => t.price))
+    : event.price || 499;
 
   return (
-    <div
-      className="template-event-card"
-      onClick={() => navigate(`/event/${event._id}`)}
-      style={{ cursor: 'pointer' }}
+    <Link
+      to={`/events/${event._id}`}
+      className="sonora-event-card"
+      style={{ textDecoration: 'none' }}
     >
-      {/* 📸 Image Container with Badges */}
-      <div className="card-photo-container">
+      {/* Event Photo Cover */}
+      <div className="sonora-card-photo">
         <img
-          src={getEventImage(event)}
+          src={
+            event.coverImage ||
+            event.banner ||
+            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80'
+          }
           alt={event.title}
           loading="lazy"
-          onError={(e) => {
-            e.currentTarget.src =
-              'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800&auto=format&fit=crop&q=80';
-          }}
         />
+        <div className="sonora-photo-overlay"></div>
 
-        {/* Soft Vignette Gradient */}
-        <div className="card-gradient-overlay" />
-
-        {/* 🟡 Yellow Date Badge (Top Left) */}
-        <div className="yellow-date-badge">
-          <span>{getCategoryEmoji(event.category)}</span>
-          <span>{formatDate(event.date)}</span>
+        {/* Category Tag */}
+        <div className="sonora-category-tag">
+          {event.category || 'Live Music'}
         </div>
 
-        {/* ⚪ Capacity Fraction Circle (Top Right) */}
-        <div className="capacity-circle-badge">
-          <span>{booked}</span>
-          <div className="fraction-line" />
-          <span className="denominator">{totalCapacity}</span>
-        </div>
-
-        {/* 🔤 Bold Title Overlaid on Photo */}
-        <div className="card-overlay-title">
-          {event.title}
-        </div>
-      </div>
-
-      {/* 📍 Bottom Venue & "Wants Join" Pill Button */}
-      <div className="card-bottom-info">
-        <div className="card-address-block">
-          <div
-            style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '8px',
-              background: '#F1F5F9',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <MapPin size={14} color="#0F172A" />
-          </div>
-          <div>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', display: 'block' }}>
-              {event.venue?.name || 'Grand Arena'}
-            </span>
-            <span style={{ fontSize: '0.74rem', color: '#64748B', display: 'block' }}>
-              {event.city}
-            </span>
-          </div>
-        </div>
-
-        <button
-          className="btn-wants-join"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/event/${event._id}`);
+        {/* Date Pill (Top Right) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '0.85rem',
+            right: '0.85rem',
+            background: 'rgba(8, 7, 13, 0.8)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            padding: '0.3rem 0.65rem',
+            borderRadius: 'var(--radius-pill)',
+            fontSize: '0.72rem',
+            fontWeight: 800,
+            color: '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.3rem',
           }}
         >
-          <span>👏</span>
-          <span>Wants Join</span>
-        </button>
+          <Calendar size={11} color="#A78BFA" />
+          <span>{formattedDate}</span>
+        </div>
       </div>
-    </div>
+
+      {/* Card Content Details */}
+      <div
+        style={{
+          padding: '1.25rem',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          justifyContent: 'space-between',
+          gap: '1rem',
+        }}
+      >
+        <div>
+          {/* Location / Venue */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              color: '#94A3B8',
+              marginBottom: '0.4rem',
+            }}
+          >
+            <MapPin size={13} color="#8B5CF6" />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {event.location?.venue || 'Live Stadium'}, {event.location?.city || 'India'}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h3
+            style={{
+              fontSize: '1.15rem',
+              fontWeight: 900,
+              color: '#FFFFFF',
+              lineHeight: 1.3,
+              marginBottom: '0.5rem',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {event.title}
+          </h3>
+
+          {/* Short description */}
+          <p
+            style={{
+              fontSize: '0.82rem',
+              color: '#64748B',
+              lineHeight: 1.4,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {event.description || 'Join thousands of fans for this incredible live showcase.'}
+          </p>
+        </div>
+
+        {/* Bottom Price & Action Button */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            paddingTop: '0.85rem',
+          }}
+        >
+          <div>
+            <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
+              From
+            </div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#FFFFFF' }}>
+              ₹{lowestPrice}
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: 'var(--gradient-purple)',
+              color: '#FFFFFF',
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              padding: '0.55rem 1rem',
+              borderRadius: 'var(--radius-pill)',
+              boxShadow: '0 4px 12px rgba(139, 92, 246, 0.35)',
+            }}
+          >
+            <span>Get Ticket</span>
+            <ArrowRight size={14} />
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 }
