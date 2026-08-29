@@ -5,23 +5,19 @@ import {
   Calendar,
   Clock,
   MapPin,
-  Navigation,
   Share2,
   Heart,
-  ChevronRight,
   ShieldCheck,
+  Star,
+  Users,
+  Ticket,
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react';
 import api from '../api/client.js';
-import { getEventImage } from '../utils/categoryImages.js';
 import { useFavoritesStore } from '../store/favoritesStore.js';
 import { useToastStore } from '../store/toastStore.js';
-
-const GOING_AVATARS = [
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
-];
+import CountdownWidget from '../components/home/CountdownWidget.jsx';
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -32,6 +28,7 @@ export default function EventDetails() {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedTier, setSelectedTier] = useState(null);
 
   const favorite = isFavorite(id);
 
@@ -41,7 +38,11 @@ export default function EventDetails() {
       setError(null);
       try {
         const res = await api.get(`/events/${id}`);
-        setEvent(res.data?.data?.event);
+        const ev = res.data?.data?.event || res.data?.event;
+        setEvent(ev);
+        if (ev?.pricing?.length > 0) {
+          setSelectedTier(ev.pricing[0]);
+        }
       } catch (err) {
         setError(err.message || 'Event not found');
       } finally {
@@ -54,19 +55,19 @@ export default function EventDetails() {
 
   if (loading) {
     return (
-      <div className="container mobile-safe-bottom" style={{ maxWidth: '480px', paddingTop: '2rem' }}>
-        <div style={{ height: '400px', background: '#FFFFFF', borderRadius: 'var(--radius-xl)', animation: 'pulse 1.5s infinite' }} />
+      <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+        <div className="glass-widget-card" style={{ height: '500px', animation: 'pulse 1.5s infinite' }}></div>
       </div>
     );
   }
 
   if (error || !event) {
     return (
-      <div className="container mobile-safe-bottom" style={{ maxWidth: '480px', paddingTop: '3rem', textAlign: 'center' }}>
-        <div className="glass-panel" style={{ padding: '2.5rem 1.5rem' }}>
-          <h2 style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>Event Not Found</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{error}</p>
-          <button onClick={() => navigate('/events')} className="btn-primary">
+      <div className="container" style={{ paddingTop: '5rem', textAlign: 'center' }}>
+        <div className="glass-widget-card" style={{ padding: '4rem 2rem' }}>
+          <h2 style={{ fontSize: '1.8rem', color: '#FFFFFF', marginBottom: '0.75rem' }}>Event Not Found</h2>
+          <p style={{ color: '#94A3B8', marginBottom: '2rem' }}>{error || 'This event does not exist.'}</p>
+          <button onClick={() => navigate('/events')} className="btn-purple-glow">
             Browse All Events
           </button>
         </div>
@@ -75,14 +76,11 @@ export default function EventDetails() {
   }
 
   const d = new Date(event.date || Date.now());
-  const monthShort = d.toLocaleDateString('en-US', { month: 'short' });
-  const dayNum = d.toLocaleDateString('en-US', { day: 'numeric' });
-  const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', year: 'numeric' });
+  const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
   const timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
-  const totalCapacity = event.totalSeats || 50;
-  const available = event.availableSeats !== undefined ? event.availableSeats : 24;
-  const booked = Math.max(1, totalCapacity - available);
+  const totalCapacity = event.totalSeats || 160;
+  const available = event.availableSeats !== undefined ? event.availableSeats : 142;
 
   const minPrice =
     event.pricing && event.pricing.length > 0
@@ -90,344 +88,340 @@ export default function EventDetails() {
       : 499;
 
   return (
-    <div className="mobile-safe-bottom" style={{ minHeight: '100vh', paddingTop: '1rem' }}>
-      <div className="container" style={{ maxWidth: '480px' }}>
-        {/* Top Control Bar */}
+    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', padding: '2rem 0 6rem' }}>
+      <div className="container">
+        {/* Top Breadcrumb & Controls */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: '1rem',
+            marginBottom: '2rem',
           }}
         >
           <button
             onClick={() => navigate(-1)}
-            className="btn-icon"
-            style={{ width: '40px', height: '40px' }}
-            aria-label="Back"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '0.5rem 1.1rem',
+              color: '#FFFFFF',
+              fontSize: '0.86rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
+            <span>Back to Events</span>
           </button>
 
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <button
               onClick={() => {
-                navigator.clipboard?.writeText(window.location.href);
-                addToast('Event link copied!', 'success');
+                toggleFavorite(event);
+                addToast(favorite ? 'Removed from favorites' : 'Saved to favorites! ❤️', 'success');
               }}
-              className="btn-icon"
-              style={{ width: '40px', height: '40px' }}
-              aria-label="Share"
-            >
-              <Share2 size={16} />
-            </button>
-            <button
-              onClick={() => toggleFavorite(event._id)}
-              className="btn-icon"
-              style={{ width: '40px', height: '40px', color: favorite ? '#F43F5E' : '#0F172A' }}
-              aria-label="Favorite"
-            >
-              <Heart size={16} fill={favorite ? '#F43F5E' : 'none'} />
-            </button>
-          </div>
-        </div>
-
-        {/* 🌟 1. EVENT HEADER CARD (Thumbnail + Title + 24/50 Circle) */}
-        <div
-          style={{
-            background: '#FFFFFF',
-            borderRadius: 'var(--radius-xl)',
-            padding: '1.25rem',
-            boxShadow: 'var(--shadow-card)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            marginBottom: '1rem',
-          }}
-        >
-          {/* Thumbnail Box */}
-          <div
-            style={{
-              width: '74px',
-              height: '74px',
-              borderRadius: 'var(--radius-md)',
-              overflow: 'hidden',
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src={getEventImage(event)}
-              alt={event.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
-
-          {/* Title */}
-          <div style={{ flex: 1 }}>
-            <h1
               style={{
-                fontSize: '1.15rem',
-                fontWeight: 800,
-                color: '#0F172A',
-                lineHeight: 1.3,
-              }}
-            >
-              {event.title}
-            </h1>
-          </div>
-
-          {/* ⚪ Capacity Fraction Circle */}
-          <div
-            style={{
-              width: '50px',
-              height: '50px',
-              borderRadius: '50%',
-              background: '#FFFFFF',
-              border: '1.5px solid #E2E8F0',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.82rem',
-              fontWeight: 900,
-              color: '#0F172A',
-              flexShrink: 0,
-              boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
-            }}
-          >
-            <span>{booked}</span>
-            <div style={{ width: '16px', height: '1px', background: '#CBD5E1', margin: '1px 0' }} />
-            <span style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 700 }}>{totalCapacity}</span>
-          </div>
-        </div>
-
-        {/* 📅 2. DATE & TIME CARD */}
-        <div
-          style={{
-            background: '#FFFFFF',
-            borderRadius: 'var(--radius-xl)',
-            padding: '1.15rem',
-            boxShadow: 'var(--shadow-card)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            marginBottom: '1rem',
-          }}
-        >
-          {/* Square Date Badge */}
-          <div
-            style={{
-              width: '54px',
-              height: '54px',
-              borderRadius: 'var(--radius-md)',
-              background: '#F1F5F9',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
-              {monthShort}
-            </span>
-            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
-              {dayNum}
-            </span>
-          </div>
-
-          <div>
-            <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>
-              {fullDate}
-            </div>
-            <div style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
-              <Clock size={13} color="#EAB308" />
-              <span>{timeStr} onwards</span>
-            </div>
-          </div>
-        </div>
-
-        {/* 📍 3. LOCATION CARD WITH MINI MAP & GET DIRECTIONS */}
-        <div
-          style={{
-            background: '#FFFFFF',
-            borderRadius: 'var(--radius-xl)',
-            padding: '1.15rem',
-            boxShadow: 'var(--shadow-card)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            marginBottom: '1rem',
-          }}
-        >
-          {/* Mini Map Thumbnail */}
-          <div
-            style={{
-              width: '84px',
-              height: '84px',
-              borderRadius: 'var(--radius-md)',
-              background: '#E2E8F0',
-              overflow: 'hidden',
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              border: '1px solid #CBD5E1',
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage:
-                  'radial-gradient(#CBD5E1 1px, transparent 1px), radial-gradient(#CBD5E1 1px, #E2E8F0 1px)',
-                backgroundSize: '8px 8px',
-              }}
-            />
-            <div
-              style={{
-                width: '28px',
-                height: '28px',
+                width: '40px',
+                height: '40px',
                 borderRadius: '50%',
-                background: '#0F172A',
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: favorite ? '#F43F5E' : '#FFFFFF',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#FFFFFF',
-                zIndex: 2,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                cursor: 'pointer',
               }}
+              aria-label="Save to favorites"
             >
-              <MapPin size={15} />
-            </div>
-          </div>
-
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0F172A' }}>
-              {event.venue?.name || '4517 Washington Ave.'}
-            </div>
-            <div style={{ fontSize: '0.78rem', color: '#64748B', marginBottom: '0.6rem' }}>
-              {event.city}
-            </div>
-
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                `${event.venue?.name || ''} ${event.city}`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                background: '#F1F5F9',
-                padding: '0.35rem 0.75rem',
-                borderRadius: 'var(--radius-pill)',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                color: '#0F172A',
-                textDecoration: 'none',
-              }}
-            >
-              <Navigation size={12} />
-              <span>Get Direction</span>
-            </a>
-          </div>
-        </div>
-
-        {/* 👤 4. HOSTED BY & PEOPLE GOING */}
-        <div
-          style={{
-            background: '#FFFFFF',
-            borderRadius: 'var(--radius-xl)',
-            padding: '1.15rem',
-            boxShadow: 'var(--shadow-card)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.85rem',
-            marginBottom: '1rem',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B' }}>
-              Hosted By
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 800, color: '#0F172A' }}>
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=80"
-                alt="Host"
-                style={{ width: '22px', height: '22px', borderRadius: '50%' }}
-              />
-              <span>Mike Wazowki</span>
-            </div>
-          </div>
-
-          <div style={{ height: '1px', background: '#F1F5F9' }} />
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B' }}>
-              People Going ({booked} People)
-            </span>
-            <div className="avatar-group">
-              {GOING_AVATARS.map((av, idx) => (
-                <img key={idx} src={av} alt="Attendee" />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* 📝 5. ABOUT EVENT */}
-        <div
-          style={{
-            background: '#FFFFFF',
-            borderRadius: 'var(--radius-xl)',
-            padding: '1.25rem',
-            boxShadow: 'var(--shadow-card)',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem' }}>
-            About Event
-          </h3>
-          <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.6 }}>
-            {event.description ||
-              `Unlock your potential with our ${event.title} in ${event.city}! Designed for attendees of all skill levels, this hands-on session will help you sharpen your fundamentals, enhance your performance, and connect with vibrant creators.`}
-          </p>
-        </div>
-
-        {/* 🏷️ STICKY BOTTOM BOOK TICKET BAR */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-            background: '#FFFFFF',
-            borderRadius: 'var(--radius-xl)',
-            padding: '1rem 1.25rem',
-            boxShadow: 'var(--shadow-card)',
-          }}
-        >
-          <div>
-            <div style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>
-              Price
-            </div>
-            <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0F172A' }}>
-              ₹{minPrice.toLocaleString('en-IN')}
-            </div>
-          </div>
-
-          <Link to={`/event/${event._id}/seats`} style={{ flex: 1, maxWidth: '200px' }}>
-            <button
-              className="btn-primary"
-              style={{ width: '100%', padding: '0.85rem' }}
-            >
-              <span>Book Ticket</span>
-              <ChevronRight size={16} />
+              <Heart size={18} fill={favorite ? '#F43F5E' : 'none'} />
             </button>
-          </Link>
+
+            <button
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({ title: event.title, url: window.location.href });
+                } else {
+                  navigator.clipboard.writeText(window.location.href);
+                  addToast('Event link copied to clipboard! 📋', 'info');
+                }
+              }}
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+              aria-label="Share event"
+            >
+              <Share2 size={18} />
+            </button>
+          </div>
+        </div>
+
+        {/* 2-Column Responsive Layout */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+            gap: '2.5rem',
+            alignItems: 'start',
+          }}
+        >
+          {/* Left Column: Cover Banner, Title, Countdown, Venue & Lineup */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            {/* Main Visual Banner */}
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '380px',
+                borderRadius: '28px',
+                overflow: 'hidden',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 0 30px rgba(139, 92, 246, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              }}
+            >
+              <img
+                src={
+                  event.coverImage ||
+                  event.banner ||
+                  'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1000&auto=format&fit=crop&q=80'
+                }
+                alt={event.title}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to top, rgba(8, 7, 13, 0.9) 0%, rgba(139, 92, 246, 0.1) 60%, transparent 100%)',
+                }}
+              ></div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '1.25rem',
+                  left: '1.25rem',
+                }}
+              >
+                <div className="hero-tag-pill">
+                  <span className="tag-icon">✦</span>
+                  <span>{event.category || 'Live Experience'}</span>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '1.5rem',
+                  left: '1.5rem',
+                  right: '1.5rem',
+                }}
+              >
+                <h1
+                  style={{
+                    fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
+                    fontWeight: 900,
+                    color: '#FFFFFF',
+                    lineHeight: 1.15,
+                  }}
+                >
+                  {event.title}
+                </h1>
+              </div>
+            </div>
+
+            {/* Countdown Widget */}
+            <CountdownWidget targetDate={d} />
+
+            {/* Event Description */}
+            <div className="glass-widget-card" style={{ padding: '1.75rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.85rem' }}>
+                About This Experience
+              </h3>
+              <p style={{ color: '#94A3B8', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                {event.description ||
+                  'Join thousands of music and arts enthusiasts for a magical evening filled with world-class performances, state-of-the-art acoustics, and unforgettable memories.'}
+              </p>
+            </div>
+
+            {/* Venue & Location Box */}
+            <div className="glass-widget-card" style={{ padding: '1.75rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '1rem' }}>
+                Venue & Schedule
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '12px',
+                      background: 'rgba(139, 92, 246, 0.15)',
+                      border: '1px solid rgba(139, 92, 246, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Calendar size={18} color="#A78BFA" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF' }}>{fullDate}</div>
+                    <div style={{ fontSize: '0.8rem', color: '#94A3B8' }}>Doors open at {timeStr}</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '12px',
+                      background: 'rgba(139, 92, 246, 0.15)',
+                      border: '1px solid rgba(139, 92, 246, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <MapPin size={18} color="#A78BFA" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF' }}>
+                      {event.venue?.name || event.location?.venue || 'Grand Stadium Arena'}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+                      {event.venue?.address || event.location?.address || 'Main Complex'}, {event.city || 'India'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Ticket Tier Selector, Stadium Seat Map Link & Booking Action */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'sticky', top: '100px' }}>
+            {/* Booking Card */}
+            <div
+              className="glass-widget-card"
+              style={{
+                padding: '2rem',
+                border: '1px solid rgba(139, 92, 246, 0.35)',
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(139, 92, 246, 0.2)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+                <div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase' }}>
+                    Passes Starting At
+                  </div>
+                  <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#FFFFFF' }}>
+                    ₹{selectedTier ? selectedTier.price : minPrice}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                    color: '#10B981',
+                    padding: '0.35rem 0.75rem',
+                    borderRadius: 'var(--radius-pill)',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                  }}
+                >
+                  {available} Seats Left
+                </div>
+              </div>
+
+              {/* Tier Selection Pills */}
+              {event.pricing && event.pricing.length > 0 && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.75rem' }}>
+                    Select Ticket Tier:
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    {event.pricing.map((tier, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => setSelectedTier(tier)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '0.85rem 1.15rem',
+                          borderRadius: '14px',
+                          background: selectedTier?.category === tier.category ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                          border: selectedTier?.category === tier.category ? '1.5px solid #8B5CF6' : '1px solid rgba(255, 255, 255, 0.08)',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                        }}
+                      >
+                        <div>
+                          <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF' }}>
+                            {tier.category} Pass
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                            {tier.category === 'VIP' ? 'Front Row + Lounge Access' : tier.category === 'Premium' ? 'Central Prime View' : 'Upper Tier Admission'}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#FFFFFF' }}>
+                          ₹{tier.price}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Direct Stadium Seat Map Booking CTA */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <Link to={`/events/${event._id}/seats`} style={{ width: '100%' }}>
+                  <button
+                    className="btn-purple-glow"
+                    style={{ width: '100%', padding: '0.95rem', fontSize: '1rem' }}
+                  >
+                    <Star size={16} fill="#FFFFFF" />
+                    <span>Select Stadium Seats</span>
+                    <ArrowRight size={16} />
+                  </button>
+                </Link>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                    fontSize: '0.75rem',
+                    color: '#94A3B8',
+                    marginTop: '0.5rem',
+                  }}
+                >
+                  <ShieldCheck size={14} color="#10B981" />
+                  <span>5-Minute Atomic Seat Lock Guarantee</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

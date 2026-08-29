@@ -1,14 +1,15 @@
 import React from 'react';
 
 export const CATEGORIES_LIST = [
-  { id: '', name: 'Near By You', emoji: '📍' },
-  { id: 'Sports', name: 'Sport', emoji: '🍌' },
-  { id: 'Festival', name: 'Circus', emoji: '🎪' },
-  { id: 'Concert', name: 'Music', emoji: '🎵' },
-  { id: 'Food', name: 'Food', emoji: '🍤' },
-  { id: 'Comedy', name: 'Comedy', emoji: '🎤' },
-  { id: 'Workshop', name: 'Workshop', emoji: '🎨' },
-  { id: 'Theatre', name: 'Theatre', emoji: '🎭' },
+  { id: '', name: 'All Events', emoji: '✨' },
+  { id: 'Concert', name: 'Concert & Live Music', emoji: '🎸' },
+  { id: 'Festival', name: 'Festivals', emoji: '🎪' },
+  { id: 'Nightlife', name: 'DJ & Nightlife', emoji: '🍸' },
+  { id: 'Comedy', name: 'Stand-up Comedy', emoji: '🎤' },
+  { id: 'Sports', name: 'Sports & Matches', emoji: '🏆' },
+  { id: 'Conference', name: 'Tech & Summits', emoji: '⚡' },
+  { id: 'Workshop', name: 'Masterclasses', emoji: '🎨' },
+  { id: 'Theatre', name: 'Theatre & Plays', emoji: '🎭' },
 ];
 
 export default function CategoryPillList({ activeCategory, onSelectCategory }) {
@@ -19,7 +20,7 @@ export default function CategoryPillList({ activeCategory, onSelectCategory }) {
         alignItems: 'center',
         gap: '0.65rem',
         overflowX: 'auto',
-        padding: '0.25rem 0.25rem 0.75rem 0.25rem',
+        padding: '0.25rem 0 0.75rem 0',
       }}
       className="no-scrollbar"
     >
@@ -30,9 +31,9 @@ export default function CategoryPillList({ activeCategory, onSelectCategory }) {
 
         return (
           <button
-            key={cat.name}
+            key={cat.id || 'all'}
             onClick={() => onSelectCategory(cat.id)}
-            className={`category-chip ${isActive ? 'active' : ''}`}
+            className={`sonora-filter-chip ${isActive ? 'active' : ''}`}
             type="button"
           >
             {cat.emoji && <span>{cat.emoji}</span>}

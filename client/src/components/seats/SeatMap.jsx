@@ -27,7 +27,7 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
   if (!seats || seats.length === 0) {
     return (
       <div style={{ padding: '4rem 2rem', textAlign: 'center', color: '#94a3b8' }}>
-        <Sparkles size={36} color="#eab308" style={{ margin: '0 auto 1rem auto', opacity: 0.8 }} />
+        <Sparkles size={36} color="#8B5CF6" style={{ margin: '0 auto 1rem auto', opacity: 0.8 }} />
         <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>
           No Seats in this View
         </h4>
@@ -40,11 +40,9 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
 
   const isSelected = (seat) => selectedSeats.some((s) => s._id === seat._id);
 
-  const subtotal = selectedSeats.reduce((sum, s) => sum + s.price, 0);
-
   return (
     <div style={{ position: 'relative', width: '100%' }}>
-      {/* Stadium / Theatre Stage Indicator */}
+      {/* Stadium / Theatre Stage Indicator with Electric Purple Glow */}
       <div
         style={{
           display: 'flex',
@@ -58,9 +56,9 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
             width: '70%',
             maxWidth: '650px',
             height: '14px',
-            background: 'linear-gradient(90deg, transparent 0%, #eab308 50%, transparent 100%)',
+            background: 'linear-gradient(90deg, transparent 0%, #8B5CF6 50%, transparent 100%)',
             borderRadius: '100px 100px 0 0',
-            boxShadow: '0 -10px 25px rgba(234, 179, 8, 0.6)',
+            boxShadow: '0 -10px 30px rgba(139, 92, 246, 0.8)',
             marginBottom: '0.75rem',
           }}
         />
@@ -68,10 +66,10 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
           style={{
             fontFamily: 'var(--font-heading)',
             fontSize: '0.85rem',
-            fontWeight: 700,
+            fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.2em',
-            color: '#eab308',
+            color: '#A78BFA',
           }}
         >
           STAGE / PERFORMANCE AREA
@@ -92,7 +90,7 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
         {Object.values(sectionMap).map((sec) => (
           <div
             key={sec.name}
-            className="glass-panel"
+            className="glass-widget-card"
             style={{
               padding: '1.75rem',
               width: '100%',
@@ -100,7 +98,7 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              backgroundColor: 'rgba(18, 20, 31, 0.6)',
+              backgroundColor: 'rgba(20, 18, 34, 0.75)',
             }}
           >
             {/* Section Header */}
@@ -111,17 +109,24 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
                 justifyContent: 'space-between',
                 width: '100%',
                 marginBottom: '1.25rem',
-                borderBottom: '1px solid var(--border-subtle)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                 paddingBottom: '0.75rem',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <span style={{ fontSize: '1.05rem', fontWeight: 700 }}>
+                <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#FFFFFF' }}>
                   {sec.name}
                 </span>
                 <span
-                  className={`badge badge-${sec.category.toLowerCase()}`}
-                  style={{ fontSize: '0.7rem' }}
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: 'var(--radius-pill)',
+                    background: sec.category === 'VIP' ? 'rgba(139, 92, 246, 0.25)' : sec.category === 'Premium' ? 'rgba(99, 102, 241, 0.25)' : 'rgba(56, 189, 248, 0.25)',
+                    color: sec.category === 'VIP' ? '#C4B5FD' : sec.category === 'Premium' ? '#A5B4FC' : '#7DD3FC',
+                    border: `1px solid ${sec.category === 'VIP' ? 'rgba(139, 92, 246, 0.5)' : sec.category === 'Premium' ? 'rgba(99, 102, 241, 0.5)' : 'rgba(56, 189, 248, 0.5)'}`,
+                  }}
                 >
                   {sec.category}
                 </span>
@@ -129,13 +134,13 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
               <div
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.1rem',
-                  fontWeight: 700,
+                  fontSize: '1.15rem',
+                  fontWeight: 900,
                   color: '#ffffff',
                 }}
               >
                 ₹{sec.price}
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginLeft: '4px' }}>
+                <span style={{ fontSize: '0.75rem', color: '#94A3B8', marginLeft: '4px' }}>
                   / seat
                 </span>
               </div>
@@ -173,7 +178,7 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
                           width: '20px',
                           fontSize: '0.75rem',
                           fontWeight: 700,
-                          color: 'var(--text-subtle)',
+                          color: '#94A3B8',
                           textAlign: 'center',
                         }}
                       >
@@ -218,7 +223,7 @@ export default function SeatMap({ seats, onLockReservation, isSubmitting }) {
                           width: '20px',
                           fontSize: '0.75rem',
                           fontWeight: 700,
-                          color: 'var(--text-subtle)',
+                          color: '#94A3B8',
                           textAlign: 'center',
                         }}
                       >

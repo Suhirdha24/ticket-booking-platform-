@@ -48,6 +48,21 @@ const CITIES = [
   'Pune',
 ];
 
+const CATEGORIES = [
+  { name: 'Concert', icon: Music, desc: 'Live bands, acoustic & stadium concerts' },
+  { name: 'Festival', icon: Flame, desc: 'Cultural fairs, art & food carnivals' },
+  { name: 'Comedy', icon: Mic, desc: 'Stand-up comedy specials & improv nights' },
+  { name: 'Sports', icon: Trophy, desc: 'Cricket, football, racing & esports matches' },
+  { name: 'Conference', icon: Zap, desc: 'Tech summits, AI expos & leadership keynotes' },
+  { name: 'Theatre', icon: Tv, desc: 'Broadway plays, drama & classical performances' },
+  { name: 'Workshop', icon: Palette, desc: 'Hands-on masterclasses & skill building' },
+  { name: 'Nightlife', icon: Wine, desc: 'DJ club nights, rooftop parties & lounges' },
+  { name: 'Gaming', icon: Gamepad2, desc: 'LAN tournaments & esports battles' },
+  { name: 'Meetup', icon: Users, desc: 'Networking, founder mixers & social clubs' },
+  { name: 'Wellness', icon: Heart, desc: 'Yoga retreats, fitness camps & meditation' },
+  { name: 'Kids & Family', icon: Smile, desc: 'Magic shows, puppet theatre & family fun' },
+];
+
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,6 +72,7 @@ export default function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [activeNavPopup, setActiveNavPopup] = useState(null); // 'discover' | 'categories' | null
 
   const navRef = useRef(null);
 
@@ -64,6 +80,7 @@ export default function Navbar() {
     function handleClickOutside(event) {
       if (navRef.current && !navRef.current.contains(event.target)) {
         setUserMenuOpen(false);
+        setActiveNavPopup(null);
         setMobileMenuOpen(false);
       }
     }
@@ -74,8 +91,18 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
+    setActiveNavPopup(null);
     setMobileMenuOpen(false);
     navigate('/');
+  };
+
+  const togglePopup = (name) => {
+    setActiveNavPopup((prev) => (prev === name ? null : name));
+  };
+
+  const closePopups = () => {
+    setActiveNavPopup(null);
+    setMobileMenuOpen(false);
   };
 
   const formatTimer = (sec) => {
@@ -92,7 +119,7 @@ export default function Navbar() {
         top: 0,
         zIndex: 100,
         width: '100%',
-        backgroundColor: 'rgba(8, 7, 13, 0.85)',
+        backgroundColor: 'rgba(8, 7, 13, 0.9)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
@@ -109,9 +136,10 @@ export default function Navbar() {
         }}
       >
         {/* Left: Sonora Waveform Logo & City Pill */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <Link
             to="/"
+            onClick={closePopups}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -175,65 +203,98 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Center: Sonora Nav Links (Desktop) */}
-        <div
-          style={{
-            display: 'none',
-            alignItems: 'center',
-            gap: '2rem',
-          }}
-          className="desktop-links"
-        >
+        {/* 🌟 Center: Responsive Desktop Nav Links */}
+        <div className="desktop-links">
+          {/* 1. Explore Events / Tickets Link */}
           <Link
             to="/events"
+            onClick={closePopups}
             style={{
-              fontSize: '0.92rem',
-              fontWeight: 600,
-              color: location.pathname === '/events' ? '#FFFFFF' : '#94A3B8',
+              fontSize: '0.95rem',
+              fontWeight: 700,
+              color: location.pathname === '/events' && !activeNavPopup ? '#FFFFFF' : '#94A3B8',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '8px',
               transition: 'color 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
             onMouseLeave={(e) => {
-              if (location.pathname !== '/events') e.currentTarget.style.color = '#94A3B8';
+              if (location.pathname !== '/events' || activeNavPopup) e.currentTarget.style.color = '#94A3B8';
             }}
           >
-            Tickets
+            <Ticket size={16} color="#A78BFA" />
+            <span>Explore Events</span>
           </Link>
 
-          <Link
-            to="/events?category=Concert"
+          {/* 2. Discover Dropdown Toggle */}
+          <button
+            onClick={() => togglePopup('discover')}
             style={{
-              fontSize: '0.92rem',
-              fontWeight: 600,
-              color: '#94A3B8',
-              transition: 'color 0.2s',
+              background: activeNavPopup === 'discover' ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+              border: 'none',
+              fontSize: '0.95rem',
+              fontWeight: 700,
+              color: activeNavPopup === 'discover' ? '#A78BFA' : '#94A3B8',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
           >
-            Lineup
-          </Link>
+            <span>Discover</span>
+            <ChevronDown
+              size={14}
+              style={{
+                transform: activeNavPopup === 'discover' ? 'rotate(180deg)' : 'none',
+                transition: 'transform 0.2s ease',
+              }}
+            />
+          </button>
 
-          <Link
-            to="/events?category=Festival"
+          {/* 3. Categories Dropdown Toggle */}
+          <button
+            onClick={() => togglePopup('categories')}
             style={{
-              fontSize: '0.92rem',
-              fontWeight: 600,
-              color: '#94A3B8',
-              transition: 'color 0.2s',
+              background: activeNavPopup === 'categories' ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+              border: 'none',
+              fontSize: '0.95rem',
+              fontWeight: 700,
+              color: activeNavPopup === 'categories' ? '#A78BFA' : '#94A3B8',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
           >
-            Schedule
-          </Link>
+            <span>Categories</span>
+            <ChevronDown
+              size={14}
+              style={{
+                transform: activeNavPopup === 'categories' ? 'rotate(180deg)' : 'none',
+                transition: 'transform 0.2s ease',
+              }}
+            />
+          </button>
 
+          {/* 4. Experience / My Bookings Direct Link */}
           <Link
             to="/my-bookings"
+            onClick={closePopups}
             style={{
-              fontSize: '0.92rem',
-              fontWeight: 600,
+              fontSize: '0.95rem',
+              fontWeight: 700,
               color: location.pathname === '/my-bookings' ? '#FFFFFF' : '#94A3B8',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '8px',
               transition: 'color 0.2s',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
@@ -241,22 +302,31 @@ export default function Navbar() {
               if (location.pathname !== '/my-bookings') e.currentTarget.style.color = '#94A3B8';
             }}
           >
-            Experience
+            My Passes
           </Link>
 
-          <Link
-            to="/organizer"
-            style={{
-              fontSize: '0.92rem',
-              fontWeight: 600,
-              color: '#94A3B8',
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
-          >
-            Contact
-          </Link>
+          {user?.role === 'admin' && (
+            <Link
+              to="/admin"
+              onClick={closePopups}
+              style={{
+                fontSize: '0.92rem',
+                fontWeight: 700,
+                color: '#A78BFA',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                padding: '0.4rem 0.75rem',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                background: 'rgba(139, 92, 246, 0.15)',
+                border: '1px solid rgba(139, 92, 246, 0.3)',
+              }}
+            >
+              <Shield size={15} />
+              <span>Admin Portal</span>
+            </Link>
+          )}
         </div>
 
         {/* Right: Get Tickets Button & User Profile */}
@@ -285,7 +355,7 @@ export default function Navbar() {
           )}
 
           {/* ⭐ Get Tickets Main CTA */}
-          <Link to="/events">
+          <Link to="/events" onClick={closePopups}>
             <button
               className="btn-purple-glow"
               style={{
@@ -413,28 +483,6 @@ export default function Navbar() {
                     <span>Saved Favorites</span>
                   </Link>
 
-                  {user?.role === 'admin' && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setUserMenuOpen(false)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.6rem',
-                        padding: '0.6rem 0.75rem',
-                        fontSize: '0.86rem',
-                        fontWeight: 700,
-                        color: '#A78BFA',
-                        borderRadius: '8px',
-                        textDecoration: 'none',
-                        background: 'rgba(139, 92, 246, 0.15)',
-                      }}
-                    >
-                      <Shield size={15} color="#A78BFA" />
-                      <span>Admin Portal</span>
-                    </Link>
-                  )}
-
                   <button
                     onClick={handleLogout}
                     style={{
@@ -498,7 +546,219 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Slide-Down Drawer */}
+      {/* ========================================================================= */}
+      {/* 🔮 1. DISCOVER POPUP MEGA MENU */}
+      {/* ========================================================================= */}
+      {activeNavPopup === 'discover' && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '76px',
+            left: 0,
+            width: '100%',
+            backgroundColor: '#0D0C15',
+            borderBottom: '1px solid rgba(139, 92, 246, 0.3)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.9)',
+            padding: '2rem 0',
+            zIndex: 99,
+          }}
+        >
+          <div className="container" style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '3rem' }}>
+            <div style={{ borderRight: '1px solid rgba(255, 255, 255, 0.08)', paddingRight: '2rem' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                Quick Discovery
+              </div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '1.25rem' }}>
+                Find Your Next Live Experience
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <button
+                  onClick={() => {
+                    closePopups();
+                    navigate('/events');
+                  }}
+                  className="btn-purple-glow"
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                >
+                  <span>Explore All 4,750+ Events</span>
+                  <ArrowRight size={16} />
+                </button>
+
+                <button
+                  onClick={() => {
+                    closePopups();
+                    navigate('/events?category=Concert');
+                  }}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    color: '#FFFFFF',
+                    fontWeight: 700,
+                    fontSize: '0.88rem',
+                    padding: '0.75rem 1.15rem',
+                    borderRadius: 'var(--radius-pill)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span>🔥 Trending Concerts & Music</span>
+                  <ArrowRight size={14} color="#A78BFA" />
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                Browse by Location
+              </div>
+              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.85rem' }}>
+                Popular Cities
+              </h4>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {CITIES.map((city) => (
+                  <button
+                    key={city}
+                    onClick={() => {
+                      closePopups();
+                      navigate(`/events?city=${encodeURIComponent(city)}`);
+                    }}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      color: '#FFFFFF',
+                      padding: '0.45rem 0.9rem',
+                      borderRadius: 'var(--radius-pill)',
+                      fontSize: '0.84rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <MapPin size={12} color="#A78BFA" />
+                    <span>{city}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 🎭 2. CATEGORIES POPUP MEGA MENU */}
+      {/* ========================================================================= */}
+      {activeNavPopup === 'categories' && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '76px',
+            left: 0,
+            width: '100%',
+            backgroundColor: '#0D0C15',
+            borderBottom: '1px solid rgba(139, 92, 246, 0.3)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.9)',
+            padding: '2rem 0',
+            zIndex: 99,
+          }}
+        >
+          <div className="container">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase' }}>
+                  Curated Catalog
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF' }}>
+                  Browse All Categories
+                </h3>
+              </div>
+              <button
+                onClick={() => {
+                  closePopups();
+                  navigate('/events');
+                }}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  padding: '0.4rem 1rem',
+                  borderRadius: 'var(--radius-pill)',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                View Full Catalog &rarr;
+              </button>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+                gap: '0.75rem',
+              }}
+            >
+              {CATEGORIES.map((cat, idx) => {
+                const Icon = cat.icon;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      closePopups();
+                      navigate(`/events?category=${encodeURIComponent(cat.name)}`);
+                    }}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      padding: '0.85rem 1rem',
+                      borderRadius: '14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.85rem',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '10px',
+                        background: 'rgba(139, 92, 246, 0.15)',
+                        border: '1px solid rgba(139, 92, 246, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <Icon size={18} color="#A78BFA" />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF' }}>
+                        {cat.name}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                        {cat.desc}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 📱 Mobile Slide-Down Menu */}
       {mobileMenuOpen && (
         <div
           style={{
@@ -512,31 +772,31 @@ export default function Navbar() {
         >
           <Link
             to="/events"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={closePopups}
             style={{ color: '#FFFFFF', fontWeight: 700, padding: '0.5rem 0' }}
           >
-            Tickets
+            Explore Events
           </Link>
           <Link
             to="/events?category=Concert"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={closePopups}
             style={{ color: '#E2E8F0', fontWeight: 600, padding: '0.5rem 0' }}
           >
-            Lineup
+            Concerts & Music
           </Link>
           <Link
             to="/events?category=Festival"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={closePopups}
             style={{ color: '#E2E8F0', fontWeight: 600, padding: '0.5rem 0' }}
           >
-            Schedule
+            Festivals
           </Link>
           <Link
             to="/my-bookings"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={closePopups}
             style={{ color: '#E2E8F0', fontWeight: 600, padding: '0.5rem 0' }}
           >
-            My Passes & Experience
+            My Passes & Tickets
           </Link>
         </div>
       )}

@@ -9,6 +9,7 @@ import {
   RotateCcw,
   Sparkles,
   ChevronDown,
+  Ticket,
 } from 'lucide-react';
 import api from '../api/client.js';
 import { useLocationStore } from '../store/locationStore.js';
@@ -57,9 +58,9 @@ export default function Events() {
       setError(null);
       try {
         const params = new URLSearchParams();
-        if (search) params.set('q', search);
+        if (search) params.set('search', search);
         if (category) params.set('category', category);
-        
+
         // If city filter is specified in URL, use it; otherwise use location store selectedCity
         const activeCity = city || (selectedCity !== 'All Cities' ? selectedCity : '');
         if (activeCity) params.set('city', activeCity);
@@ -69,9 +70,9 @@ export default function Events() {
         params.set('limit', '12');
 
         const res = await api.get(`/events?${params.toString()}`);
-        setEvents(res.data?.data?.events || []);
+        setEvents(res.data?.data?.events || res.data?.events || []);
         setPagination(
-          res.data?.data?.pagination || { page: 1, pages: 1, total: 0 }
+          res.data?.data?.pagination || res.data?.pagination || { page: 1, pages: 1, total: 0 }
         );
       } catch (err) {
         console.error('Failed to load events:', err);
@@ -123,35 +124,36 @@ export default function Events() {
   };
 
   return (
-    <div className="mobile-safe-bottom" style={{ minHeight: '100vh', paddingTop: '1.5rem' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', padding: '2.5rem 0 5rem' }}>
       <LocationModal />
 
       <div className="container">
         {/* Header Title */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <span
+        <div style={{ marginBottom: '2rem' }}>
+          <div
             style={{
               fontSize: '0.8rem',
               fontWeight: 800,
-              color: 'var(--primary-gold)',
+              color: '#A78BFA',
               textTransform: 'uppercase',
-              letterSpacing: '0.06em',
+              letterSpacing: '0.08em',
+              marginBottom: '0.35rem',
             }}
           >
-            Explore Events
-          </span>
+            Explore Catalog
+          </div>
           <h1
             style={{
-              fontSize: '2rem',
-              fontWeight: 800,
+              fontSize: '2.4rem',
+              fontWeight: 900,
               letterSpacing: '-0.02em',
-              marginTop: '0.15rem',
+              color: '#FFFFFF',
             }}
           >
-            {category ? `${category} Events` : 'All Live Events'}
+            {category ? `${category} Events` : 'All Live Experiences'}
           </h1>
-          <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-            Showing {pagination.total} experiences across India
+          <p style={{ fontSize: '0.92rem', color: '#94A3B8', marginTop: '0.3rem' }}>
+            Showing {pagination.total || events.length} live festivals, concerts & stages across India
           </p>
         </div>
 
@@ -160,8 +162,8 @@ export default function Events() {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem',
-            marginBottom: '1.5rem',
+            gap: '1.25rem',
+            marginBottom: '2rem',
           }}
         >
           {/* Main Search Bar */}
@@ -171,14 +173,14 @@ export default function Events() {
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-medium)',
+              background: 'rgba(22, 20, 36, 0.85)',
+              border: '1.5px solid rgba(255, 255, 255, 0.1)',
               borderRadius: 'var(--radius-pill)',
               padding: '0.45rem 0.6rem 0.45rem 1.25rem',
-              boxShadow: 'var(--shadow-card)',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
             }}
           >
-            <Search size={18} color="var(--primary-gold)" style={{ flexShrink: 0 }} />
+            <Search size={18} color="#A78BFA" style={{ flexShrink: 0 }} />
             <input
               type="text"
               value={search}
@@ -189,8 +191,8 @@ export default function Events() {
                 background: 'transparent',
                 border: 'none',
                 outline: 'none',
-                color: '#0F172A',
-                fontSize: '0.92rem',
+                color: '#FFFFFF',
+                fontSize: '0.95rem',
                 fontFamily: 'var(--font-body)',
               }}
             />
@@ -203,17 +205,22 @@ export default function Events() {
                   p.delete('q');
                   setSearchParams(p);
                 }}
-                className="btn-icon"
-                style={{ width: '28px', height: '28px' }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94A3B8',
+                  cursor: 'pointer',
+                  padding: '4px',
+                }}
                 aria-label="Clear search"
               >
-                <X size={14} />
+                <X size={15} />
               </button>
             )}
             <button
               type="submit"
-              className="btn-primary"
-              style={{ padding: '0.6rem 1.25rem', fontSize: '0.85rem' }}
+              className="btn-purple-glow"
+              style={{ padding: '0.65rem 1.4rem', fontSize: '0.86rem' }}
             >
               Search
             </button>
@@ -225,88 +232,85 @@ export default function Events() {
             onSelectCategory={handleCategoryChange}
           />
 
-          {/* Filter Metadata & Sort Controls */}
+          {/* Location & Sorting Sub-Bar */}
           <div
+            className="glass-widget-card"
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
               gap: '0.75rem',
-              padding: '0.75rem 1rem',
-              background: 'var(--bg-surface)',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--border-subtle)',
+              padding: '0.85rem 1.25rem',
+              borderRadius: '16px',
             }}
           >
             {/* Location Pill & Reset */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
               <button
                 onClick={openLocationModal}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  padding: '0.4rem 0.85rem',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-medium)',
+                  padding: '0.45rem 0.9rem',
                   borderRadius: 'var(--radius-pill)',
-                  color: 'var(--primary-gold)',
-                  fontSize: '0.82rem',
+                  background: 'rgba(139, 92, 246, 0.15)',
+                  border: '1px solid rgba(139, 92, 246, 0.35)',
+                  color: '#A78BFA',
+                  fontSize: '0.84rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                 }}
               >
-                <MapPin size={13} />
-                <span>{city || selectedCity}</span>
+                <MapPin size={13} color="#A78BFA" />
+                <span>{selectedCity}</span>
                 <ChevronDown size={12} />
               </button>
 
-              {(category || search || city) && (
+              {(search || category || city) && (
                 <button
                   onClick={resetAllFilters}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.35rem',
-                    padding: '0.4rem 0.75rem',
-                    background: 'rgba(244, 63, 94, 0.1)',
-                    border: '1px solid rgba(244, 63, 94, 0.25)',
+                    padding: '0.45rem 0.85rem',
                     borderRadius: 'var(--radius-pill)',
-                    color: '#f43f5e',
-                    fontSize: '0.78rem',
+                    background: 'rgba(244, 63, 94, 0.15)',
+                    border: '1px solid rgba(244, 63, 94, 0.3)',
+                    color: '#FB7185',
+                    fontSize: '0.82rem',
                     fontWeight: 700,
                     cursor: 'pointer',
                   }}
                 >
                   <RotateCcw size={12} />
-                  <span>Reset Filters</span>
+                  <span>Reset All</span>
                 </button>
               )}
             </div>
 
             {/* Sort Dropdown */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                Sort By:
-              </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <ArrowUpDown size={14} color="#94A3B8" />
               <select
                 value={sort}
                 onChange={(e) => handleSortChange(e.target.value)}
                 style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-medium)',
-                  borderRadius: 'var(--radius-md)',
-                  color: '#ffffff',
-                  padding: '0.4rem 0.75rem',
-                  fontSize: '0.82rem',
-                  fontWeight: 600,
-                  outline: 'none',
+                  background: '#14121F',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '0.45rem 0.9rem',
+                  fontSize: '0.84rem',
+                  fontWeight: 700,
+                  color: '#FFFFFF',
                   cursor: 'pointer',
+                  outline: 'none',
                 }}
               >
                 {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value} style={{ background: '#11151C' }}>
+                  <option key={opt.value} value={opt.value} style={{ background: '#14121F', color: '#FFFFFF' }}>
                     {opt.label}
                   </option>
                 ))}
@@ -315,87 +319,61 @@ export default function Events() {
           </div>
         </div>
 
-        {/* 🎪 Event Cards Grid */}
+        {/* 🎪 Events Grid Display */}
         {loading ? (
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1.25rem',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))',
+              gap: '1.5rem',
             }}
           >
-            {Array.from({ length: 8 }).map((_, i) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
               <div
-                key={i}
-                style={{
-                  height: '380px',
-                  borderRadius: 'var(--radius-xl)',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-subtle)',
-                  animation: 'pulse 1.5s infinite',
-                }}
-              />
+                key={n}
+                className="glass-widget-card"
+                style={{ height: '360px', opacity: 0.5, animation: 'pulse 1.5s infinite' }}
+              ></div>
             ))}
           </div>
         ) : error ? (
           <div
+            className="glass-widget-card"
             style={{
+              padding: '4rem 2rem',
               textAlign: 'center',
-              padding: '4rem 1.5rem',
-              background: 'var(--bg-card)',
-              borderRadius: 'var(--radius-xl)',
-              border: '1px solid var(--border-subtle)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem',
             }}
           >
-            <p style={{ color: '#f43f5e', fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>
-              {error}
-            </p>
-            <button onClick={resetAllFilters} className="btn-primary">
-              Retry & Reset Filters
+            <div style={{ color: '#FB7185', fontSize: '1.2rem', fontWeight: 800 }}>{error}</div>
+            <button onClick={resetAllFilters} className="btn-purple-glow">
+              Try Again
             </button>
           </div>
         ) : events.length === 0 ? (
           <div
+            className="glass-widget-card"
             style={{
+              padding: '4rem 2rem',
               textAlign: 'center',
-              padding: '4rem 1.5rem',
-              background: 'var(--bg-card)',
-              borderRadius: 'var(--radius-xl)',
-              border: '1px solid var(--border-subtle)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1.25rem',
             }}
           >
-            <div
-              style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                background: 'var(--gradient-gold-subtle)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1.25rem auto',
-                color: 'var(--primary-gold)',
-              }}
-            >
-              <Search size={28} />
-            </div>
-            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: '0.4rem' }}>
+            <Ticket size={48} color="#8B5CF6" />
+            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF' }}>
               No Events Found
             </h3>
-            <p
-              style={{
-                fontSize: '0.9rem',
-                color: 'var(--text-muted)',
-                maxWidth: '420px',
-                margin: '0 auto 1.5rem auto',
-                lineHeight: 1.5,
-              }}
-            >
-              We couldn't find any events matching your selected search query or city. Try choosing
-              another city or resetting your filters.
+            <p style={{ color: '#94A3B8', maxWidth: '400px' }}>
+              We couldn't find any events matching your selected search query or city filters.
             </p>
-            <button onClick={resetAllFilters} className="btn-primary">
-              View All Events
+            <button onClick={resetAllFilters} className="btn-purple-glow">
+              Show All Events
             </button>
           </div>
         ) : (
@@ -403,9 +381,8 @@ export default function Events() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '1.25rem',
-                marginBottom: '2.5rem',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))',
+                gap: '1.5rem',
               }}
             >
               {events.map((event) => (
@@ -415,14 +392,14 @@ export default function Events() {
 
             {/* Pagination Controls */}
             {pagination.pages > 1 && (
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+              <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
                 <Pagination
                   currentPage={pagination.page}
                   totalPages={pagination.pages}
-                  onPageChange={(newPage) => {
-                    const p = new URLSearchParams(searchParams);
-                    p.set('page', newPage.toString());
-                    setSearchParams(p);
+                  onPageChange={(p) => {
+                    const newParams = new URLSearchParams(searchParams);
+                    newParams.set('page', p.toString());
+                    setSearchParams(newParams);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 />
