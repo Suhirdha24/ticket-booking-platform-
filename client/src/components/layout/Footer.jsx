@@ -1,14 +1,16 @@
 import React from 'react';
-import { Ticket, Shield, Sparkles } from 'lucide-react';
+import { Ticket, Shield, Sparkles, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
     <footer
       style={{
-        borderTop: '1px solid var(--border-subtle)',
-        background: 'rgba(9, 10, 15, 0.95)',
-        padding: '3.5rem 0 2rem 0',
+        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+        background: '#08070D',
+        padding: '3.5rem 0 2.5rem 0',
         marginTop: 'auto',
+        color: '#94A3B8',
       }}
     >
       <div className="container">
@@ -30,39 +32,43 @@ export default function Footer() {
                 marginBottom: '1rem',
               }}
             >
+              {/* Soundwave Bars */}
               <div
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  gap: '3px',
+                  height: '20px',
                 }}
               >
-                <Ticket size={18} color="#000000" />
+                <div className="soundwave-bar" style={{ height: '8px', background: '#8B5CF6' }}></div>
+                <div className="soundwave-bar" style={{ height: '16px', background: '#A78BFA' }}></div>
+                <div className="soundwave-bar" style={{ height: '20px', background: '#8B5CF6' }}></div>
+                <div className="soundwave-bar" style={{ height: '12px', background: '#C4B5FD' }}></div>
               </div>
+
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.2rem',
-                  fontWeight: 800,
+                  fontSize: '1.25rem',
+                  fontWeight: 900,
                   color: '#ffffff',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
                 }}
               >
-                Event<span style={{ color: '#eab308' }}>Linqs</span>
+                Event<span style={{ color: '#A78BFA' }}>Linqs</span>
               </span>
             </div>
             <p
               style={{
                 fontSize: '0.88rem',
-                color: 'var(--text-muted)',
+                color: '#94A3B8',
                 lineHeight: 1.6,
                 marginBottom: '1.25rem',
               }}
             >
-              Every Culture, Every Event, One Platform. Real-time ticket reservations, interactive seat maps, and secure digital event passes across India.
+              Feel the sound. Live the moment. Real-time ticket reservations, interactive seat maps, and secure digital event passes across India.
             </p>
             <div
               style={{
@@ -91,70 +97,113 @@ export default function Footer() {
           <div>
             <h4
               style={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: '#ffffff',
+                fontSize: '0.85rem',
+                fontWeight: 800,
+                color: '#A78BFA',
                 marginBottom: '1rem',
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.08em',
               }}
             >
               Explore
             </h4>
-            <ul
-              style={{
-                listStyle: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.65rem',
-                fontSize: '0.9rem',
-                color: 'var(--text-muted)',
-              }}
-            >
-              <li><a href="/events?category=Concert" style={{ transition: 'color 0.2s' }}>Live Concerts</a></li>
-              <li><a href="/events?category=Conference" style={{ transition: 'color 0.2s' }}>Tech Conferences</a></li>
-              <li><a href="/events?category=Theatre" style={{ transition: 'color 0.2s' }}>Broadway & Theatres</a></li>
-              <li><a href="/events?category=Sports" style={{ transition: 'color 0.2s' }}>Esports & Tournaments</a></li>
-              <li><a href="/events?category=Comedy" style={{ transition: 'color 0.2s' }}>Standup Comedy</a></li>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
+              <li>
+                <Link to="/events" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
+                  All Live Events
+                </Link>
+              </li>
+              <li>
+                <Link to="/events?category=Concert" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
+                  Concerts & Music
+                </Link>
+              </li>
+              <li>
+                <Link to="/events?category=Festival" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
+                  Festivals & Carnivals
+                </Link>
+              </li>
+              <li>
+                <Link to="/events?category=Conference" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
+                  Tech & Summits
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Architecture */}
+          {/* Account & Passes */}
           <div>
             <h4
               style={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: '#ffffff',
+                fontSize: '0.85rem',
+                fontWeight: 800,
+                color: '#A78BFA',
                 marginBottom: '1rem',
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.08em',
               }}
             >
-              Architecture
+              My Hub
             </h4>
-            <ul
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
+              <li>
+                <Link to="/my-bookings" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
+                  My Passes & Tickets
+                </Link>
+              </li>
+              <li>
+                <Link to="/favorites" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
+                  Saved Favorites
+                </Link>
+              </li>
+              <li>
+                <Link to="/organizer" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
+                  Organizer Portal
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
+                  Admin Portal
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Technology & Security */}
+          <div>
+            <h4
               style={{
-                listStyle: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.65rem',
-                fontSize: '0.88rem',
-                color: 'var(--text-muted)',
+                fontSize: '0.85rem',
+                fontWeight: 800,
+                color: '#A78BFA',
+                marginBottom: '1rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
               }}
             >
-              <li>⚡ Vercel Fluid Functions</li>
-              <li>🍃 MongoDB Atlas Replica Set</li>
-              <li>🔒 Atomic Concurrency Locking</li>
-              <li>⏱️ 5-Minute Lazy Hold Expiry</li>
-              <li>🎫 Verifiable HMAC QR Passes</li>
+              Security
+            </h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
+              <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
+                ⚡ 5-Minute Atomic Seat Locks
+              </li>
+              <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
+                🔒 HMAC-SHA256 QR Verification
+              </li>
+              <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
+                🛡️ Verified Organizers Only
+              </li>
+              <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
+                ✨ 24h Full Refund Protection
+              </li>
             </ul>
           </div>
         </div>
 
+        {/* Bottom Bar */}
         <div
           style={{
-            borderTop: '1px solid var(--border-subtle)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             paddingTop: '1.5rem',
             display: 'flex',
             alignItems: 'center',
@@ -162,16 +211,13 @@ export default function Footer() {
             flexWrap: 'wrap',
             gap: '1rem',
             fontSize: '0.82rem',
-            color: 'var(--text-subtle)',
           }}
         >
           <div>
-            &copy; {new Date().getFullYear()} EventHub Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} EventLinqs Inc. All rights reserved.
           </div>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
-            <span>Privacy Policy</span>
-            <span>Terms of Service</span>
-            <span>24h Cancellation Policy</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <span>Designed for live moments</span>
           </div>
         </div>
       </div>

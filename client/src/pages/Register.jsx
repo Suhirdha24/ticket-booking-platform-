@@ -63,9 +63,10 @@ export default function Register() {
         justifyContent: 'center',
         padding: '3rem 1.5rem',
         position: 'relative',
+        backgroundColor: '#08070D',
       }}
     >
-      {/* Background ambient gold aura */}
+      {/* Background ambient purple aura */}
       <div
         style={{
           position: 'absolute',
@@ -74,7 +75,7 @@ export default function Register() {
           transform: 'translate(-50%, -50%)',
           width: '750px',
           height: '450px',
-          background: 'radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -84,7 +85,7 @@ export default function Register() {
         style={{
           maxWidth: '1080px',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
           gap: '2.5rem',
           alignItems: 'stretch',
           position: 'relative',
@@ -93,93 +94,79 @@ export default function Register() {
       >
         {/* 🌟 LEFT SHOWCASE COLUMN: BRANDING & SOCIAL PROOF */}
         <div
-          className="glass-panel"
+          className="glass-widget-card"
           style={{
             padding: '3rem 2.5rem',
-            backgroundColor: 'rgba(14, 17, 24, 0.9)',
-            border: '1px solid rgba(234, 179, 8, 0.2)',
-            borderRadius: '24px',
+            backgroundColor: 'rgba(20, 18, 34, 0.85)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: '28px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
             position: 'relative',
             overflow: 'hidden',
             backgroundImage: `
-              linear-gradient(to bottom, rgba(14, 17, 24, 0.85) 0%, rgba(14, 17, 24, 0.98) 100%),
-              url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1000&auto=format&fit=crop&q=80')
+              linear-gradient(to bottom, rgba(14, 12, 24, 0.85) 0%, rgba(14, 12, 24, 0.98) 100%),
+              url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1000&auto=format&fit=crop&q=80')
             `,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         >
-          {/* Top Brand Header */}
           <div>
             <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                background: 'rgba(234, 179, 8, 0.15)',
-                border: '1px solid rgba(234, 179, 8, 0.35)',
-                color: '#eab308',
-                padding: '0.35rem 0.85rem',
-                borderRadius: '9999px',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                marginBottom: '1.5rem',
-              }}
+              className="hero-tag-pill"
+              style={{ marginBottom: '1.5rem' }}
             >
-              <Sparkles size={13} /> Join EventLinqs Club
+              <Sparkles size={13} color="#A78BFA" />
+              <span>Join EventLinqs Club</span>
             </div>
 
             <h1
-              className="font-serif-editorial"
               style={{
                 fontSize: 'clamp(2rem, 4vw, 2.7rem)',
-                fontWeight: 800,
+                fontWeight: 900,
                 color: '#ffffff',
-                lineHeight: 1.2,
+                lineHeight: 1.15,
                 marginBottom: '1.25rem',
               }}
             >
-              Discover & Experience<br />
-              Live Moments<br />
-              <span className="gold-gradient-text" style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)' }}>
+              Discover &<br />
+              Experience Live Moments<br />
+              <span className="hero-script-subtitle" style={{ fontSize: '2.4rem', margin: '0.2rem 0' }}>
                 Across Tamil Nadu & India.
               </span>
             </h1>
 
-            <p style={{ color: '#cbd5e1', fontSize: '0.98rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
+            <p style={{ color: '#94A3B8', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
               Create your account in seconds to unlock early-bird tickets, interactive seat maps, and cryptographic mobile QR passes.
             </p>
 
             {/* Feature Highlights */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Zap size={15} color="#eab308" />
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Zap size={15} color="#A78BFA" />
                 </div>
-                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
                   4,750+ Live Events in 60+ Cities & Districts
                 </span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <ShieldCheck size={15} color="#eab308" />
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <ShieldCheck size={15} color="#A78BFA" />
                 </div>
-                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
                   100% Guaranteed Seat Allocation & 24h Full Refunds
                 </span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Ticket size={15} color="#eab308" />
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Ticket size={15} color="#A78BFA" />
                 </div>
-                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
                   Instant Automated Digital Tickets & Receipts
                 </span>
               </div>
@@ -191,17 +178,17 @@ export default function Register() {
             style={{
               padding: '1rem 1.25rem',
               borderRadius: '16px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#eab308', marginBottom: '0.2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#A78BFA', marginBottom: '0.2rem' }}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} fill="#eab308" />
+                  <Star key={i} size={13} fill="#A78BFA" />
                 ))}
               </div>
               <div style={{ fontSize: '0.82rem', color: '#ffffff', fontWeight: 700 }}>
@@ -209,195 +196,131 @@ export default function Register() {
               </div>
             </div>
 
-            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#94a3b8' }}>
-              Rated <strong style={{ color: '#eab308' }}>4.9 / 5.0</strong>
+            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#94A3B8' }}>
+              Rated <strong style={{ color: '#A78BFA' }}>4.9 / 5.0</strong>
             </div>
           </div>
         </div>
 
-        {/* 🔐 RIGHT FORM COLUMN: SIGN UP CARD */}
+        {/* 🔐 RIGHT FORM COLUMN: USER REGISTRATION CARD */}
         <div
-          className="glass-panel"
+          className="glass-widget-card"
           style={{
             padding: '3rem 2.5rem',
-            backgroundColor: '#0c0f16',
-            border: '1px solid rgba(234, 179, 8, 0.3)',
-            borderRadius: '24px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(234, 179, 8, 0.25)',
+            backgroundColor: '#0D0C15',
+            border: '1px solid rgba(139, 92, 246, 0.35)',
+            borderRadius: '28px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(139, 92, 246, 0.3)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
           }}
         >
-          {/* Form Header */}
-          <div style={{ marginBottom: '1.75rem' }}>
+          {/* Header */}
+          <div style={{ marginBottom: '1.5rem' }}>
             <div
               style={{
                 width: '46px',
                 height: '46px',
                 borderRadius: '12px',
-                background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
+                background: 'var(--gradient-purple)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '1rem',
-                boxShadow: '0 0 20px rgba(234, 179, 8, 0.45)',
+                boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
               }}
             >
-              <Ticket size={22} color="#000000" />
+              <Ticket size={22} color="#FFFFFF" />
             </div>
-            <h2 className="font-serif-editorial" style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#ffffff' }}>
               Create an Account
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
+            <p style={{ color: '#94A3B8', fontSize: '0.92rem', marginTop: '0.3rem', marginBottom: '1.5rem' }}>
               Join EventLinqs to start booking verified live experiences
             </p>
           </div>
 
+          {/* Already exists notification banner */}
           {alreadyExists && (
             <div
-              className="animate-fade-in"
               style={{
-                background: 'rgba(234, 179, 8, 0.12)',
-                border: '1.5px solid #eab308',
-                borderRadius: '16px',
-                padding: '1.25rem',
-                marginBottom: '1.5rem',
+                padding: '0.9rem 1.15rem',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(244, 63, 94, 0.15)',
+                border: '1px solid rgba(244, 63, 94, 0.4)',
+                marginBottom: '1.25rem',
                 display: 'flex',
-                flexDirection: 'column',
+                alignItems: 'center',
                 gap: '0.75rem',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#eab308', fontWeight: 800, fontSize: '0.95rem' }}>
-                <AlertTriangle size={18} /> User / Account Already Exists
+              <AlertTriangle size={18} color="#FB7185" style={{ flexShrink: 0 }} />
+              <div style={{ fontSize: '0.86rem', color: '#FFFFFF' }}>
+                An account with this email exists.{' '}
+                <Link to={`/login?email=${encodeURIComponent(email)}`} style={{ color: '#A78BFA', fontWeight: 800 }}>
+                  Click to Sign In &rarr;
+                </Link>
               </div>
-              <div style={{ fontSize: '0.88rem', color: '#e2e8f0', lineHeight: 1.5 }}>
-                An account with the email <strong style={{ color: '#ffffff' }}>{email}</strong> is already registered in the system.
-              </div>
-              <Link
-                to={`/login?email=${encodeURIComponent(email)}&redirect=${encodeURIComponent(redirect)}`}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                  padding: '0.65rem 1rem',
-                  background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
-                  color: '#000000',
-                  fontWeight: 800,
-                  borderRadius: '10px',
-                  textAlign: 'center',
-                  textDecoration: 'none',
-                  fontSize: '0.88rem',
-                  boxShadow: '0 4px 12px rgba(234, 179, 8, 0.3)',
-                }}
-              >
-                <span>Sign In with {email} Now</span>
-                <ArrowRight size={15} />
-              </Link>
             </div>
           )}
 
-          <form onSubmit={handleRegister} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
-            <div className="input-group">
-              <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>Full Name</label>
+          {/* Form Fields */}
+          <form
+            onSubmit={handleRegister}
+            style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}
+          >
+            <div>
+              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+                Full Name
+              </label>
               <div style={{ position: 'relative' }}>
-                <User
-                  size={18}
-                  style={{
-                    position: 'absolute',
-                    left: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--text-subtle)',
-                  }}
-                />
+                <User size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="text"
-                  className="input-field"
-                  style={{
-                    paddingLeft: '2.75rem',
-                    background: '#12151e',
-                    color: '#ffffff',
-                    borderColor: 'rgba(255, 255, 255, 0.15)',
-                  }}
-                  placeholder="Jane Doe"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  autoComplete="off"
-                  required
+                  placeholder="Jane Doe"
+                  className="form-input"
+                  style={{ paddingLeft: '2.75rem' }}
                 />
               </div>
             </div>
 
-            <div className="input-group">
-              <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>Email Address</label>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+                Email Address
+              </label>
               <div style={{ position: 'relative' }}>
-                <Mail
-                  size={18}
-                  style={{
-                    position: 'absolute',
-                    left: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: alreadyExists ? '#eab308' : 'var(--text-subtle)',
-                  }}
-                />
+                <Mail size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="email"
-                  className="input-field"
-                  style={{
-                    paddingLeft: '2.75rem',
-                    background: '#12151e',
-                    color: '#ffffff',
-                    borderColor: alreadyExists ? '#eab308' : 'rgba(255, 255, 255, 0.15)',
-                    boxShadow: alreadyExists ? '0 0 0 2px rgba(234, 179, 8, 0.3)' : 'none',
-                  }}
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (alreadyExists) setAlreadyExists(false);
-                  }}
-                  autoComplete="off"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  className="form-input"
+                  style={{ paddingLeft: '2.75rem' }}
                 />
               </div>
-              {alreadyExists && (
-                <div style={{ color: '#fbbf24', fontSize: '0.78rem', marginTop: '0.35rem', fontWeight: 600 }}>
-                  ⚠️ This email is already registered. Please sign in instead.
-                </div>
-              )}
             </div>
 
-            <div className="input-group">
-              <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>Password</label>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+                Password
+              </label>
               <div style={{ position: 'relative' }}>
-                <Lock
-                  size={18}
-                  style={{
-                    position: 'absolute',
-                    left: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--text-subtle)',
-                  }}
-                />
+                <Lock size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  className="input-field"
-                  style={{
-                    paddingLeft: '2.75rem',
-                    paddingRight: '2.75rem',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    borderColor: 'rgba(255, 255, 255, 0.12)',
-                  }}
-                  placeholder="At least 6 characters"
+                  required
+                  minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="new-password"
-                  minLength={6}
-                  required
+                  placeholder="At least 6 characters"
+                  className="form-input"
+                  style={{ paddingLeft: '2.75rem', paddingRight: '2.75rem' }}
                 />
                 <button
                   type="button"
@@ -409,42 +332,28 @@ export default function Register() {
                     transform: 'translateY(-50%)',
                     background: 'transparent',
                     border: 'none',
-                    color: 'var(--text-subtle)',
+                    color: '#94A3B8',
                     cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
                   }}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            <div className="input-group">
-              <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>Phone Number (Optional)</label>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+                Phone Number (Optional)
+              </label>
               <div style={{ position: 'relative' }}>
-                <Phone
-                  size={18}
-                  style={{
-                    position: 'absolute',
-                    left: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--text-subtle)',
-                  }}
-                />
+                <Phone size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="tel"
-                  className="input-field"
-                  style={{
-                    paddingLeft: '2.75rem',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    borderColor: 'rgba(255, 255, 255, 0.12)',
-                  }}
-                  placeholder="+91 98765 43210"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  autoComplete="off"
+                  placeholder="+91 98765 43210"
+                  className="form-input"
+                  style={{ paddingLeft: '2.75rem' }}
                 />
               </div>
             </div>
@@ -452,46 +361,18 @@ export default function Register() {
             <button
               type="submit"
               disabled={isLoading}
-              style={{
-                width: '100%',
-                marginTop: '0.75rem',
-                background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
-                color: '#000000',
-                fontWeight: 800,
-                fontSize: '1.02rem',
-                padding: '0.9rem 1.5rem',
-                borderRadius: '9999px',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(234, 179, 8, 0.4)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                transition: 'all 0.2s ease',
-              }}
+              className="btn-purple-glow"
+              style={{ width: '100%', padding: '0.9rem', marginTop: '0.5rem' }}
             >
               <span>{isLoading ? 'Creating Account...' : 'Create Account & Get Started'}</span>
-              <ArrowRight size={18} />
+              <ArrowRight size={16} />
             </button>
           </form>
 
-          {/* Footer Switch */}
-          <div
-            style={{
-              textAlign: 'center',
-              fontSize: '0.9rem',
-              color: 'var(--text-muted)',
-              marginTop: '1.75rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-              paddingTop: '1.25rem',
-            }}
-          >
+          {/* Switch to Login */}
+          <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.88rem', color: '#94A3B8' }}>
             Already have an account?{' '}
-            <Link
-              to={`/login?redirect=${encodeURIComponent(redirect)}`}
-              style={{ color: '#eab308', fontWeight: 700 }}
-            >
+            <Link to="/login" style={{ color: '#A78BFA', fontWeight: 700 }}>
               Sign In &rarr;
             </Link>
           </div>

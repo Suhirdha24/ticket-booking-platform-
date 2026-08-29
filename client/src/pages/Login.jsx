@@ -6,7 +6,6 @@ import {
   Ticket,
   Lock,
   Mail,
-  UserCheck,
   Eye,
   EyeOff,
   Sparkles,
@@ -54,9 +53,10 @@ export default function Login() {
         justifyContent: 'center',
         padding: '3rem 1.5rem',
         position: 'relative',
+        backgroundColor: '#08070D',
       }}
     >
-      {/* Background ambient gold aura */}
+      {/* Background ambient purple aura */}
       <div
         style={{
           position: 'absolute',
@@ -65,7 +65,7 @@ export default function Login() {
           transform: 'translate(-50%, -50%)',
           width: '750px',
           height: '450px',
-          background: 'radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -75,7 +75,7 @@ export default function Login() {
         style={{
           maxWidth: '1080px',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
           gap: '2.5rem',
           alignItems: 'stretch',
           position: 'relative',
@@ -84,20 +84,20 @@ export default function Login() {
       >
         {/* 🌟 LEFT SHOWCASE COLUMN: BRANDING & SOCIAL PROOF */}
         <div
-          className="glass-panel"
+          className="glass-widget-card"
           style={{
             padding: '3rem 2.5rem',
-            backgroundColor: 'rgba(14, 17, 24, 0.9)',
-            border: '1px solid rgba(234, 179, 8, 0.2)',
-            borderRadius: '24px',
+            backgroundColor: 'rgba(20, 18, 34, 0.85)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: '28px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
             position: 'relative',
             overflow: 'hidden',
             backgroundImage: `
-              linear-gradient(to bottom, rgba(14, 17, 24, 0.85) 0%, rgba(14, 17, 24, 0.98) 100%),
-              url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1000&auto=format&fit=crop&q=80')
+              linear-gradient(to bottom, rgba(14, 12, 24, 0.85) 0%, rgba(14, 12, 24, 0.98) 100%),
+              url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1000&auto=format&fit=crop&q=80')
             `,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -106,71 +106,58 @@ export default function Login() {
           {/* Top Brand Header */}
           <div>
             <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                background: 'rgba(234, 179, 8, 0.15)',
-                border: '1px solid rgba(234, 179, 8, 0.35)',
-                color: '#eab308',
-                padding: '0.35rem 0.85rem',
-                borderRadius: '9999px',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                marginBottom: '1.5rem',
-              }}
+              className="hero-tag-pill"
+              style={{ marginBottom: '1.5rem' }}
             >
-              <Sparkles size={13} /> Attendee Member Access
+              <Sparkles size={13} color="#A78BFA" />
+              <span>Attendee Member Access</span>
             </div>
 
             <h1
-              className="font-serif-editorial"
               style={{
                 fontSize: 'clamp(2rem, 4vw, 2.7rem)',
-                fontWeight: 800,
+                fontWeight: 900,
                 color: '#ffffff',
-                lineHeight: 1.2,
+                lineHeight: 1.15,
                 marginBottom: '1.25rem',
               }}
             >
               Every Culture.<br />
               Every Event.<br />
-              <span className="gold-gradient-text" style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)' }}>
+              <span className="hero-script-subtitle" style={{ fontSize: '2.4rem', margin: '0.2rem 0' }}>
                 One Seamless Pass.
               </span>
             </h1>
 
-            <p style={{ color: '#cbd5e1', fontSize: '0.98rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
+            <p style={{ color: '#94A3B8', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
               Sign in to reserve premium seats across 60+ Indian cities with instant QR tickets and zero double-booking locks.
             </p>
 
             {/* Feature Highlights */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Zap size={15} color="#eab308" />
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Zap size={15} color="#A78BFA" />
                 </div>
-                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
-                  Live 130-Seat Interactive Stadium Grid
+                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
+                  Live 160-Seat Interactive Stadium Grid
                 </span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <ShieldCheck size={15} color="#eab308" />
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <ShieldCheck size={15} color="#A78BFA" />
                 </div>
-                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
                   5-Minute Atomic Concurrency Hold Protection
                 </span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(234, 179, 8, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Ticket size={15} color="#eab308" />
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Ticket size={15} color="#A78BFA" />
                 </div>
-                <span style={{ fontSize: '0.9rem', color: '#f1f5f9', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
                   Instant Cryptographic Mobile Passes & Receipts
                 </span>
               </div>
@@ -182,17 +169,17 @@ export default function Login() {
             style={{
               padding: '1rem 1.25rem',
               borderRadius: '16px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#eab308', marginBottom: '0.2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#A78BFA', marginBottom: '0.2rem' }}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} fill="#eab308" />
+                  <Star key={i} size={13} fill="#A78BFA" />
                 ))}
               </div>
               <div style={{ fontSize: '0.82rem', color: '#ffffff', fontWeight: 700 }}>
@@ -200,21 +187,21 @@ export default function Login() {
               </div>
             </div>
 
-            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#94a3b8' }}>
-              Across <strong style={{ color: '#eab308' }}>60+ Cities</strong>
+            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#94A3B8' }}>
+              Across <strong style={{ color: '#A78BFA' }}>60+ Cities</strong>
             </div>
           </div>
         </div>
 
         {/* 🔐 RIGHT FORM COLUMN: USER SIGN IN CARD */}
         <div
-          className="glass-panel"
+          className="glass-widget-card"
           style={{
             padding: '3rem 2.5rem',
-            backgroundColor: '#0c0f16',
-            border: '1px solid rgba(234, 179, 8, 0.3)',
-            borderRadius: '24px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(234, 179, 8, 0.25)',
+            backgroundColor: '#0D0C15',
+            border: '1px solid rgba(139, 92, 246, 0.35)',
+            borderRadius: '28px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(139, 92, 246, 0.3)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -239,10 +226,10 @@ export default function Login() {
                 padding: '0.55rem',
                 fontSize: '0.82rem',
                 fontWeight: 800,
-                color: '#000000',
-                background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
+                color: '#FFFFFF',
+                background: 'var(--gradient-purple)',
                 borderRadius: '8px',
-                boxShadow: '0 2px 10px rgba(234, 179, 8, 0.35)',
+                boxShadow: '0 2px 10px rgba(139, 92, 246, 0.4)',
               }}
             >
               👤 User Sign In
@@ -271,20 +258,20 @@ export default function Login() {
                 width: '46px',
                 height: '46px',
                 borderRadius: '12px',
-                background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
+                background: 'var(--gradient-purple)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '1rem',
-                boxShadow: '0 0 20px rgba(234, 179, 8, 0.45)',
+                boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
               }}
             >
-              <Ticket size={22} color="#000000" />
+              <Ticket size={22} color="#FFFFFF" />
             </div>
-            <h2 className="font-serif-editorial" style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#ffffff' }}>
               Attendee Sign In
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '0.3rem', marginBottom: '1.75rem' }}>
+            <p style={{ color: '#94A3B8', fontSize: '0.92rem', marginTop: '0.3rem', marginBottom: '1.75rem' }}>
               Sign in to manage your tickets, bookings, and digital passes
             </p>
           </div>
@@ -292,97 +279,40 @@ export default function Login() {
           {/* Form Fields */}
           <form
             onSubmit={handleLogin}
-            autoComplete="off"
             style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
           >
-            {/* Decoy fields to trap browser autofill algorithms */}
-            <input
-              type="text"
-              name="fake_user_username_prevent_autofill"
-              style={{ display: 'none' }}
-              tabIndex={-1}
-              autoComplete="off"
-            />
-            <input
-              type="password"
-              name="fake_user_password_prevent_autofill"
-              style={{ display: 'none' }}
-              tabIndex={-1}
-              autoComplete="off"
-            />
-
-            <div className="input-group">
-              <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
                 Email Address
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail
-                  size={18}
-                  style={{
-                    position: 'absolute',
-                    left: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--text-subtle)',
-                  }}
-                />
+                <Mail size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="email"
-                  name="eventlinqs_user_login_email_input"
-                  id="eventlinqs_user_login_email_input"
-                  className="input-field"
-                  style={{
-                    paddingLeft: '2.75rem',
-                    background: '#12151e',
-                    color: '#ffffff',
-                    borderColor: 'rgba(255, 255, 255, 0.15)',
-                    fontSize: '0.95rem',
-                  }}
-                  placeholder="e.g. user@example.com"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                  spellCheck="false"
-                  required
+                  placeholder="e.g. user@example.com"
+                  className="form-input"
+                  style={{ paddingLeft: '2.75rem' }}
                 />
               </div>
             </div>
 
-            <div className="input-group">
-              <label className="input-label" style={{ fontWeight: 600, color: '#e2e8f0' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
                 Password
               </label>
               <div style={{ position: 'relative' }}>
-                <Lock
-                  size={18}
-                  style={{
-                    position: 'absolute',
-                    left: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--text-subtle)',
-                  }}
-                />
+                <Lock size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  name="eventlinqs_user_login_password_input"
-                  id="eventlinqs_user_login_password_input"
-                  className="input-field"
-                  style={{
-                    paddingLeft: '2.75rem',
-                    paddingRight: '2.75rem',
-                    background: '#12151e',
-                    color: '#ffffff',
-                    borderColor: 'rgba(255, 255, 255, 0.15)',
-                    fontSize: '0.95rem',
-                  }}
-                  placeholder="Enter your password"
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="new-password"
-                  required
+                  placeholder="Enter your password"
+                  className="form-input"
+                  style={{ paddingLeft: '2.75rem', paddingRight: '2.75rem' }}
                 />
                 <button
                   type="button"
@@ -394,13 +324,11 @@ export default function Login() {
                     transform: 'translateY(-50%)',
                     background: 'transparent',
                     border: 'none',
-                    color: 'var(--text-subtle)',
+                    color: '#94A3B8',
                     cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
                   }}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
@@ -408,59 +336,20 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              style={{
-                width: '100%',
-                marginTop: '0.75rem',
-                background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
-                color: '#000000',
-                fontWeight: 800,
-                fontSize: '1.02rem',
-                padding: '0.9rem 1.5rem',
-                borderRadius: '9999px',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(234, 179, 8, 0.4)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                transition: 'all 0.2s ease',
-              }}
+              className="btn-purple-glow"
+              style={{ width: '100%', padding: '0.9rem', marginTop: '0.5rem' }}
             >
               <span>{isLoading ? 'Signing In...' : 'Sign In to EventLinqs'}</span>
-              <ArrowRight size={18} />
+              <ArrowRight size={16} />
             </button>
           </form>
 
-          {/* Footer Switch */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.75rem',
-              textAlign: 'center',
-              fontSize: '0.9rem',
-              color: 'var(--text-muted)',
-              marginTop: '1.75rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-              paddingTop: '1.25rem',
-            }}
-          >
-            <div>
-              Don't have an account?{' '}
-              <Link
-                to={`/register?redirect=${encodeURIComponent(redirect)}`}
-                style={{ color: '#eab308', fontWeight: 700 }}
-              >
-                Create an Account &rarr;
-              </Link>
-            </div>
-            <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
-              Are you an Event Organizer / Administrator?{' '}
-              <Link to="/admin/login" style={{ color: '#eab308', fontWeight: 700 }}>
-                Admin Sign In &rarr;
-              </Link>
-            </div>
+          {/* Switch to Register */}
+          <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.88rem', color: '#94A3B8' }}>
+            Don't have an account?{' '}
+            <Link to="/register" style={{ color: '#A78BFA', fontWeight: 700 }}>
+              Create an Account &rarr;
+            </Link>
           </div>
         </div>
       </div>
