@@ -44,15 +44,20 @@ export default function Pagination({
         gap: '0.75rem',
       }}
     >
-      {/* Google-Style Pagination Bar */}
+      {/* Sonora Cyber-Violet Pagination Bar */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '0.4rem',
+          gap: '0.45rem',
           flexWrap: 'wrap',
           userSelect: 'none',
+          padding: '0.5rem 1rem',
+          borderRadius: '16px',
+          background: 'rgba(20, 18, 34, 0.75)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(12px)',
         }}
       >
         {/* Previous Button */}
@@ -63,20 +68,20 @@ export default function Pagination({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              padding: '0.5rem 1rem',
-              marginRight: '0.5rem',
+              padding: '0.5rem 0.9rem',
+              marginRight: '0.35rem',
               background: 'transparent',
               border: 'none',
-              color: '#eab308',
-              fontSize: '0.98rem',
-              fontWeight: 700,
+              color: '#A78BFA',
+              fontSize: '0.92rem',
+              fontWeight: 800,
               cursor: 'pointer',
-              borderRadius: '8px',
+              borderRadius: '10px',
               transition: 'all 0.2s ease',
             }}
-            className="google-nav-btn"
+            className="sonora-page-nav-btn"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={16} />
             Previous
           </button>
         ) : (
@@ -85,15 +90,15 @@ export default function Pagination({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              padding: '0.5rem 1rem',
-              marginRight: '0.5rem',
+              padding: '0.5rem 0.9rem',
+              marginRight: '0.35rem',
               color: 'rgba(255, 255, 255, 0.2)',
-              fontSize: '0.98rem',
+              fontSize: '0.92rem',
               fontWeight: 500,
               cursor: 'default',
             }}
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={16} />
             Previous
           </span>
         )}
@@ -107,29 +112,29 @@ export default function Pagination({
               key={pageNum}
               onClick={() => changePage(pageNum)}
               style={{
-                minWidth: '38px',
-                height: '38px',
+                minWidth: '40px',
+                height: '40px',
                 padding: '0 0.5rem',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1rem',
-                fontWeight: isCurrent ? 800 : 500,
-                color: isCurrent ? '#000000' : '#94a3b8',
+                fontSize: '0.95rem',
+                fontWeight: isCurrent ? 900 : 600,
+                color: isCurrent ? '#FFFFFF' : '#94A3B8',
                 background: isCurrent
-                  ? 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)'
-                  : 'transparent',
+                  ? 'var(--gradient-purple)'
+                  : 'rgba(255, 255, 255, 0.03)',
                 border: isCurrent
-                  ? '1px solid #eab308'
-                  : '1px solid transparent',
-                borderRadius: '8px',
+                  ? '1px solid rgba(139, 92, 246, 0.6)'
+                  : '1px solid rgba(255, 255, 255, 0.05)',
+                borderRadius: '10px',
                 cursor: isCurrent ? 'default' : 'pointer',
                 boxShadow: isCurrent
-                  ? '0 4px 14px rgba(234, 179, 8, 0.4)'
+                  ? '0 0 20px rgba(139, 92, 246, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4)'
                   : 'none',
-                transition: 'all 0.15s ease',
+                transition: 'all 0.2s ease',
               }}
-              className={isCurrent ? '' : 'google-page-num'}
+              className={isCurrent ? '' : 'sonora-page-num-btn'}
             >
               {pageNum}
             </button>
@@ -144,21 +149,21 @@ export default function Pagination({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              padding: '0.5rem 1rem',
-              marginLeft: '0.5rem',
+              padding: '0.5rem 0.9rem',
+              marginLeft: '0.35rem',
               background: 'transparent',
               border: 'none',
-              color: '#eab308',
-              fontSize: '0.98rem',
-              fontWeight: 700,
+              color: '#A78BFA',
+              fontSize: '0.92rem',
+              fontWeight: 800,
               cursor: 'pointer',
-              borderRadius: '8px',
+              borderRadius: '10px',
               transition: 'all 0.2s ease',
             }}
-            className="google-nav-btn"
+            className="sonora-page-nav-btn"
           >
             Next
-            <ChevronRight size={18} />
+            <ChevronRight size={16} />
           </button>
         ) : (
           <span
@@ -166,28 +171,29 @@ export default function Pagination({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              padding: '0.5rem 1rem',
-              marginLeft: '0.5rem',
+              padding: '0.5rem 0.9rem',
+              marginLeft: '0.35rem',
               color: 'rgba(255, 255, 255, 0.2)',
-              fontSize: '0.98rem',
+              fontSize: '0.92rem',
               fontWeight: 500,
               cursor: 'default',
             }}
           >
             Next
-            <ChevronRight size={18} />
+            <ChevronRight size={16} />
           </span>
         )}
       </div>
 
       <style>{`
-        .google-nav-btn:hover {
-          color: #c084fc !important;
-          background: rgba(99, 102, 241, 0.1) !important;
-        }
-        .google-page-num:hover {
+        .sonora-page-nav-btn:hover {
           color: #ffffff !important;
-          background: rgba(255, 255, 255, 0.08) !important;
+          background: rgba(139, 92, 246, 0.2) !important;
+        }
+        .sonora-page-num-btn:hover {
+          color: #ffffff !important;
+          background: rgba(139, 92, 246, 0.15) !important;
+          border-color: rgba(139, 92, 246, 0.3) !important;
         }
       `}</style>
     </div>

@@ -84,7 +84,7 @@ export default function SeatSelection() {
   const handleLockReservation = async () => {
     if (!isAuthenticated) {
       showWarningToast('Authentication Required', 'Please log in to reserve your seats.');
-      navigate(`/login?redirect=/event/${id}/seats`);
+      navigate(`/login?redirect=/events/${id}/seats`);
       return;
     }
 

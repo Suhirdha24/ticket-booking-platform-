@@ -7,10 +7,16 @@ export const useReservationStore = create((set, get) => ({
   remainingSeconds: 0,
   isHolding: false,
 
+  setSelectedSeats: (seats) => {
+    set({ selectedSeats: seats || [] });
+  },
+
   toggleSeatSelection: (seat) => {
-    const { selectedSeats, activeReservation } = get();
-    // Cannot modify selection if already holding an active reservation lock
-    if (activeReservation) return;
+    const { selectedSeats, activeReservation, remainingSeconds } = get();
+    // If active reservation is expired, clear it
+    if (activeReservation && remainingSeconds <= 0) {
+      set({ activeReservation: null, remainingSeconds: 0 });
+    }
 
     const exists = selectedSeats.some((s) => s._id === seat._id);
     if (exists) {
@@ -38,6 +44,35 @@ export const useReservationStore = create((set, get) => ({
       const res = await api.post('/reservations', {
         eventId,
         seatIds: selectedSeats.map((s) => s._id),
+      });
+
+      const data = res.data.data;
+      const expiresAt = new Date(data.expiresAt);
+      const remainingMs = Math.max(0, expiresAt.getTime() - Date.now());
+
+      set({
+        activeReservation: data,
+        remainingSeconds: Math.floor(remainingMs / 1000),
+        isHolding: false,
+      });
+
+      return data;
+    } catch (error) {
+      set({ isHolding: false });
+      throw error;
+    }
+  },
+
+  createReservationForSeats: async (eventId, seats) => {
+    if (!seats || seats.length === 0) {
+      throw new Error('Please select at least one seat to reserve.');
+    }
+
+    set({ isHolding: true, selectedSeats: seats });
+    try {
+      const res = await api.post('/reservations', {
+        eventId,
+        seatIds: seats.map((s) => s._id),
       });
 
       const data = res.data.data;
