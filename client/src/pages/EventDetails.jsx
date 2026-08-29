@@ -18,6 +18,7 @@ import api from '../api/client.js';
 import { useFavoritesStore } from '../store/favoritesStore.js';
 import { useToastStore } from '../store/toastStore.js';
 import CountdownWidget from '../components/home/CountdownWidget.jsx';
+import { getEventImage, getCategoryTheme } from '../utils/categoryImages.js';
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -194,11 +195,7 @@ export default function EventDetails() {
               }}
             >
               <img
-                src={
-                  event.coverImage ||
-                  event.banner ||
-                  'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1000&auto=format&fit=crop&q=80'
-                }
+                src={getEventImage(event)}
                 alt={event.title}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />

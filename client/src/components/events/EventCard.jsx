@@ -1,11 +1,44 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Ticket, Star, Users, ArrowRight } from 'lucide-react';
+import {
+  Calendar,
+  MapPin,
+  Ticket,
+  ArrowRight,
+  Music,
+  Trophy,
+  Film,
+  Smile,
+  Sparkles,
+  Briefcase,
+  Layers,
+  Gamepad2,
+  Heart,
+  Moon,
+  Users,
+  BookOpen,
+} from 'lucide-react';
+import { getEventImage, getCategoryTheme } from '../../utils/categoryImages.js';
+
+const ICON_MAP = {
+  Music,
+  Trophy,
+  Film,
+  Smile,
+  Sparkles,
+  Briefcase,
+  Layers,
+  Gamepad2,
+  Heart,
+  Moon,
+  Users,
+  BookOpen,
+};
 
 export default function EventCard({ event }) {
   if (!event) return null;
 
-  const eventDate = event.startDate ? new Date(event.startDate) : new Date();
+  const eventDate = event.startDate ? new Date(event.startDate) : event.date ? new Date(event.date) : new Date();
   const formattedDate = eventDate.toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'short',
@@ -16,28 +49,94 @@ export default function EventCard({ event }) {
     ? Math.min(...event.tiers.map((t) => t.price))
     : event.price || 499;
 
+  const category = event.category || 'Concert';
+  const theme = getCategoryTheme(category);
+  const imageUrl = getEventImage(event);
+  const CategoryIcon = ICON_MAP[theme.iconName] || Ticket;
+
   return (
     <Link
       to={`/events/${event._id}`}
       className="sonora-event-card"
-      style={{ textDecoration: 'none' }}
+      style={{
+        textDecoration: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '24px',
+        backgroundColor: 'rgba(20, 18, 34, 0.85)',
+        border: `1px solid rgba(255, 255, 255, 0.08)`,
+        overflow: 'hidden',
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = theme.color;
+        e.currentTarget.style.boxShadow = `0 15px 35px -5px rgba(0, 0, 0, 0.8), 0 0 25px -5px ${theme.glow}`;
+        e.currentTarget.style.transform = 'translateY(-4px)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+        e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+        e.currentTarget.style.transform = 'translateY(0)';
+      }}
     >
-      {/* Event Photo Cover */}
-      <div className="sonora-card-photo">
+      {/* Event Photo Cover with Per-Category Curated Photography */}
+      <div
+        className="sonora-card-photo"
+        style={{
+          position: 'relative',
+          height: '210px',
+          width: '100%',
+          overflow: 'hidden',
+          backgroundColor: '#0D0C15',
+        }}
+      >
         <img
-          src={
-            event.coverImage ||
-            event.banner ||
-            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80'
-          }
+          src={imageUrl}
           alt={event.title}
           loading="lazy"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            transition: 'transform 0.5s ease',
+          }}
+          onError={(e) => {
+            // Fallback gracefully if an image fails
+            e.target.src = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80';
+          }}
         />
-        <div className="sonora-photo-overlay"></div>
+        <div
+          className="sonora-photo-overlay"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to top, rgba(20, 18, 34, 0.95) 0%, transparent 60%)',
+          }}
+        />
 
-        {/* Category Tag */}
-        <div className="sonora-category-tag">
-          {event.category || 'Live Music'}
+        {/* Dynamic Category Pill (Top Left) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '0.85rem',
+            left: '0.85rem',
+            background: theme.bgBadge,
+            border: `1px solid ${theme.borderBadge}`,
+            backdropFilter: 'blur(10px)',
+            padding: '0.35rem 0.75rem',
+            borderRadius: 'var(--radius-pill)',
+            fontSize: '0.74rem',
+            fontWeight: 800,
+            color: theme.textColor,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            boxShadow: `0 2px 10px ${theme.glow}`,
+          }}
+        >
+          <CategoryIcon size={12} color={theme.color} />
+          <span>{category}</span>
         </div>
 
         {/* Date Pill (Top Right) */}
@@ -88,16 +187,16 @@ export default function EventCard({ event }) {
               marginBottom: '0.4rem',
             }}
           >
-            <MapPin size={13} color="#8B5CF6" />
+            <MapPin size={13} color={theme.color} />
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {event.location?.venue || 'Live Stadium'}, {event.location?.city || 'India'}
+              {event.location?.venue || event.venue?.name || 'Live Stadium'}, {event.location?.city || event.city || 'India'}
             </span>
           </div>
 
           {/* Title */}
           <h3
             style={{
-              fontSize: '1.15rem',
+              fontSize: '1.12rem',
               fontWeight: 900,
               color: '#FFFFFF',
               lineHeight: 1.3,
@@ -115,7 +214,7 @@ export default function EventCard({ event }) {
           <p
             style={{
               fontSize: '0.82rem',
-              color: '#64748B',
+              color: '#94A3B8',
               lineHeight: 1.4,
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -123,7 +222,7 @@ export default function EventCard({ event }) {
               overflow: 'hidden',
             }}
           >
-            {event.description || 'Join thousands of fans for this incredible live showcase.'}
+            {event.description || `Experience the most exciting ${category} event featuring top performers and live seating.`}
           </p>
         </div>
 
@@ -138,7 +237,7 @@ export default function EventCard({ event }) {
           }}
         >
           <div>
-            <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               From
             </div>
             <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#FFFFFF' }}>
@@ -148,20 +247,20 @@ export default function EventCard({ event }) {
 
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: 'var(--gradient-purple)',
+              background: `linear-gradient(135deg, ${theme.color} 0%, #6366F1 100%)`,
               color: '#FFFFFF',
+              padding: '0.45rem 0.95rem',
+              borderRadius: 'var(--radius-pill)',
               fontSize: '0.82rem',
               fontWeight: 800,
-              padding: '0.55rem 1rem',
-              borderRadius: 'var(--radius-pill)',
-              boxShadow: '0 4px 12px rgba(139, 92, 246, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              boxShadow: `0 4px 15px ${theme.glow}`,
             }}
           >
             <span>Get Ticket</span>
-            <ArrowRight size={14} />
+            <ArrowRight size={13} />
           </div>
         </div>
       </div>
