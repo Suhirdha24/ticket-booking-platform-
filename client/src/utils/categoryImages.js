@@ -1,17 +1,18 @@
 export const CATEGORY_IMAGE_POOLS = {
-  Concert: [
-    'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800&auto=format&fit=crop&q=80',
-  ],
   Sports: [
     'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?w=800&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&auto=format&fit=crop&q=80',
+  ],
+  Concert: [
+    'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80',
   ],
   Theatre: [
     'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=800&auto=format&fit=crop&q=80',
@@ -37,9 +38,9 @@ export const CATEGORY_IMAGE_POOLS = {
     'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&auto=format&fit=crop&q=80',
   ],
   Exhibition: [
-    'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&auto=format&fit=crop&q=80',
   ],
   Workshop: [
@@ -60,7 +61,7 @@ export const CATEGORY_IMAGE_POOLS = {
   Wellness: [
     'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&auto=format&fit=crop&q=80',
   ],
   Nightlife: [
     'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=800&auto=format&fit=crop&q=80',
@@ -194,27 +195,18 @@ export const CATEGORY_THEMES = {
 };
 
 export function getCategoryTheme(category) {
-  return CATEGORY_THEMES[category] || CATEGORY_THEMES['Concert'];
+  const norm = category ? category.trim() : 'Concert';
+  return CATEGORY_THEMES[norm] || CATEGORY_THEMES['Concert'];
 }
 
 export function getEventImage(event) {
   if (!event) return CATEGORY_IMAGE_POOLS.Concert[0];
 
-  const rawUrl = event.coverImage || event.banner || event.image || event.bannerUrl;
-
-  // If the event has a valid custom image that is NOT the repetitive default DJ image
-  if (
-    rawUrl &&
-    !rawUrl.includes('photo-1470225620780-dba8ba36b745') &&
-    !rawUrl.includes('photo-1540747913346-19e32dc3e97e')
-  ) {
-    return rawUrl;
-  }
-
-  const category = event.category || 'Concert';
+  const category = event.category ? event.category.trim() : 'Concert';
   const pool = CATEGORY_IMAGE_POOLS[category] || CATEGORY_IMAGE_POOLS['Concert'];
-  const key = (event.title || '') + (event._id || '') + (event.city || '');
 
+  // Calculate unique index based on event title, id, and city so every event gets a consistent image from its category
+  const key = (event.title || '') + (event._id || '') + (event.city || '');
   let hash = 0;
   for (let i = 0; i < key.length; i++) {
     hash = (hash << 5) - hash + key.charCodeAt(i);
