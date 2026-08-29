@@ -2,23 +2,84 @@ import { create } from 'zustand';
 
 const LOCATION_STORAGE_KEY = 'eventlinqs_selected_city';
 
-export const MAJOR_CITIES = [
-  'All Cities',
+export const TAMIL_NADU_CITIES = [
+  'Chennai',
+  'Coimbatore',
+  'Madurai',
+  'Tiruchirappalli',
+  'Salem',
+  'Tirunelveli',
+  'Vellore',
+  'Erode',
+  'Thoothukudi',
+  'Thanjavur',
+  'Dindigul',
+  'Kanchipuram',
+  'Tiruppur',
+  'Nagercoil',
+  'Hosur',
+  'Cuddalore',
+  'Karur',
+  'Kanyakumari',
+  'Namakkal',
+  'Ramanathapuram',
+  'Sivakasi',
+  'Theni',
+  'Tiruvannamalai',
+  'Villupuram',
+  'Virudhunagar',
+  'Puducherry',
+];
+
+export const OTHER_MAJOR_CITIES = [
   'Bengaluru',
   'Mumbai',
-  'Chennai',
-  'Delhi',
+  'New Delhi',
   'Hyderabad',
+  'Kolkata',
   'Pune',
   'Kochi',
-  'Coimbatore',
-  'Kolkata',
   'Ahmedabad',
+  'Goa',
   'Jaipur',
   'Chandigarh',
-  'Goa',
-  'Indore',
   'Lucknow',
+  'Indore',
+  'Bhubaneswar',
+  'Bhopal',
+  'Agra',
+  'Amritsar',
+  'Dehradun',
+  'Guwahati',
+  'Gwalior',
+  'Jalandhar',
+  'Jamshedpur',
+  'Jodhpur',
+  'Kanpur',
+  'Kozhikode',
+  'Ludhiana',
+  'Mangaluru',
+  'Mysuru',
+  'Nagpur',
+  'Nashik',
+  'Navi Mumbai',
+  'Noida',
+  'Patna',
+  'Raipur',
+  'Ranchi',
+  'Surat',
+  'Thiruvananthapuram',
+  'Udaipur',
+  'Vadodara',
+  'Varanasi',
+  'Vijayawada',
+  'Visakhapatnam',
+];
+
+export const MAJOR_CITIES = [
+  'All Cities',
+  ...TAMIL_NADU_CITIES,
+  ...OTHER_MAJOR_CITIES,
 ];
 
 function getInitialCity() {
@@ -67,7 +128,7 @@ export const useLocationStore = create((set) => ({
             data.address?.town ||
             data.address?.state_district ||
             data.address?.state ||
-            'Bengaluru';
+            'Chennai';
 
           // Match closest major city or use detected name
           const matched = MAJOR_CITIES.find(
