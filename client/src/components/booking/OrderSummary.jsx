@@ -53,11 +53,11 @@ export default function OrderSummary({ reservation, event, seats }) {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Calendar size={14} color="#eab308" />
+            <Calendar size={14} color="#A78BFA" />
             <span>{formatDate(event?.date)}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <MapPin size={14} color="#eab308" />
+            <MapPin size={14} color="#A78BFA" />
             <span>
               {event?.venue?.name || event?.venueName || 'Venue'}, {event?.city}
             </span>

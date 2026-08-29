@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function StatCard({ title, value, subtext, icon: Icon, color = '#eab308' }) {
+export default function StatCard({ title, value, subtext, icon: Icon, color = '#8B5CF6' }) {
   return (
     <div
       className="glass-card"
@@ -54,8 +54,8 @@ export default function StatCard({ title, value, subtext, icon: Icon, color = '#
           width: '50px',
           height: '50px',
           borderRadius: '14px',
-          background: `rgba(${color === '#eab308' ? '234, 179, 8' : color === '#10b981' ? '16, 185, 129' : '245, 158, 11'}, 0.15)`,
-          border: `1px solid rgba(${color === '#eab308' ? '234, 179, 8' : color === '#10b981' ? '16, 185, 129' : '245, 158, 11'}, 0.3)`,
+          background: `rgba(${color === '#8B5CF6' ? '139, 92, 246' : color === '#10b981' ? '16, 185, 129' : '99, 102, 241'}, 0.15)`,
+          border: `1px solid rgba(${color === '#8B5CF6' ? '139, 92, 246' : color === '#10b981' ? '16, 185, 129' : '99, 102, 241'}, 0.3)`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
