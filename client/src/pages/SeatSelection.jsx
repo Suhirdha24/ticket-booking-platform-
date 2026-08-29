@@ -50,8 +50,8 @@ export default function SeatSelection() {
         api.get(`/events/${id}`),
         api.get(`/events/${id}/seats`),
       ]);
-      setEvent(eventRes.data.data);
-      setSeats(seatsRes.data.data || []);
+      setEvent(eventRes.data.data?.event || eventRes.data.data);
+      setSeats(seatsRes.data.data?.seats || seatsRes.data.data || []);
     } catch (err) {
       setFetchError(err.message || 'Failed to load seating map');
       showErrorToast('Failed to load seating map', err.message);

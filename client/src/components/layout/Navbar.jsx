@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore.js';
 import { useReservationStore } from '../../store/reservationStore.js';
+import { useLocationStore } from '../../store/locationStore.js';
 import {
   Ticket,
   Calendar,
@@ -100,6 +101,7 @@ export default function Navbar() {
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuthStore();
   const { activeReservation, remainingSeconds } = useReservationStore();
+  const { selectedCity, openLocationModal } = useLocationStore();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -160,8 +162,9 @@ export default function Navbar() {
         top: 0,
         zIndex: 100,
         width: '100%',
-        backgroundColor: 'rgba(10, 12, 16, 0.95)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        backgroundColor: 'rgba(255, 255, 255, 0.88)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
       }}
     >
       <div
@@ -170,49 +173,76 @@ export default function Navbar() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '74px',
+          height: '70px',
           position: 'relative',
         }}
       >
-        {/* Brand Logo */}
-        <Link
-          to="/"
-          onClick={closePopups}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-            textDecoration: 'none',
-          }}
-        >
-          <div
+        {/* Brand Logo & Location Pill */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <Link
+            to="/"
+            onClick={closePopups}
             style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, #eab308 0%, #f59e0b 100%)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 0 15px rgba(234, 179, 8, 0.4)',
+              gap: '0.6rem',
+              textDecoration: 'none',
             }}
           >
-            <Ticket size={20} color="#000000" />
-          </div>
-          <div>
-            <span
+            <div
               style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '1.45rem',
-                fontWeight: 800,
-                letterSpacing: '-0.02em',
-                color: '#ffffff',
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                background: '#0F172A',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)',
               }}
             >
-              Event<span style={{ color: '#eab308' }}>Linqs</span>
-            </span>
-          </div>
-        </Link>
+              <Ticket size={18} color="#FFFFFF" />
+            </div>
+            <div>
+              <span
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '1.35rem',
+                  fontWeight: 900,
+                  letterSpacing: '-0.02em',
+                  color: '#0F172A',
+                }}
+              >
+                Event<span style={{ color: '#EAB308' }}>Linqs</span>
+              </span>
+            </div>
+          </Link>
+
+          {/* Quick Location Trigger Button */}
+          <button
+            onClick={openLocationModal}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: '#FFFFFF',
+              border: '1px solid rgba(15, 23, 42, 0.1)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '0.35rem 0.85rem',
+              color: '#0F172A',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+              transition: 'all 0.2s ease',
+            }}
+            title="Choose your city"
+          >
+            <MapPin size={13} color="#EAB308" />
+            <span>{selectedCity}</span>
+            <ChevronDown size={12} />
+          </button>
+        </div>
 
         {/* 🌟 DESKTOP NAV LINKS (WITH INTERACTIVE POPUP TOGGLES) */}
         <div

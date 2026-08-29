@@ -1,161 +1,436 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
+import {
+  Search,
+  MapPin,
+  SlidersHorizontal,
+  ArrowUpDown,
+  X,
+  RotateCcw,
+  Sparkles,
+  ChevronDown,
+} from 'lucide-react';
 import api from '../api/client.js';
+import { useLocationStore } from '../store/locationStore.js';
 import EventCard from '../components/events/EventCard.jsx';
-import EventFilter from '../components/events/EventFilter.jsx';
+import CategoryPillList from '../components/events/CategoryPillList.jsx';
+import LocationModal from '../components/common/LocationModal.jsx';
 import Pagination from '../components/common/Pagination.jsx';
-import { EventCardSkeleton } from '../components/common/Skeleton.jsx';
-import { Sparkles, Calendar, Frown } from 'lucide-react';
+
+const SORT_OPTIONS = [
+  { value: 'recommended', label: 'Recommended ✨' },
+  { value: 'popular', label: 'Most Popular 🔥' },
+  { value: 'newest', label: 'Newest Added 🕒' },
+  { value: 'price_asc', label: 'Price: Low to High 🏷️' },
+  { value: 'price_desc', label: 'Price: High to Low 💎' },
+];
 
 export default function Events() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { selectedCity, openLocationModal } = useLocationStore();
+
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [category, setCategory] = useState(searchParams.get('category') || 'All');
-  const [city, setCity] = useState(searchParams.get('city') || 'All');
-  const [sort, setSort] = useState(searchParams.get('sort') || 'date-asc');
-  const [page, setPage] = useState(1);
+  // Filters
+  const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [category, setCategory] = useState(searchParams.get('category') || '');
+  const [city, setCity] = useState(searchParams.get('city') || '');
+  const [sort, setSort] = useState(searchParams.get('sort') || 'recommended');
+  const [page, setPage] = useState(parseInt(searchParams.get('page') || '1', 10));
 
+  // Sync state with URL params
+  useEffect(() => {
+    setSearch(searchParams.get('q') || '');
+    setCategory(searchParams.get('category') || '');
+    setCity(searchParams.get('city') || '');
+    setSort(searchParams.get('sort') || 'recommended');
+    setPage(parseInt(searchParams.get('page') || '1', 10));
+  }, [searchParams]);
+
+  // Fetch events on filter change
   useEffect(() => {
     async function fetchEvents() {
       setLoading(true);
+      setError(null);
       try {
         const params = new URLSearchParams();
-        if (search) params.append('search', search);
-        if (category && category !== 'All') params.append('category', category);
-        if (city && city !== 'All') params.append('city', city);
-        if (sort) params.append('sort', sort);
-        params.append('page', page);
-        params.append('limit', 12);
+        if (search) params.set('q', search);
+        if (category) params.set('category', category);
+        
+        // If city filter is specified in URL, use it; otherwise use location store selectedCity
+        const activeCity = city || (selectedCity !== 'All Cities' ? selectedCity : '');
+        if (activeCity) params.set('city', activeCity);
+
+        if (sort) params.set('sort', sort);
+        params.set('page', page.toString());
+        params.set('limit', '12');
 
         const res = await api.get(`/events?${params.toString()}`);
-        setEvents(res.data.data.events || []);
-        setPagination(res.data.data.pagination || { page: 1, pages: 1, total: 0 });
+        setEvents(res.data?.data?.events || []);
+        setPagination(
+          res.data?.data?.pagination || { page: 1, pages: 1, total: 0 }
+        );
       } catch (err) {
-        console.error('Failed to fetch events:', err);
+        console.error('Failed to load events:', err);
+        setError(err.message || 'Could not load events. Please try again.');
       } finally {
         setLoading(false);
       }
     }
 
     fetchEvents();
-  }, [search, category, city, sort, page]);
+  }, [search, category, city, sort, page, selectedCity]);
 
-  const handleReset = () => {
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const newParams = new URLSearchParams(searchParams);
+    if (search.trim()) {
+      newParams.set('q', search.trim());
+    } else {
+      newParams.delete('q');
+    }
+    newParams.set('page', '1');
+    setSearchParams(newParams);
+  };
+
+  const handleCategoryChange = (newCategory) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (newCategory) {
+      newParams.set('category', newCategory);
+    } else {
+      newParams.delete('category');
+    }
+    newParams.set('page', '1');
+    setSearchParams(newParams);
+  };
+
+  const handleSortChange = (newSort) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('sort', newSort);
+    newParams.set('page', '1');
+    setSearchParams(newParams);
+  };
+
+  const resetAllFilters = () => {
     setSearch('');
-    setCategory('All');
-    setCity('All');
-    setSort('date-asc');
-    setPage(1);
-    setSearchParams({});
+    setCategory('');
+    setCity('');
+    setSort('recommended');
+    setSearchParams(new URLSearchParams());
   };
 
   return (
-    <div className="container" style={{ padding: '3rem 1.5rem' }}>
-      {/* Page Header */}
-      <div style={{ marginBottom: '2.5rem' }}>
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            background: 'rgba(234, 179, 8, 0.15)',
-            color: '#eab308',
-            border: '1px solid rgba(234, 179, 8, 0.3)',
-            padding: '0.35rem 0.85rem',
-            borderRadius: '9999px',
-            fontSize: '0.8rem',
-            fontWeight: 700,
-            marginBottom: '0.75rem',
-            letterSpacing: '0.04em',
-            textTransform: 'uppercase',
-          }}
-        >
-          <Calendar size={13} /> Live Event Catalog
-        </div>
-        <h1 className="font-serif-editorial" style={{ fontSize: '2.8rem', fontWeight: 800, marginBottom: '0.5rem', color: '#ffffff' }}>
-          Explore Upcoming Events
-        </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>
-          Filter through concerts, conferences, comedy shows, festivals, and cultural celebrations across India.
-        </p>
-      </div>
+    <div className="mobile-safe-bottom" style={{ minHeight: '100vh', paddingTop: '1.5rem' }}>
+      <LocationModal />
 
-      {/* Filter Bar */}
-      <EventFilter
-        search={search}
-        setSearch={setSearch}
-        category={category}
-        setCategory={setCategory}
-        city={city}
-        setCity={setCity}
-        sort={sort}
-        setSort={setSort}
-        onReset={handleReset}
-      />
-
-      {/* Results Section */}
-      {loading ? (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-            gap: '2rem',
-          }}
-        >
-          {Array.from({ length: 6 }).map((_, i) => (
-            <EventCardSkeleton key={i} />
-          ))}
+      <div className="container">
+        {/* Header Title */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <span
+            style={{
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              color: 'var(--primary-gold)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+            }}
+          >
+            Explore Events
+          </span>
+          <h1
+            style={{
+              fontSize: '2rem',
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+              marginTop: '0.15rem',
+            }}
+          >
+            {category ? `${category} Events` : 'All Live Events'}
+          </h1>
+          <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+            Showing {pagination.total} experiences across India
+          </p>
         </div>
-      ) : events.length === 0 ? (
+
+        {/* 🔍 Search & Filter Controls Bar */}
         <div
-          className="glass-panel"
           style={{
-            padding: '4rem 2rem',
-            textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
             gap: '1rem',
+            marginBottom: '1.5rem',
           }}
         >
-          <Frown size={48} color="var(--text-subtle)" />
-          <h3 style={{ fontSize: '1.4rem', fontWeight: 700 }}>No Events Found</h3>
-          <p style={{ color: 'var(--text-muted)', maxWidth: '420px', fontSize: '0.95rem' }}>
-            We could not find any events matching your selected criteria. Try adjusting your filters or search terms.
-          </p>
-          <button onClick={handleReset} className="btn btn-secondary" style={{ marginTop: '0.5rem' }}>
-            Clear All Filters
-          </button>
+          {/* Main Search Bar */}
+          <form
+            onSubmit={handleSearchSubmit}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-medium)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '0.45rem 0.6rem 0.45rem 1.25rem',
+              boxShadow: 'var(--shadow-card)',
+            }}
+          >
+            <Search size={18} color="var(--primary-gold)" style={{ flexShrink: 0 }} />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by artist, concert, city, or festival..."
+              style={{
+                flex: 1,
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                color: '#0F172A',
+                fontSize: '0.92rem',
+                fontFamily: 'var(--font-body)',
+              }}
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch('');
+                  const p = new URLSearchParams(searchParams);
+                  p.delete('q');
+                  setSearchParams(p);
+                }}
+                className="btn-icon"
+                style={{ width: '28px', height: '28px' }}
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
+            <button
+              type="submit"
+              className="btn-primary"
+              style={{ padding: '0.6rem 1.25rem', fontSize: '0.85rem' }}
+            >
+              Search
+            </button>
+          </form>
+
+          {/* Category Chips Bar */}
+          <CategoryPillList
+            activeCategory={category}
+            onSelectCategory={handleCategoryChange}
+          />
+
+          {/* Filter Metadata & Sort Controls */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              padding: '0.75rem 1rem',
+              background: 'var(--bg-surface)',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            {/* Location Pill & Reset */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={openLocationModal}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.4rem 0.85rem',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-medium)',
+                  borderRadius: 'var(--radius-pill)',
+                  color: 'var(--primary-gold)',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                <MapPin size={13} />
+                <span>{city || selectedCity}</span>
+                <ChevronDown size={12} />
+              </button>
+
+              {(category || search || city) && (
+                <button
+                  onClick={resetAllFilters}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    padding: '0.4rem 0.75rem',
+                    background: 'rgba(244, 63, 94, 0.1)',
+                    border: '1px solid rgba(244, 63, 94, 0.25)',
+                    borderRadius: 'var(--radius-pill)',
+                    color: '#f43f5e',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <RotateCcw size={12} />
+                  <span>Reset Filters</span>
+                </button>
+              )}
+            </div>
+
+            {/* Sort Dropdown */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                Sort By:
+              </span>
+              <select
+                value={sort}
+                onChange={(e) => handleSortChange(e.target.value)}
+                style={{
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-medium)',
+                  borderRadius: 'var(--radius-md)',
+                  color: '#ffffff',
+                  padding: '0.4rem 0.75rem',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  outline: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value} style={{ background: '#11151C' }}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
-      ) : (
-        <>
+
+        {/* 🎪 Event Cards Grid */}
+        {loading ? (
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-              gap: '2rem',
-              marginBottom: '3rem',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '1.25rem',
             }}
           >
-            {events.map((event) => (
-              <EventCard key={event._id} event={event} />
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  height: '380px',
+                  borderRadius: 'var(--radius-xl)',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-subtle)',
+                  animation: 'pulse 1.5s infinite',
+                }}
+              />
             ))}
           </div>
+        ) : error ? (
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '4rem 1.5rem',
+              background: 'var(--bg-card)',
+              borderRadius: 'var(--radius-xl)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <p style={{ color: '#f43f5e', fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>
+              {error}
+            </p>
+            <button onClick={resetAllFilters} className="btn-primary">
+              Retry & Reset Filters
+            </button>
+          </div>
+        ) : events.length === 0 ? (
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '4rem 1.5rem',
+              background: 'var(--bg-card)',
+              borderRadius: 'var(--radius-xl)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <div
+              style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                background: 'var(--gradient-gold-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.25rem auto',
+                color: 'var(--primary-gold)',
+              }}
+            >
+              <Search size={28} />
+            </div>
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: '0.4rem' }}>
+              No Events Found
+            </h3>
+            <p
+              style={{
+                fontSize: '0.9rem',
+                color: 'var(--text-muted)',
+                maxWidth: '420px',
+                margin: '0 auto 1.5rem auto',
+                lineHeight: 1.5,
+              }}
+            >
+              We couldn't find any events matching your selected search query or city. Try choosing
+              another city or resetting your filters.
+            </p>
+            <button onClick={resetAllFilters} className="btn-primary">
+              View All Events
+            </button>
+          </div>
+        ) : (
+          <>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: '1.25rem',
+                marginBottom: '2.5rem',
+              }}
+            >
+              {events.map((event) => (
+                <EventCard key={event._id} event={event} />
+              ))}
+            </div>
 
-          {/* Smart Pagination with Range Display & Jump Dialog */}
-          <Pagination
-            currentPage={page}
-            totalPages={pagination.pages}
-            totalItems={pagination.total}
-            pageSize={12}
-            onPageChange={(newPage) => setPage(newPage)}
-          />
-        </>
-      )}
+            {/* Pagination Controls */}
+            {pagination.pages > 1 && (
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+                <Pagination
+                  currentPage={pagination.page}
+                  totalPages={pagination.pages}
+                  onPageChange={(newPage) => {
+                    const p = new URLSearchParams(searchParams);
+                    p.set('page', newPage.toString());
+                    setSearchParams(p);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                />
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

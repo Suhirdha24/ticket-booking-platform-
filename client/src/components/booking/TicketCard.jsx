@@ -75,7 +75,7 @@ export default function TicketCard({ booking, isNew = false }) {
       'VERSION:2.0',
       'BEGIN:VEVENT',
       `SUMMARY:${title}`,
-      `DESCRIPTION:Event tickets booked via EventHub. Booking Ref: ${booking.bookingReference}`,
+      `DESCRIPTION:Event tickets booked via EventLinqs. Booking Ref: ${booking.bookingReference}`,
       `LOCATION:${booking.venueSnapshot?.name || ''}, ${booking.venueSnapshot?.city || ''}`,
       `DTSTART:${formatDateForICS(date)}`,
       `DTEND:${formatDateForICS(endDate)}`,

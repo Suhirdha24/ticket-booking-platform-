@@ -1,335 +1,433 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import api from '../api/client.js';
-import Button from '../components/common/Button.jsx';
-import { getEventImage } from '../utils/categoryImages.js';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
+  ArrowLeft,
   Calendar,
   Clock,
   MapPin,
-  Ticket,
+  Navigation,
+  Share2,
+  Heart,
+  ChevronRight,
   ShieldCheck,
-  ArrowRight,
-  Info,
-  Building,
-  UserCheck,
 } from 'lucide-react';
+import api from '../api/client.js';
+import { getEventImage } from '../utils/categoryImages.js';
+import { useFavoritesStore } from '../store/favoritesStore.js';
+import { useToastStore } from '../store/toastStore.js';
+
+const GOING_AVATARS = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
+];
 
 export default function EventDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { isFavorite, toggleFavorite } = useFavoritesStore();
+  const { addToast } = useToastStore();
+
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const favorite = isFavorite(id);
+
   useEffect(() => {
-    async function loadEvent() {
+    async function loadDetails() {
       setLoading(true);
+      setError(null);
       try {
         const res = await api.get(`/events/${id}`);
-        setEvent(res.data.data);
+        setEvent(res.data?.data?.event);
       } catch (err) {
-        setError(err.message || 'Failed to load event details');
+        setError(err.message || 'Event not found');
       } finally {
         setLoading(false);
       }
     }
-    loadEvent();
+
+    if (id) loadDetails();
   }, [id]);
 
   if (loading) {
     return (
-      <div className="container" style={{ padding: '4rem 1.5rem', textAlign: 'center' }}>
-        <div className="skeleton" style={{ height: '360px', borderRadius: 'var(--radius-lg)', marginBottom: '2rem' }} />
-        <div className="skeleton" style={{ height: '40px', width: '50%', margin: '0 auto 1rem auto' }} />
-        <div className="skeleton" style={{ height: '100px', width: '70%', margin: '0 auto' }} />
+      <div className="container mobile-safe-bottom" style={{ maxWidth: '480px', paddingTop: '2rem' }}>
+        <div style={{ height: '400px', background: '#FFFFFF', borderRadius: 'var(--radius-xl)', animation: 'pulse 1.5s infinite' }} />
       </div>
     );
   }
 
   if (error || !event) {
     return (
-      <div className="container" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
-        <div className="glass-panel" style={{ padding: '3rem', maxWidth: '500px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#fb7185' }}>
-            Event Not Found
-          </h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-            {error || 'The requested event could not be located.'}
-          </p>
-          <Link to="/events">
-            <Button variant="primary">Browse Other Events</Button>
-          </Link>
+      <div className="container mobile-safe-bottom" style={{ maxWidth: '480px', paddingTop: '3rem', textAlign: 'center' }}>
+        <div className="glass-panel" style={{ padding: '2.5rem 1.5rem' }}>
+          <h2 style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>Event Not Found</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{error}</p>
+          <button onClick={() => navigate('/events')} className="btn-primary">
+            Browse All Events
+          </button>
         </div>
       </div>
     );
   }
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
+  const d = new Date(event.date || Date.now());
+  const monthShort = d.toLocaleDateString('en-US', { month: 'short' });
+  const dayNum = d.toLocaleDateString('en-US', { day: 'numeric' });
+  const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', year: 'numeric' });
+  const timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
-  const formatTime = (dateStr) => {
-    if (!dateStr) return '';
-    return new Date(dateStr).toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-    });
-  };
+  const totalCapacity = event.totalSeats || 50;
+  const available = event.availableSeats !== undefined ? event.availableSeats : 24;
+  const booked = Math.max(1, totalCapacity - available);
+
+  const minPrice =
+    event.pricing && event.pricing.length > 0
+      ? Math.min(...event.pricing.map((p) => p.price))
+      : 499;
 
   return (
-    <div style={{ paddingBottom: '5rem' }}>
-      {/* Immersive Event Hero Banner */}
-      <div
-        style={{
-          position: 'relative',
-          height: '420px',
-          width: '100%',
-          overflow: 'hidden',
-        }}
-      >
-        <img
-          src={getEventImage(event)}
-          alt={event.title}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
+    <div className="mobile-safe-bottom" style={{ minHeight: '100vh', paddingTop: '1rem' }}>
+      <div className="container" style={{ maxWidth: '480px' }}>
+        {/* Top Control Bar */}
         <div
           style={{
-            position: 'absolute',
-            inset: 0,
-            background:
-              'linear-gradient(to top, rgba(9, 10, 15, 1) 0%, rgba(9, 10, 15, 0.6) 50%, rgba(9, 10, 15, 0.3) 100%)',
-          }}
-        />
-        <div
-          className="container"
-          style={{
-            position: 'absolute',
-            bottom: '2.5rem',
-            left: 0,
-            right: 0,
-            zIndex: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '1rem',
           }}
         >
-          <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem' }}>
-            <span className="badge badge-primary">{event.category}</span>
-            <span className="badge badge-success">
-              <Ticket size={12} /> {event.availableSeats} Available Seats
-            </span>
+          <button
+            onClick={() => navigate(-1)}
+            className="btn-icon"
+            style={{ width: '40px', height: '40px' }}
+            aria-label="Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
+
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => {
+                navigator.clipboard?.writeText(window.location.href);
+                addToast('Event link copied!', 'success');
+              }}
+              className="btn-icon"
+              style={{ width: '40px', height: '40px' }}
+              aria-label="Share"
+            >
+              <Share2 size={16} />
+            </button>
+            <button
+              onClick={() => toggleFavorite(event._id)}
+              className="btn-icon"
+              style={{ width: '40px', height: '40px', color: favorite ? '#F43F5E' : '#0F172A' }}
+              aria-label="Favorite"
+            >
+              <Heart size={16} fill={favorite ? '#F43F5E' : 'none'} />
+            </button>
           </div>
-          <h1
+        </div>
+
+        {/* 🌟 1. EVENT HEADER CARD (Thumbnail + Title + 24/50 Circle) */}
+        <div
+          style={{
+            background: '#FFFFFF',
+            borderRadius: 'var(--radius-xl)',
+            padding: '1.25rem',
+            boxShadow: 'var(--shadow-card)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            marginBottom: '1rem',
+          }}
+        >
+          {/* Thumbnail Box */}
+          <div
             style={{
-              fontSize: 'clamp(2rem, 5vw, 3.2rem)',
-              fontWeight: 900,
-              lineHeight: 1.2,
-              color: '#ffffff',
-              maxWidth: '850px',
+              width: '74px',
+              height: '74px',
+              borderRadius: 'var(--radius-md)',
+              overflow: 'hidden',
+              flexShrink: 0,
             }}
           >
-            {event.title}
-          </h1>
-        </div>
-      </div>
+            <img
+              src={getEventImage(event)}
+              alt={event.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </div>
 
-      {/* Main Details Body */}
-      <div className="container" style={{ marginTop: '2rem' }}>
+          {/* Title */}
+          <div style={{ flex: 1 }}>
+            <h1
+              style={{
+                fontSize: '1.15rem',
+                fontWeight: 800,
+                color: '#0F172A',
+                lineHeight: 1.3,
+              }}
+            >
+              {event.title}
+            </h1>
+          </div>
+
+          {/* ⚪ Capacity Fraction Circle */}
+          <div
+            style={{
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              background: '#FFFFFF',
+              border: '1.5px solid #E2E8F0',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.82rem',
+              fontWeight: 900,
+              color: '#0F172A',
+              flexShrink: 0,
+              boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
+            }}
+          >
+            <span>{booked}</span>
+            <div style={{ width: '16px', height: '1px', background: '#CBD5E1', margin: '1px 0' }} />
+            <span style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 700 }}>{totalCapacity}</span>
+          </div>
+        </div>
+
+        {/* 📅 2. DATE & TIME CARD */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '2.5rem',
+            background: '#FFFFFF',
+            borderRadius: 'var(--radius-xl)',
+            padding: '1.15rem',
+            boxShadow: 'var(--shadow-card)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            marginBottom: '1rem',
           }}
         >
-          {/* Left Column: Event Overview & Description */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            {/* Meta Pill Grid */}
+          {/* Square Date Badge */}
+          <div
+            style={{
+              width: '54px',
+              height: '54px',
+              borderRadius: 'var(--radius-md)',
+              background: '#F1F5F9',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
+              {monthShort}
+            </span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
+              {dayNum}
+            </span>
+          </div>
+
+          <div>
+            <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>
+              {fullDate}
+            </div>
+            <div style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
+              <Clock size={13} color="#EAB308" />
+              <span>{timeStr} onwards</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 📍 3. LOCATION CARD WITH MINI MAP & GET DIRECTIONS */}
+        <div
+          style={{
+            background: '#FFFFFF',
+            borderRadius: 'var(--radius-xl)',
+            padding: '1.15rem',
+            boxShadow: 'var(--shadow-card)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            marginBottom: '1rem',
+          }}
+        >
+          {/* Mini Map Thumbnail */}
+          <div
+            style={{
+              width: '84px',
+              height: '84px',
+              borderRadius: 'var(--radius-md)',
+              background: '#E2E8F0',
+              overflow: 'hidden',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              border: '1px solid #CBD5E1',
+            }}
+          >
             <div
-              className="glass-panel"
               style={{
-                padding: '1.5rem',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '1.5rem',
+                position: 'absolute',
+                inset: 0,
+                backgroundImage:
+                  'radial-gradient(#CBD5E1 1px, transparent 1px), radial-gradient(#CBD5E1 1px, #E2E8F0 1px)',
+                backgroundSize: '8px 8px',
               }}
-            >
-              {/* Date */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <div
-                  style={{
-                    padding: '10px',
-                    borderRadius: '12px',
-                    background: 'rgba(234, 179, 8, 0.15)',
-                    color: '#eab308',
-                  }}
-                >
-                  <Calendar size={22} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', textTransform: 'uppercase', fontWeight: 700 }}>
-                    Event Date
-                  </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#ffffff' }}>
-                    {formatDate(event.date)}
-                  </div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    Starts at {formatTime(event.date)}
-                  </div>
-                </div>
-              </div>
-
-              {/* Venue */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <div
-                  style={{
-                    padding: '10px',
-                    borderRadius: '12px',
-                    background: 'rgba(234, 179, 8, 0.15)',
-                    color: '#eab308',
-                  }}
-                >
-                  <Building size={22} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', textTransform: 'uppercase', fontWeight: 700 }}>
-                    Location
-                  </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#ffffff' }}>
-                    {event.venue?.name || 'Grand Venue'}
-                  </div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    {event.venue?.address || ''}, {event.city}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="glass-panel" style={{ padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '1rem' }}>
-                About the Event
-              </h3>
-              <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '1rem', whiteSpace: 'pre-line' }}>
-                {event.description}
-              </p>
-            </div>
-
-            {/* Cancellation Policy Banner */}
+            />
             <div
-              className="glass-panel"
               style={{
-                padding: '1.25rem 1.5rem',
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                background: '#0F172A',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '1rem',
-                background: 'rgba(16, 185, 129, 0.08)',
-                borderColor: 'rgba(16, 185, 129, 0.3)',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                zIndex: 2,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
               }}
             >
-              <ShieldCheck size={26} color="#34d399" style={{ flexShrink: 0 }} />
-              <div>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#34d399', marginBottom: '0.2rem' }}>
-                  Flexible 24-Hour Refund Policy
-                </h4>
-                <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                  Cancellations requested at least {event.cancellationPolicy?.cutoffHours || 24} hours before event start are eligible for instant full refunds.
-                </p>
-              </div>
+              <MapPin size={15} />
             </div>
           </div>
 
-          {/* Right Column: Pricing Tiers & Seat Selection CTA */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <div
-              className="glass-panel"
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0F172A' }}>
+              {event.venue?.name || '4517 Washington Ave.'}
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#64748B', marginBottom: '0.6rem' }}>
+              {event.city}
+            </div>
+
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `${event.venue?.name || ''} ${event.city}`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                padding: '2rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.5rem',
-                background: 'rgba(18, 20, 31, 0.85)',
-                borderColor: 'var(--border-highlight)',
-                boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px -5px var(--primary-glow)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                background: '#F1F5F9',
+                padding: '0.35rem 0.75rem',
+                borderRadius: 'var(--radius-pill)',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: '#0F172A',
+                textDecoration: 'none',
               }}
             >
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>
-                Ticket Pricing Tiers
-              </h3>
+              <Navigation size={12} />
+              <span>Get Direction</span>
+            </a>
+          </div>
+        </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                {(event.pricing || []).map((tier) => (
-                  <Link
-                    key={tier.category}
-                    to={`/event/${event._id}/seats?tier=${tier.category}`}
-                    className="glass-card table-row-hover"
-                    style={{
-                      padding: '1rem 1.25rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      textDecoration: 'none',
-                      cursor: 'pointer',
-                      border: '1px solid var(--border-subtle)',
-                      borderRadius: 'var(--radius-md)',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    <div>
-                      <span className={`badge badge-${tier.category.toLowerCase()}`}>
-                        {tier.category} Tier
-                      </span>
-                      <div style={{ fontSize: '0.78rem', color: 'var(--text-subtle)', marginTop: '4px' }}>
-                        Click to Select {tier.category} Seats &rarr;
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: '1.35rem',
-                        fontWeight: 800,
-                        color: '#ffffff',
-                      }}
-                    >
-                      ₹{tier.price}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-              <Link to={`/event/${event._id}/seats`} style={{ width: '100%' }}>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  icon={ArrowRight}
-                  style={{ width: '100%', padding: '1rem', fontSize: '1.05rem' }}
-                >
-                  Select Seats on Map
-                </Button>
-              </Link>
-
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  fontSize: '0.8rem',
-                  color: 'var(--text-subtle)',
-                }}
-              >
-                <Clock size={14} color="#eab308" />
-                <span>Selected seats are locked for 5 minutes during checkout</span>
-              </div>
+        {/* 👤 4. HOSTED BY & PEOPLE GOING */}
+        <div
+          style={{
+            background: '#FFFFFF',
+            borderRadius: 'var(--radius-xl)',
+            padding: '1.15rem',
+            boxShadow: 'var(--shadow-card)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.85rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B' }}>
+              Hosted By
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 800, color: '#0F172A' }}>
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=80"
+                alt="Host"
+                style={{ width: '22px', height: '22px', borderRadius: '50%' }}
+              />
+              <span>Mike Wazowki</span>
             </div>
           </div>
+
+          <div style={{ height: '1px', background: '#F1F5F9' }} />
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B' }}>
+              People Going ({booked} People)
+            </span>
+            <div className="avatar-group">
+              {GOING_AVATARS.map((av, idx) => (
+                <img key={idx} src={av} alt="Attendee" />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 📝 5. ABOUT EVENT */}
+        <div
+          style={{
+            background: '#FFFFFF',
+            borderRadius: 'var(--radius-xl)',
+            padding: '1.25rem',
+            boxShadow: 'var(--shadow-card)',
+            marginBottom: '1.5rem',
+          }}
+        >
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem' }}>
+            About Event
+          </h3>
+          <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.6 }}>
+            {event.description ||
+              `Unlock your potential with our ${event.title} in ${event.city}! Designed for attendees of all skill levels, this hands-on session will help you sharpen your fundamentals, enhance your performance, and connect with vibrant creators.`}
+          </p>
+        </div>
+
+        {/* 🏷️ STICKY BOTTOM BOOK TICKET BAR */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            background: '#FFFFFF',
+            borderRadius: 'var(--radius-xl)',
+            padding: '1rem 1.25rem',
+            boxShadow: 'var(--shadow-card)',
+          }}
+        >
+          <div>
+            <div style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>
+              Price
+            </div>
+            <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0F172A' }}>
+              ₹{minPrice.toLocaleString('en-IN')}
+            </div>
+          </div>
+
+          <Link to={`/event/${event._id}/seats`} style={{ flex: 1, maxWidth: '200px' }}>
+            <button
+              className="btn-primary"
+              style={{ width: '100%', padding: '0.85rem' }}
+            >
+              <span>Book Ticket</span>
+              <ChevronRight size={16} />
+            </button>
+          </Link>
         </div>
       </div>
     </div>

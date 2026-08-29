@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Compass, Ticket, Heart, User } from 'lucide-react';
+import { Home, Ticket, Compass, Heart, User } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore.js';
 import { useFavoritesStore } from '../../store/favoritesStore.js';
 
@@ -9,16 +9,13 @@ export default function MobileBottomNav() {
   const { isAuthenticated } = useAuthStore();
   const { favoriteIds } = useFavoritesStore();
 
-  // Hide bottom navigation during seat selection or checkout on mobile to maximize viewport
-  const isExcludedRoute =
-    location.pathname.includes('/seats') ||
-    location.pathname.includes('/checkout');
+  // Hide during seat selection and checkout to maximize viewport
+  const isExcluded =
+    location.pathname.includes('/seats') || location.pathname.includes('/checkout');
 
-  if (isExcludedRoute) {
-    return null;
-  }
+  if (isExcluded) return null;
 
-  const navItems = [
+  const navLinks = [
     {
       to: '/',
       label: 'Home',
@@ -26,14 +23,14 @@ export default function MobileBottomNav() {
       exact: true,
     },
     {
-      to: '/events',
-      label: 'Explore',
-      icon: Compass,
+      to: isAuthenticated ? '/my-bookings' : '/login',
+      label: 'Tickets',
+      icon: Ticket,
     },
     {
-      to: isAuthenticated ? '/my-bookings' : '/login',
-      label: 'Bookings',
-      icon: Ticket,
+      to: '/events',
+      label: 'Discover',
+      icon: Compass,
     },
     {
       to: '/favorites',
@@ -49,50 +46,39 @@ export default function MobileBottomNav() {
   ];
 
   return (
-    <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
-      {navItems.map((item) => {
-        const Icon = item.icon;
-        const isActive =
-          item.exact
+    <div className="floating-dock-wrapper" aria-label="Bottom Navigation Dock">
+      <nav className="floating-dock">
+        {navLinks.map((item) => {
+          const Icon = item.icon;
+          const isActive = item.exact
             ? location.pathname === item.to
             : location.pathname.startsWith(item.to);
 
-        return (
-          <NavLink
-            key={item.label}
-            to={item.to}
-            className={`bottom-nav-item ${isActive ? 'active' : ''}`}
-            aria-label={item.label}
-          >
-            {isActive && <div className="bottom-nav-indicator" />}
-            <div className="nav-icon-container" style={{ position: 'relative' }}>
+          return (
+            <NavLink
+              key={item.label}
+              to={item.to}
+              className={`dock-item ${isActive ? 'active' : ''}`}
+              aria-label={item.label}
+            >
               <Icon size={20} strokeWidth={isActive ? 2.5 : 1.8} />
               {item.badge && (
                 <span
                   style={{
                     position: 'absolute',
-                    top: '-4px',
-                    right: '-6px',
-                    background: 'var(--primary-gold)',
-                    color: '#000000',
-                    fontSize: '0.62rem',
-                    fontWeight: 800,
-                    width: '15px',
-                    height: '15px',
+                    top: '6px',
+                    right: '6px',
+                    width: '7px',
+                    height: '7px',
                     borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    background: '#F43F5E',
                   }}
-                >
-                  {item.badge}
-                </span>
+                />
               )}
-            </div>
-            <span>{item.label}</span>
-          </NavLink>
-        );
-      })}
-    </nav>
+            </NavLink>
+          );
+        })}
+      </nav>
+    </div>
   );
 }

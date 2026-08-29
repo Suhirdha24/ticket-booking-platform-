@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuthStore } from './store/authStore.js';
 import Navbar from './components/layout/Navbar.jsx';
 import Footer from './components/layout/Footer.jsx';
+import MobileBottomNav from './components/layout/MobileBottomNav.jsx';
 import Toast from './components/common/Toast.jsx';
 
 // Pages
@@ -13,6 +14,10 @@ import SeatSelection from './pages/SeatSelection.jsx';
 import Checkout from './pages/Checkout.jsx';
 import BookingSuccess from './pages/BookingSuccess.jsx';
 import MyBookings from './pages/MyBookings.jsx';
+import Favorites from './pages/Favorites.jsx';
+import Profile from './pages/Profile.jsx';
+import OrganizerDashboard from './pages/OrganizerDashboard.jsx';
+import CreateEvent from './pages/CreateEvent.jsx';
 import Login from './pages/Login.jsx';
 import AdminLogin from './pages/AdminLogin.jsx';
 import Register from './pages/Register.jsx';
@@ -50,6 +55,7 @@ export default function App() {
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
+          backgroundColor: 'var(--bg-main)',
         }}
       >
         <Navbar />
@@ -63,7 +69,36 @@ export default function App() {
             <Route path="/checkout/:reservationId" element={<Checkout />} />
             <Route path="/success/:id" element={<BookingSuccess />} />
             
-            {/* Authenticated User Routes */}
+            {/* Wishlist & Profile Routes */}
+            <Route path="/favorites" element={<Favorites />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Organizer Hub Routes */}
+            <Route
+              path="/organizer"
+              element={
+                <ProtectedRoute>
+                  <OrganizerDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/organizer/create-event"
+              element={
+                <ProtectedRoute>
+                  <CreateEvent />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Authenticated User Bookings */}
             <Route
               path="/my-bookings"
               element={
@@ -120,6 +155,7 @@ export default function App() {
         </main>
 
         <Footer />
+        <MobileBottomNav />
         <Toast />
       </div>
     </Router>
