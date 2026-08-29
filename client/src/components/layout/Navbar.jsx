@@ -127,6 +127,7 @@ export default function Navbar() {
       if (e.key === 'Escape') {
         setActiveNavPopup(null);
         setUserMenuOpen(false);
+        setMobileMenuOpen(false);
       }
     }
     document.addEventListener('keydown', handleKeyDown);
@@ -136,6 +137,7 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
+    setMobileMenuOpen(false);
     navigate('/');
   };
 
@@ -145,6 +147,7 @@ export default function Navbar() {
 
   const closePopups = () => {
     setActiveNavPopup(null);
+    setMobileMenuOpen(false);
   };
 
   const formatTimer = (sec) => {
@@ -161,9 +164,9 @@ export default function Navbar() {
         top: 0,
         zIndex: 100,
         width: '100%',
-        backgroundColor: '#FFFFFF',
-        borderBottom: '1px solid #E2E8F0',
-        boxShadow: '0 2px 10px rgba(15, 23, 42, 0.04)',
+        backgroundColor: '#0B0F17',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
       }}
     >
       <div
@@ -172,7 +175,7 @@ export default function Navbar() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '70px',
+          height: '74px',
           position: 'relative',
         }}
       >
@@ -190,29 +193,29 @@ export default function Navbar() {
           >
             <div
               style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: '#0F172A',
+                width: '38px',
+                height: '38px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #F5B900 0%, #FF8A00 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)',
+                boxShadow: '0 0 15px rgba(245, 185, 0, 0.4)',
               }}
             >
-              <Ticket size={18} color="#FFFFFF" />
+              <Ticket size={20} color="#000000" />
             </div>
             <div>
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.35rem',
+                  fontSize: '1.45rem',
                   fontWeight: 900,
                   letterSpacing: '-0.02em',
-                  color: '#0F172A',
+                  color: '#FFFFFF',
                 }}
               >
-                Event<span style={{ color: '#EAB308' }}>Linqs</span>
+                Event<span style={{ color: '#F5B900' }}>Linqs</span>
               </span>
             </div>
           </Link>
@@ -224,43 +227,35 @@ export default function Navbar() {
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem',
-              background: '#F8FAFC',
-              border: '1.5px solid #E2E8F0',
+              background: 'rgba(245, 185, 0, 0.12)',
+              border: '1px solid rgba(245, 185, 0, 0.3)',
               borderRadius: 'var(--radius-pill)',
-              padding: '0.35rem 0.85rem',
-              color: '#0F172A',
-              fontSize: '0.82rem',
+              padding: '0.4rem 0.85rem',
+              color: '#F5B900',
+              fontSize: '0.84rem',
               fontWeight: 700,
               cursor: 'pointer',
-              boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
               transition: 'all 0.2s ease',
             }}
             title="Choose your city"
           >
-            <MapPin size={13} color="#EAB308" />
+            <MapPin size={13} color="#F5B900" />
             <span>{selectedCity}</span>
-            <ChevronDown size={12} color="#64748B" />
+            <ChevronDown size={12} />
           </button>
         </div>
 
-        {/* 🌟 DESKTOP NAV LINKS */}
-        <div
-          style={{
-            display: 'none',
-            alignItems: 'center',
-            gap: '1.5rem',
-          }}
-          className="desktop-links"
-        >
+        {/* 🌟 DESKTOP NAV LINKS (CENTER) */}
+        <div className="desktop-links">
           {/* 1. Discover */}
           <button
             onClick={() => togglePopup('discover')}
             style={{
-              background: activeNavPopup === 'discover' ? '#F1F5F9' : 'transparent',
+              background: activeNavPopup === 'discover' ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
               border: 'none',
-              fontSize: '0.92rem',
+              fontSize: '0.95rem',
               fontWeight: 700,
-              color: '#0F172A',
+              color: activeNavPopup === 'discover' ? '#F5B900' : '#FFFFFF',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -273,7 +268,6 @@ export default function Navbar() {
             <span>Discover</span>
             <ChevronDown
               size={14}
-              color="#64748B"
               style={{
                 transform: activeNavPopup === 'discover' ? 'rotate(180deg)' : 'none',
                 transition: 'transform 0.2s ease',
@@ -285,11 +279,11 @@ export default function Navbar() {
           <button
             onClick={() => togglePopup('categories')}
             style={{
-              background: activeNavPopup === 'categories' ? '#F1F5F9' : 'transparent',
+              background: activeNavPopup === 'categories' ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
               border: 'none',
-              fontSize: '0.92rem',
+              fontSize: '0.95rem',
               fontWeight: 700,
-              color: '#0F172A',
+              color: activeNavPopup === 'categories' ? '#F5B900' : '#FFFFFF',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -302,7 +296,6 @@ export default function Navbar() {
             <span>Categories</span>
             <ChevronDown
               size={14}
-              color="#64748B"
               style={{
                 transform: activeNavPopup === 'categories' ? 'rotate(180deg)' : 'none',
                 transition: 'transform 0.2s ease',
@@ -314,11 +307,11 @@ export default function Navbar() {
           <button
             onClick={() => togglePopup('organisers')}
             style={{
-              background: activeNavPopup === 'organisers' ? '#F1F5F9' : 'transparent',
+              background: activeNavPopup === 'organisers' ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
               border: 'none',
-              fontSize: '0.92rem',
+              fontSize: '0.95rem',
               fontWeight: 700,
-              color: '#0F172A',
+              color: activeNavPopup === 'organisers' ? '#F5B900' : '#FFFFFF',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -331,7 +324,6 @@ export default function Navbar() {
             <span>Organisers</span>
             <ChevronDown
               size={14}
-              color="#64748B"
               style={{
                 transform: activeNavPopup === 'organisers' ? 'rotate(180deg)' : 'none',
                 transition: 'transform 0.2s ease',
@@ -344,10 +336,10 @@ export default function Navbar() {
             to="/my-bookings"
             onClick={closePopups}
             style={{
-              fontSize: '0.92rem',
+              fontSize: '0.95rem',
               fontWeight: 700,
-              color: location.pathname === '/my-bookings' ? '#0F172A' : '#334155',
-              background: location.pathname === '/my-bookings' ? '#F1F5F9' : 'transparent',
+              color: location.pathname === '/my-bookings' ? '#F5B900' : '#FFFFFF',
+              background: location.pathname === '/my-bookings' ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem',
@@ -357,7 +349,7 @@ export default function Navbar() {
               transition: 'all 0.2s ease',
             }}
           >
-            <Ticket size={16} color="#0F172A" />
+            <Ticket size={16} color={location.pathname === '/my-bookings' ? '#F5B900' : '#FFFFFF'} />
             <span>My Bookings</span>
           </Link>
 
@@ -366,26 +358,27 @@ export default function Navbar() {
               to="/admin"
               onClick={closePopups}
               style={{
-                fontSize: '0.92rem',
+                fontSize: '0.95rem',
                 fontWeight: 700,
-                color: '#0F172A',
+                color: '#F5B900',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.35rem',
                 padding: '0.45rem 0.75rem',
                 borderRadius: '8px',
                 textDecoration: 'none',
-                background: '#FEF9C3',
+                background: 'rgba(245, 185, 0, 0.12)',
+                border: '1px solid rgba(245, 185, 0, 0.3)',
               }}
             >
-              <Shield size={16} color="#854D0E" />
-              <span style={{ color: '#854D0E' }}>Admin Portal</span>
+              <Shield size={16} color="#F5B900" />
+              <span>Admin Portal</span>
             </Link>
           )}
         </div>
 
         {/* Right Action Section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
           {/* Held Timer Pill */}
           {activeReservation && remainingSeconds > 0 && (
             <Link
@@ -395,13 +388,13 @@ export default function Navbar() {
                 fontSize: '0.78rem',
                 fontWeight: 800,
                 textDecoration: 'none',
-                background: '#FEF08A',
-                color: '#854D0E',
+                background: 'rgba(245, 185, 0, 0.15)',
+                color: '#F5B900',
                 borderRadius: 'var(--radius-pill)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.35rem',
-                border: '1px solid #FDE047',
+                border: '1px solid rgba(245, 185, 0, 0.4)',
               }}
             >
               <Clock size={13} />
@@ -412,7 +405,20 @@ export default function Navbar() {
           {isAuthenticated ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <Link to="/events" onClick={closePopups}>
-                <button className="btn-primary" style={{ padding: '0.5rem 1.15rem', fontSize: '0.84rem' }}>
+                <button
+                  style={{
+                    background: 'linear-gradient(135deg, #F5B900 0%, #FF8A00 100%)',
+                    color: '#000000',
+                    fontWeight: 800,
+                    fontSize: '0.86rem',
+                    padding: '0.55rem 1.25rem',
+                    borderRadius: '9999px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(245, 185, 0, 0.4)',
+                    transition: 'all 0.2s',
+                  }}
+                >
                   Explore Events
                 </button>
               </Link>
@@ -423,11 +429,11 @@ export default function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    background: '#F8FAFC',
-                    border: '1.5px solid #E2E8F0',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
                     borderRadius: 'var(--radius-pill)',
                     padding: '0.35rem 0.75rem',
-                    color: '#0F172A',
+                    color: '#FFFFFF',
                     cursor: 'pointer',
                     fontSize: '0.88rem',
                     fontWeight: 700,
@@ -438,19 +444,19 @@ export default function Navbar() {
                       width: '26px',
                       height: '26px',
                       borderRadius: '50%',
-                      background: '#0F172A',
-                      color: '#FFFFFF',
+                      background: 'linear-gradient(135deg, #F5B900, #FF8A00)',
+                      color: '#000000',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '0.75rem',
-                      fontWeight: 800,
+                      fontWeight: 900,
                     }}
                   >
                     {user?.name?.charAt(0) || 'U'}
                   </div>
                   <span>{user?.name?.split(' ')[0]}</span>
-                  <ChevronDown size={14} color="#64748B" />
+                  <ChevronDown size={14} color="#94A3B8" />
                 </button>
 
                 {userMenuOpen && (
@@ -461,27 +467,27 @@ export default function Navbar() {
                       right: 0,
                       width: '220px',
                       padding: '0.5rem',
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: '#11151C',
                       borderRadius: '16px',
-                      border: '1px solid #E2E8F0',
-                      boxShadow: '0 15px 35px rgba(15, 23, 42, 0.12)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.7)',
                       zIndex: 1000,
                     }}
                   >
                     <div
                       style={{
                         padding: '0.6rem 0.75rem',
-                        borderBottom: '1px solid #E2E8F0',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         marginBottom: '0.35rem',
                       }}
                     >
-                      <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0F172A' }}>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF' }}>
                         {user?.name}
                       </div>
                       <div
                         style={{
                           fontSize: '0.75rem',
-                          color: '#64748B',
+                          color: '#94A3B8',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                         }}
@@ -500,12 +506,12 @@ export default function Navbar() {
                         padding: '0.6rem 0.75rem',
                         fontSize: '0.86rem',
                         fontWeight: 700,
-                        color: '#0F172A',
+                        color: '#FFFFFF',
                         borderRadius: '8px',
                         textDecoration: 'none',
                       }}
                     >
-                      <User size={15} color="#0F172A" />
+                      <User size={15} color="#F5B900" />
                       <span>My Profile</span>
                     </Link>
 
@@ -519,7 +525,7 @@ export default function Navbar() {
                         padding: '0.6rem 0.75rem',
                         fontSize: '0.86rem',
                         fontWeight: 700,
-                        color: '#0F172A',
+                        color: '#FFFFFF',
                         borderRadius: '8px',
                         textDecoration: 'none',
                       }}
@@ -538,12 +544,12 @@ export default function Navbar() {
                         padding: '0.6rem 0.75rem',
                         fontSize: '0.86rem',
                         fontWeight: 700,
-                        color: '#0F172A',
+                        color: '#FFFFFF',
                         borderRadius: '8px',
                         textDecoration: 'none',
                       }}
                     >
-                      <Ticket size={15} color="#0F172A" />
+                      <Ticket size={15} color="#F5B900" />
                       <span>My Bookings</span>
                     </Link>
 
@@ -557,7 +563,7 @@ export default function Navbar() {
                         padding: '0.6rem 0.75rem',
                         fontSize: '0.86rem',
                         fontWeight: 700,
-                        color: '#0F172A',
+                        color: '#FFFFFF',
                         borderRadius: '8px',
                         textDecoration: 'none',
                       }}
@@ -577,14 +583,14 @@ export default function Navbar() {
                           padding: '0.6rem 0.75rem',
                           fontSize: '0.86rem',
                           fontWeight: 700,
-                          color: '#854D0E',
-                          background: '#FEF9C3',
+                          color: '#F5B900',
+                          background: 'rgba(245, 185, 0, 0.12)',
                           borderRadius: '8px',
                           textDecoration: 'none',
                           margin: '0.2rem 0',
                         }}
                       >
-                        <Shield size={15} color="#854D0E" />
+                        <Shield size={15} color="#F5B900" />
                         <span>Admin Portal</span>
                       </Link>
                     )}
@@ -606,7 +612,7 @@ export default function Navbar() {
                         cursor: 'pointer',
                         textAlign: 'left',
                         marginTop: '0.25rem',
-                        borderTop: '1px solid #E2E8F0',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                       }}
                     >
                       <LogOut size={15} />
@@ -617,28 +623,58 @@ export default function Navbar() {
               </div>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <Link
                 to="/login"
                 onClick={closePopups}
                 style={{
-                  color: '#0F172A',
-                  fontSize: '0.9rem',
+                  color: '#FFFFFF',
+                  fontSize: '0.92rem',
                   fontWeight: 700,
                   padding: '0.45rem 0.85rem',
                   textDecoration: 'none',
                   borderRadius: 'var(--radius-pill)',
+                  transition: 'color 0.2s',
                 }}
               >
                 Sign In
               </Link>
               <Link to="/events" onClick={closePopups}>
-                <button className="btn-primary" style={{ padding: '0.5rem 1.15rem', fontSize: '0.84rem' }}>
+                <button
+                  style={{
+                    background: 'linear-gradient(135deg, #F5B900 0%, #FF8A00 100%)',
+                    color: '#000000',
+                    fontWeight: 800,
+                    fontSize: '0.86rem',
+                    padding: '0.55rem 1.25rem',
+                    borderRadius: '9999px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(245, 185, 0, 0.4)',
+                    transition: 'all 0.2s',
+                  }}
+                >
                   Explore Events
                 </button>
               </Link>
             </div>
           )}
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="mobile-toggle btn-icon"
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              color: '#FFFFFF',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              width: '38px',
+              height: '38px',
+            }}
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
 
@@ -649,22 +685,22 @@ export default function Navbar() {
         <div
           style={{
             position: 'absolute',
-            top: '70px',
+            top: '74px',
             left: 0,
             width: '100%',
-            backgroundColor: '#FFFFFF',
-            borderBottom: '1px solid #E2E8F0',
-            boxShadow: '0 20px 40px rgba(15, 23, 42, 0.1)',
+            backgroundColor: '#11151C',
+            borderBottom: '2px solid rgba(245, 185, 0, 0.3)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.9)',
             padding: '2rem 0',
             zIndex: 99,
           }}
         >
           <div className="container" style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '3rem' }}>
-            <div style={{ borderRight: '1px solid #E2E8F0', paddingRight: '2rem' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#EAB308', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+            <div style={{ borderRight: '1px solid rgba(255, 255, 255, 0.08)', paddingRight: '2rem' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#F5B900', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
                 Quick Discovery
               </div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0F172A', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '1.25rem' }}>
                 Find Your Next Live Experience
               </h3>
 
@@ -674,10 +710,10 @@ export default function Navbar() {
                     closePopups();
                     navigate('/events');
                   }}
-                  className="btn-primary"
-                  style={{ width: '100%', justifyContent: 'space-between' }}
+                  className="btn-gold"
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
                 >
-                  <span>Explore All Events</span>
+                  <span>Explore All 4,750+ Events</span>
                   <ArrowRight size={16} />
                 </button>
 
@@ -686,21 +722,32 @@ export default function Navbar() {
                     closePopups();
                     navigate('/events?category=Concert');
                   }}
-                  className="btn-secondary"
-                  style={{ width: '100%', justifyContent: 'space-between' }}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    color: '#FFFFFF',
+                    fontWeight: 700,
+                    fontSize: '0.88rem',
+                    padding: '0.75rem 1.15rem',
+                    borderRadius: 'var(--radius-pill)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
                 >
                   <span>🔥 Trending Concerts & Music</span>
-                  <ArrowRight size={14} color="#0F172A" />
+                  <ArrowRight size={14} color="#F5B900" />
                 </button>
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#EAB308', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#F5B900', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
                 Browse by Location
               </div>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.85rem' }}>
-                Popular Cities in India
+              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.85rem' }}>
+                Popular Indian Cities
               </h4>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -712,9 +759,9 @@ export default function Navbar() {
                       navigate(`/events?city=${encodeURIComponent(city)}`);
                     }}
                     style={{
-                      background: '#F8FAFC',
-                      border: '1px solid #E2E8F0',
-                      color: '#0F172A',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      color: '#FFFFFF',
                       padding: '0.45rem 0.9rem',
                       borderRadius: 'var(--radius-pill)',
                       fontSize: '0.84rem',
@@ -726,7 +773,7 @@ export default function Navbar() {
                       transition: 'all 0.15s ease',
                     }}
                   >
-                    <MapPin size={12} color="#EAB308" />
+                    <MapPin size={12} color="#F5B900" />
                     <span>{city}</span>
                   </button>
                 ))}
@@ -743,12 +790,12 @@ export default function Navbar() {
         <div
           style={{
             position: 'absolute',
-            top: '70px',
+            top: '74px',
             left: 0,
             width: '100%',
-            backgroundColor: '#FFFFFF',
-            borderBottom: '1px solid #E2E8F0',
-            boxShadow: '0 20px 40px rgba(15, 23, 42, 0.1)',
+            backgroundColor: '#11151C',
+            borderBottom: '2px solid rgba(245, 185, 0, 0.3)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.9)',
             padding: '2rem 0',
             zIndex: 99,
           }}
@@ -756,10 +803,10 @@ export default function Navbar() {
           <div className="container">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#EAB308', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#F5B900', textTransform: 'uppercase' }}>
                   Curated Catalog
                 </div>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0F172A' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF' }}>
                   Browse All Categories
                 </h3>
               </div>
@@ -768,8 +815,16 @@ export default function Navbar() {
                   closePopups();
                   navigate('/events');
                 }}
-                className="btn-secondary"
-                style={{ padding: '0.4rem 1rem', fontSize: '0.82rem' }}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  padding: '0.4rem 1rem',
+                  borderRadius: 'var(--radius-pill)',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
               >
                 View Full Catalog &rarr;
               </button>
@@ -792,8 +847,8 @@ export default function Navbar() {
                       navigate(`/events?category=${encodeURIComponent(cat.name)}`);
                     }}
                     style={{
-                      background: '#F8FAFC',
-                      border: '1px solid #E2E8F0',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
                       padding: '0.85rem 1rem',
                       borderRadius: '14px',
                       display: 'flex',
@@ -809,21 +864,21 @@ export default function Navbar() {
                         width: '36px',
                         height: '36px',
                         borderRadius: '10px',
-                        background: '#FFFFFF',
-                        border: '1px solid #E2E8F0',
+                        background: 'rgba(245, 185, 0, 0.15)',
+                        border: '1px solid rgba(245, 185, 0, 0.3)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexShrink: 0,
                       }}
                     >
-                      <Icon size={18} color="#0F172A" />
+                      <Icon size={18} color="#F5B900" />
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>
+                      <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF' }}>
                         {cat.name}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
                         {cat.desc}
                       </div>
                     </div>
@@ -842,22 +897,22 @@ export default function Navbar() {
         <div
           style={{
             position: 'absolute',
-            top: '70px',
+            top: '74px',
             left: 0,
             width: '100%',
-            backgroundColor: '#FFFFFF',
-            borderBottom: '1px solid #E2E8F0',
-            boxShadow: '0 20px 40px rgba(15, 23, 42, 0.1)',
+            backgroundColor: '#11151C',
+            borderBottom: '2px solid rgba(245, 185, 0, 0.3)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.9)',
             padding: '2rem 0',
             zIndex: 99,
           }}
         >
           <div className="container">
             <div style={{ marginBottom: '1.25rem', textAlign: 'left' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#EAB308', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#F5B900', textTransform: 'uppercase' }}>
                 Featured Creators
               </div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0F172A' }}>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF' }}>
                 Top Event Curators & Organisers
               </h3>
             </div>
@@ -873,8 +928,8 @@ export default function Navbar() {
                 <div
                   key={i}
                   style={{
-                    background: '#F8FAFC',
-                    border: '1px solid #E2E8F0',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '14px',
                     padding: '1rem',
                     display: 'flex',
@@ -890,15 +945,15 @@ export default function Navbar() {
                       height: '44px',
                       borderRadius: '50%',
                       objectFit: 'cover',
-                      border: '2px solid #FFFFFF',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+                      border: '2px solid #F5B900',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                     }}
                   />
                   <div>
-                    <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>
+                    <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF' }}>
                       {org.name}
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
                       {org.followers} followers &bull; {org.events} events
                     </div>
                   </div>
@@ -906,6 +961,96 @@ export default function Navbar() {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* 📱 MOBILE SLIDE-DOWN DRAWER MENU */}
+      {mobileMenuOpen && (
+        <div
+          style={{
+            backgroundColor: '#0B0F17',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            padding: '1.5rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+          }}
+        >
+          <Link
+            to="/events"
+            onClick={closePopups}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0.75rem 1rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '10px',
+              color: '#FFFFFF',
+              fontWeight: 700,
+              textDecoration: 'none',
+            }}
+          >
+            <span>Explore All Events</span>
+            <ArrowRight size={16} color="#F5B900" />
+          </Link>
+
+          <Link
+            to="/my-bookings"
+            onClick={closePopups}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0.75rem 1rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '10px',
+              color: '#FFFFFF',
+              fontWeight: 700,
+              textDecoration: 'none',
+            }}
+          >
+            <span>My Bookings</span>
+            <Ticket size={16} color="#F5B900" />
+          </Link>
+
+          <Link
+            to="/favorites"
+            onClick={closePopups}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0.75rem 1rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '10px',
+              color: '#FFFFFF',
+              fontWeight: 700,
+              textDecoration: 'none',
+            }}
+          >
+            <span>Saved Favorites</span>
+            <Heart size={16} color="#F43F5E" />
+          </Link>
+
+          <Link
+            to="/organizer"
+            onClick={closePopups}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0.75rem 1rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '10px',
+              color: '#FFFFFF',
+              fontWeight: 700,
+              textDecoration: 'none',
+            }}
+          >
+            <span>Organizer Portal</span>
+            <Store size={16} color="#FF8A00" />
+          </Link>
         </div>
       )}
     </nav>
