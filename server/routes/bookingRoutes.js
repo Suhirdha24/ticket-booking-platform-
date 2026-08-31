@@ -310,11 +310,11 @@ router.post('/', authenticate, validateBooking, async (req, res, next) => {
 });
 
 /**
- * @route   GET /api/bookings
+ * @route   GET /api/bookings & GET /api/bookings/my-bookings
  * @desc    Get all bookings for logged-in user
  * @access  Private
  */
-router.get('/', authenticate, async (req, res, next) => {
+const getMyBookingsHandler = async (req, res, next) => {
   try {
     const bookings = await Booking.find({ user: req.user._id })
       .populate('event', 'title date city bannerUrl category')
@@ -327,7 +327,10 @@ router.get('/', authenticate, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
+
+router.get('/', authenticate, getMyBookingsHandler);
+router.get('/my-bookings', authenticate, getMyBookingsHandler);
 
 /**
  * @route   GET /api/bookings/:id

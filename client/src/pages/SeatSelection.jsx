@@ -369,47 +369,97 @@ export default function SeatSelection() {
                 </span>
               </div>
             ) : (
-              <div style={{ margin: '1.25rem 0', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                {selectedSeats.map((seat) => (
-                  <div
-                    key={seat._id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '0.65rem 0.85rem',
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      borderRadius: 'var(--radius-sm)',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: '0.86rem', fontWeight: 700 }}>
-                        {seat.section} • Row {seat.row}, Seat {seat.seatNumber}
+              <div
+                style={{
+                  margin: '1.25rem 0',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.65rem',
+                  maxHeight: '260px',
+                  overflowY: 'auto',
+                  paddingRight: '4px',
+                }}
+              >
+                {selectedSeats.map((seat) => {
+                  const displayNum = seat.seatNumber.split('-')[1] || seat.seatNumber;
+                  const isVip = seat.category === 'VIP';
+                  const isPrem = seat.category === 'Premium';
+
+                  return (
+                    <div
+                      key={seat._id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '0.7rem 0.95rem',
+                        background: 'rgba(255, 255, 255, 0.04)',
+                        borderRadius: '12px',
+                        border: '1px solid rgba(139, 92, 246, 0.25)',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <span
+                          style={{
+                            fontSize: '0.72rem',
+                            fontWeight: 800,
+                            padding: '0.2rem 0.5rem',
+                            borderRadius: '6px',
+                            background: isVip
+                              ? 'rgba(139, 92, 246, 0.25)'
+                              : isPrem
+                              ? 'rgba(99, 102, 241, 0.25)'
+                              : 'rgba(56, 189, 248, 0.25)',
+                            color: isVip ? '#C4B5FD' : isPrem ? '#A5B4FC' : '#7DD3FC',
+                            border: `1px solid ${
+                              isVip
+                                ? 'rgba(139, 92, 246, 0.5)'
+                                : isPrem
+                                ? 'rgba(99, 102, 241, 0.5)'
+                                : 'rgba(56, 189, 248, 0.5)'
+                            }`,
+                          }}
+                        >
+                          {seat.category}
+                        </span>
+                        <div>
+                          <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#FFFFFF' }}>
+                            Row {seat.row} &bull; Seat {displayNum}
+                          </div>
+                          <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
+                            {seat.section}
+                          </span>
+                        </div>
                       </div>
-                      <span style={{ fontSize: '0.75rem', color: '#A78BFA', fontWeight: 600 }}>
-                        {seat.category} Tier
-                      </span>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <span style={{ fontWeight: 900, color: '#FFFFFF', fontSize: '0.95rem' }}>
+                          ₹{seat.price}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleSeatSelection(seat)}
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.06)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '6px',
+                            color: '#94A3B8',
+                            cursor: 'pointer',
+                            padding: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.15s ease',
+                          }}
+                          title="Remove seat"
+                        >
+                          <X size={13} />
+                        </button>
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <span style={{ fontWeight: 800, color: '#A78BFA', fontSize: '0.95rem' }}>
-                        ₹{seat.price}
-                      </span>
-                      <button
-                        onClick={() => toggleSeatSelection(seat)}
-                        style={{
-                          background: 'transparent',
-                          border: 'none',
-                          color: '#94a3b8',
-                          cursor: 'pointer',
-                          padding: '2px',
-                        }}
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
