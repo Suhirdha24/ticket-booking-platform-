@@ -319,7 +319,10 @@ export default function SeatSelection() {
           <div
             className="glass-panel"
             style={{
-              padding: '1.5rem',
+              padding: '1.75rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.25rem',
               backgroundColor: 'rgba(20, 18, 34, 0.85)',
               borderColor: selectedSeats.length > 0 ? 'rgba(139, 92, 246, 0.5)' : 'rgba(255, 255, 255, 0.08)',
               boxShadow: selectedSeats.length > 0 ? '0 15px 35px -5px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(139, 92, 246, 0.3)' : 'none',
@@ -352,12 +355,11 @@ export default function SeatSelection() {
             {selectedSeats.length === 0 ? (
               <div
                 style={{
-                  padding: '2rem 1rem',
+                  padding: '2.5rem 1rem',
                   textAlign: 'center',
                   background: 'rgba(255, 255, 255, 0.02)',
                   borderRadius: 'var(--radius-md)',
                   border: '1px dashed rgba(255, 255, 255, 0.1)',
-                  margin: '1.25rem 0',
                 }}
               >
                 <Ticket size={32} color="#94a3b8" style={{ margin: '0 auto 0.75rem auto', opacity: 0.6 }} />
@@ -371,7 +373,6 @@ export default function SeatSelection() {
             ) : (
               <div
                 style={{
-                  margin: '1.25rem 0',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.65rem',
@@ -463,59 +464,70 @@ export default function SeatSelection() {
               </div>
             )}
 
-            {/* Subtotal & Lock Button */}
+            {/* Subtotal, 5-Min Guarantee & Checkout Button Section */}
             {selectedSeats.length > 0 && (
-              <div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  paddingTop: '1.25rem',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.88rem', color: '#94A3B8', fontWeight: 700 }}>Total Payable</span>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '1.75rem',
+                      fontWeight: 900,
+                      color: '#ffffff',
+                    }}
+                  >
+                    ₹{subtotal}
+                  </div>
+                </div>
+
+                {/* 5-Min Lock Guarantee Info */}
                 <div
                   style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: '1.6rem',
-                    fontWeight: 900,
-                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.65rem',
+                    fontSize: '0.8rem',
+                    color: '#CBD5E1',
+                    background: 'rgba(139, 92, 246, 0.12)',
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '12px',
+                    lineHeight: 1.4,
                   }}
                 >
-                  ₹{subtotal}
+                  <Clock size={16} color="#A78BFA" style={{ flexShrink: 0 }} />
+                  <span>Seats are locked exclusively for you for 5 minutes during checkout</span>
                 </div>
+
+                {/* Checkout Action Button */}
+                <Button
+                  variant="primary"
+                  size="lg"
+                  loading={isSubmitting}
+                  disabled={selectedSeats.length === 0}
+                  onClick={handleLockReservation}
+                  icon={ArrowRight}
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    fontSize: '1.05rem',
+                    fontWeight: 900,
+                    borderRadius: '14px',
+                  }}
+                >
+                  Lock Seats & Pay (₹{subtotal})
+                </Button>
               </div>
             )}
-
-            {/* 5-Min Lock Guarantee Info */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                fontSize: '0.8rem',
-                color: '#CBD5E1',
-                background: 'rgba(139, 92, 246, 0.12)',
-                border: '1px solid rgba(139, 92, 246, 0.3)',
-                padding: '0.75rem 0.95rem',
-                borderRadius: '12px',
-              }}
-            >
-              <Clock size={16} color="#A78BFA" style={{ flexShrink: 0 }} />
-              <span>Seats are locked exclusively for you for 5 minutes during checkout</span>
-            </div>
-
-            {/* Checkout Action Button */}
-            <Button
-              variant="primary"
-              size="lg"
-              loading={isSubmitting}
-              disabled={selectedSeats.length === 0}
-              onClick={handleLockReservation}
-              icon={ArrowRight}
-              style={{
-                width: '100%',
-                padding: '0.85rem',
-                fontSize: '1rem',
-                fontWeight: 700,
-              }}
-            >
-              {selectedSeats.length > 0
-                ? `Lock Seats & Pay (₹${subtotal})`
-                : 'Select Seats on Map'}
-            </Button>
           </div>
         </div>
       </div>
