@@ -1,32 +1,41 @@
 import React, { useState, useEffect } from 'react';
 
-export default function CountdownWidget({ targetDate }) {
+export default function CountdownWidget({ targetDate, label = 'Starts In' }) {
   const [timeLeft, setTimeLeft] = useState({
-    days: 27,
-    hours: 14,
-    minutes: 36,
-    seconds: 52,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
   useEffect(() => {
-    // Default festival target: 27 days ahead
-    const target = targetDate || new Date(Date.now() + 27 * 24 * 60 * 60 * 1000 + 14 * 3600 * 1000 + 36 * 60000 + 52000);
+    // Parse target date safely (handles String ISO, Date object, timestamp, or fallback)
+    let targetTime;
+    if (targetDate) {
+      targetTime = new Date(targetDate).getTime();
+    }
+    if (!targetTime || isNaN(targetTime)) {
+      targetTime = Date.now() + (27 * 24 * 60 * 60 * 1000 + 14 * 3600 * 1000 + 36 * 60000 + 52000);
+    }
 
     const updateTimer = () => {
-      const diff = Math.max(0, target - new Date());
+      const now = Date.now();
+      const diff = Math.max(0, targetTime - now);
+
       const d = Math.floor(diff / (1000 * 60 * 60 * 24));
       const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const m = Math.floor((diff / 1000 / 60) % 60);
       const s = Math.floor((diff / 1000) % 60);
 
       setTimeLeft({
-        days: d,
-        hours: h,
-        minutes: m,
-        seconds: s,
+        days: isNaN(d) ? 0 : d,
+        hours: isNaN(h) ? 0 : h,
+        minutes: isNaN(m) ? 0 : m,
+        seconds: isNaN(s) ? 0 : s,
       });
     };
 
+    updateTimer();
     const timer = setInterval(updateTimer, 1000);
     return () => clearInterval(timer);
   }, [targetDate]);
@@ -40,6 +49,7 @@ export default function CountdownWidget({ targetDate }) {
         flexDirection: 'column',
         alignItems: 'flex-start',
         gap: '0.65rem',
+        width: '100%',
       }}
     >
       <div
@@ -51,10 +61,10 @@ export default function CountdownWidget({ targetDate }) {
           letterSpacing: '0.08em',
         }}
       >
-        Festival Starts In
+        {label}
       </div>
 
-      <div className="countdown-grid">
+      <div className="countdown-grid" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div className="countdown-box">
           <div className="countdown-number">{String(timeLeft.days).padStart(2, '0')}</div>
           <div className="countdown-label">Days</div>

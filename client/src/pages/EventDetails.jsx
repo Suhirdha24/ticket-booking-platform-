@@ -278,12 +278,10 @@ export default function EventDetails() {
             </div>
 
             {/* Countdown Widget */}
-            <div className="glass-widget-card" style={{ padding: '1.5rem 2rem' }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-                ⚡ Doors Open In
-              </div>
-              <CountdownWidget targetDate={event.date || event.startDate} />
-            </div>
+            <CountdownWidget
+              targetDate={event.date || event.startDate}
+              label={`⚡ ${event.category || 'Event'} Doors Open In`}
+            />
 
             {/* Event Description & Location Information */}
             <div className="glass-widget-card" style={{ padding: '2rem' }}>
