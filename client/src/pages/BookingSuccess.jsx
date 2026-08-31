@@ -3,7 +3,7 @@ import { useParams, useLocation, Link } from 'react-router-dom';
 import api from '../api/client.js';
 import TicketCard from '../components/booking/TicketCard.jsx';
 import Button from '../components/common/Button.jsx';
-import { CheckCircle2, ArrowRight, Sparkles } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Sparkles, Layers } from 'lucide-react';
 
 export default function BookingSuccess() {
   const { id } = useParams();
@@ -30,8 +30,9 @@ export default function BookingSuccess() {
 
   if (loading) {
     return (
-      <div className="container" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
-        <div className="skeleton" style={{ height: '380px', maxWidth: '680px', margin: '0 auto' }} />
+      <div className="container" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
+        <div className="soundwave-bar" style={{ height: '30px', margin: '0 auto 1.5rem auto' }} />
+        <p style={{ color: '#94A3B8', fontSize: '1rem', fontWeight: 600 }}>Loading confirmed ticket pass...</p>
       </div>
     );
   }
@@ -42,25 +43,26 @@ export default function BookingSuccess() {
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <div
           style={{
-            width: '64px',
-            height: '64px',
+            width: '70px',
+            height: '70px',
             borderRadius: '50%',
-            background: 'rgba(16, 185, 129, 0.15)',
-            border: '2px solid rgba(16, 185, 129, 0.4)',
+            background: 'rgba(16, 185, 129, 0.18)',
+            border: '2px solid rgba(16, 185, 129, 0.5)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 1rem auto',
-            boxShadow: '0 0 25px rgba(16, 185, 129, 0.4)',
+            margin: '0 auto 1.25rem auto',
+            boxShadow: '0 0 30px rgba(16, 185, 129, 0.5)',
+            animation: 'fadeIn 0.4s ease',
           }}
         >
-          <CheckCircle2 size={36} color="#34d399" />
+          <CheckCircle2 size={38} color="#34D399" />
         </div>
-        <h1 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.5rem' }}>
-          Booking Confirmed!
+        <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, marginBottom: '0.6rem', color: '#FFFFFF' }}>
+          Booking Confirmed! 🎉
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: '520px', margin: '0 auto' }}>
-          Your digital pass has been generated. Save or print your ticket and present the QR code at the venue gate.
+        <p style={{ color: '#94A3B8', fontSize: '1rem', maxWidth: '540px', margin: '0 auto', lineHeight: 1.6 }}>
+          Your digital access pass is locked in. Save or print your pass and present the QR code at the venue gate for instant admission.
         </p>
       </div>
 
@@ -69,22 +71,23 @@ export default function BookingSuccess() {
         <TicketCard booking={booking} isNew={isNew} />
       </div>
 
-      {/* Footer Navigation */}
+      {/* Footer Navigation Buttons */}
       <div
+        className="no-print"
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '1rem',
+          gap: '1.25rem',
           flexWrap: 'wrap',
         }}
       >
-        <Link to="/my-bookings">
-          <Button variant="secondary" size="md">
+        <Link to="/my-bookings" style={{ textDecoration: 'none' }}>
+          <Button variant="secondary" size="md" icon={Layers}>
             View All My Bookings
           </Button>
         </Link>
-        <Link to="/events">
+        <Link to="/events" style={{ textDecoration: 'none' }}>
           <Button variant="primary" size="md" icon={ArrowRight}>
             Explore More Events
           </Button>
