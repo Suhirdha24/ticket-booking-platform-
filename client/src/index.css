@@ -533,3 +533,108 @@ button, input, select, textarea {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ==========================================================================
+   STADIUM SEATING MAP & SEAT NODES (SONORA THEME)
+   ========================================================================== */
+.seat-node {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px 8px 4px 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  user-select: none;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.seat-node.AVAILABLE {
+  background: rgba(30, 27, 48, 0.85);
+  color: #CBD5E1;
+  border: 1.5px solid rgba(139, 92, 246, 0.35);
+}
+
+.seat-node.AVAILABLE:hover {
+  transform: translateY(-3px) scale(1.18);
+  background: rgba(139, 92, 246, 0.3);
+  border-color: #A78BFA;
+  color: #FFFFFF;
+  box-shadow: 0 0 18px rgba(139, 92, 246, 0.7), 0 6px 14px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.seat-node.AVAILABLE.category-VIP {
+  background: rgba(45, 30, 75, 0.75);
+  border-color: rgba(167, 139, 250, 0.5);
+  color: #E9D5FF;
+}
+
+.seat-node.AVAILABLE.category-Premium {
+  background: rgba(30, 32, 65, 0.75);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #C7D2FE;
+}
+
+.seat-node.AVAILABLE.category-General {
+  background: rgba(20, 35, 55, 0.75);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #BAE6FD;
+}
+
+/* Selected Seat State (Radiant Glowing Purple) */
+.seat-node.SELECTED {
+  background: var(--gradient-purple) !important;
+  border: 1.5px solid #FFFFFF !important;
+  color: #FFFFFF !important;
+  font-weight: 900;
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.95), 0 0 35px rgba(99, 102, 241, 0.6) !important;
+  animation: seatSelectPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 6;
+}
+
+/* Booked / Sold Out State */
+.seat-node.BOOKED,
+.seat-node.OCCUPIED {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.4) !important;
+  color: #F87171 !important;
+  cursor: not-allowed !important;
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* Held by Another User State (5m Timer Lock) */
+.seat-node.HELD {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border: 1.5px dashed rgba(245, 158, 11, 0.7) !important;
+  color: #FBBF24 !important;
+  cursor: not-allowed !important;
+  opacity: 0.8;
+}
+
+/* Held by Current User */
+.seat-node.HELD_BY_ME {
+  background: rgba(16, 185, 129, 0.3) !important;
+  border: 1.5px solid #10B981 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.7) !important;
+}
+
+@keyframes seatSelectPop {
+  0% {
+    transform: scale(0.85);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1.15);
+  }
+}
+
