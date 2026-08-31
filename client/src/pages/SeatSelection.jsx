@@ -216,14 +216,14 @@ export default function SeatSelection() {
           </div>
         </div>
 
-        <button
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={RefreshCw}
           onClick={fetchEventAndSeats}
-          className="btn btn-secondary"
-          style={{ padding: '0.55rem 0.9rem', fontSize: '0.85rem' }}
         >
-          <RefreshCw size={14} />
-          <span>Refresh Availability</span>
-        </button>
+          Refresh Availability
+        </Button>
       </div>
 
       {/* 5-Min Timer If Active */}
@@ -484,15 +484,16 @@ export default function SeatSelection() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                fontSize: '0.78rem',
-                color: 'var(--text-subtle)',
-                background: 'rgba(234, 179, 8, 0.08)',
-                padding: '0.65rem 0.85rem',
-                borderRadius: 'var(--radius-md)',
+                gap: '0.6rem',
+                fontSize: '0.8rem',
+                color: '#CBD5E1',
+                background: 'rgba(139, 92, 246, 0.12)',
+                border: '1px solid rgba(139, 92, 246, 0.3)',
+                padding: '0.75rem 0.95rem',
+                borderRadius: '12px',
               }}
             >
-              <Clock size={15} color="#eab308" style={{ flexShrink: 0 }} />
+              <Clock size={16} color="#A78BFA" style={{ flexShrink: 0 }} />
               <span>Seats are locked exclusively for you for 5 minutes during checkout</span>
             </div>
 
