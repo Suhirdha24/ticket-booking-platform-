@@ -15,20 +15,19 @@ import api from '../api/client.js';
 import { useLocationStore } from '../store/locationStore.js';
 import EventCard from '../components/events/EventCard.jsx';
 import CategoryPillList from '../components/events/CategoryPillList.jsx';
-import LocationModal from '../components/common/LocationModal.jsx';
 import Pagination from '../components/common/Pagination.jsx';
 
 const SORT_OPTIONS = [
-  { value: 'recommended', label: 'Recommended ✨' },
+  { value: 'recommended', label: 'Recommended ⭐' },
   { value: 'popular', label: 'Most Popular 🔥' },
-  { value: 'newest', label: 'Newest Added 🕒' },
-  { value: 'price_asc', label: 'Price: Low to High 🏷️' },
-  { value: 'price_desc', label: 'Price: High to Low 💎' },
+  { value: 'newest', label: 'Newest Added 📅' },
+  { value: 'price_asc', label: 'Price: Low to High 💰' },
+  { value: 'price_desc', label: 'Price: High to Low 🏷️' },
 ];
 
 export default function Events() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { selectedCity, openLocationModal } = useLocationStore();
+  const { selectedCity, setCity: setStoreCity, openLocationModal } = useLocationStore();
 
   const [events, setEvents] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
@@ -44,12 +43,33 @@ export default function Events() {
 
   // Sync state with URL params
   useEffect(() => {
+    const urlCity = searchParams.get('city');
     setSearch(searchParams.get('q') || '');
     setCategory(searchParams.get('category') || '');
-    setCity(searchParams.get('city') || '');
+    setCity(urlCity || '');
     setSort(searchParams.get('sort') || 'recommended');
     setPage(parseInt(searchParams.get('page') || '1', 10));
+
+    if (urlCity && urlCity !== selectedCity) {
+      setStoreCity(urlCity);
+    }
   }, [searchParams]);
+
+  // Sync store selectedCity changes to searchParams
+  useEffect(() => {
+    const urlCity = searchParams.get('city') || '';
+    if (selectedCity === 'All Cities' && urlCity) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('city');
+      newParams.set('page', '1');
+      setSearchParams(newParams);
+    } else if (selectedCity && selectedCity !== 'All Cities' && urlCity !== selectedCity) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('city', selectedCity);
+      newParams.set('page', '1');
+      setSearchParams(newParams);
+    }
+  }, [selectedCity]);
 
   // Fetch events on filter change
   useEffect(() => {
@@ -62,7 +82,12 @@ export default function Events() {
         if (category) params.set('category', category);
 
         // If city filter is specified in URL, use it; otherwise use location store selectedCity
-        const activeCity = city || (selectedCity !== 'All Cities' ? selectedCity : '');
+        const activeCity =
+          selectedCity && selectedCity !== 'All Cities'
+            ? selectedCity
+            : city && city !== 'All Cities'
+            ? city
+            : '';
         if (activeCity) params.set('city', activeCity);
 
         if (sort) params.set('sort', sort);
@@ -120,13 +145,12 @@ export default function Events() {
     setCategory('');
     setCity('');
     setSort('recommended');
+    setStoreCity('All Cities');
     setSearchParams(new URLSearchParams());
   };
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', padding: '2.5rem 0 5rem' }}>
-      <LocationModal />
-
       <div className="container">
         {/* Header Title */}
         <div style={{ marginBottom: '2rem' }}>

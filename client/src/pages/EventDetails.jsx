@@ -280,7 +280,7 @@ export default function EventDetails() {
             {/* Countdown Widget */}
             <CountdownWidget
               targetDate={event.date || event.startDate}
-              label={`⚡ ${event.category || 'Event'} Doors Open In`}
+              label={`⏰ ${event.category || 'Event'} Doors Open In`}
             />
 
             {/* Event Description & Location Information */}

@@ -413,7 +413,7 @@ export default function CreateEvent() {
                     className="btn-primary"
                     style={{ flex: 1 }}
                   >
-                    {loading ? 'Publishing...' : 'Publish Event Live 🚀'}
+                    {loading ? 'Publishing...' : 'Publish Event Live'}
                   </button>
                 </div>
               </div>

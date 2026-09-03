@@ -196,7 +196,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
                   textAlign: 'center',
                 }}
               >
-                🔵 Google Pay
+                Google Pay
               </button>
 
               <button
@@ -214,7 +214,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
                   textAlign: 'center',
                 }}
               >
-                🔷 Paytm
+                Paytm
               </button>
 
               <button
@@ -232,7 +232,7 @@ export default function PaymentForm({ total, onSubmit, isProcessing }) {
                   textAlign: 'center',
                 }}
               >
-                🟣 PhonePe
+                PhonePe
               </button>
             </div>
           </div>

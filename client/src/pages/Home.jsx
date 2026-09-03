@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/client.js';
+import { useLocationStore } from '../store/locationStore.js';
 import EventCard from '../components/events/EventCard.jsx';
 import MusicPlayerWidget from '../components/home/MusicPlayerWidget.jsx';
 import CountdownWidget from '../components/home/CountdownWidget.jsx';
@@ -35,6 +36,7 @@ const CATEGORIES = [
 
 export default function Home() {
   const navigate = useNavigate();
+  const { selectedCity } = useLocationStore();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [events, setEvents] = useState([]);
@@ -49,6 +51,7 @@ export default function Home() {
         const params = new URLSearchParams();
         if (selectedCategory !== 'All') params.append('category', selectedCategory);
         if (searchQuery) params.append('search', searchQuery);
+        if (selectedCity && selectedCity !== 'All Cities') params.append('city', selectedCity);
         params.append('limit', '12');
 
         const res = await api.get(`/events?${params.toString()}`);
@@ -66,7 +69,7 @@ export default function Home() {
     return () => {
       isMounted = false;
     };
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, selectedCity]);
 
   const featuredEvent = events[0] || null;
 
@@ -198,7 +201,7 @@ export default function Home() {
                   }}
                 >
                   <div className="hero-tag-pill">
-                    <span style={{ color: '#F59E0B' }}>⚡</span>
+                    <span style={{ color: '#F59E0B' }}>⭐</span>
                     <span>Unforgettable</span>
                   </div>
                 </div>
@@ -364,11 +367,14 @@ export default function Home() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`sonora-filter-chip ${selectedCategory === cat ? 'active' : ''}`}
               >
+                {cat === 'All' && <span>🎟️</span>}
                 {cat === 'Concert' && <span>🎸</span>}
                 {cat === 'Festival' && <span>🎪</span>}
                 {cat === 'Comedy' && <span>🎤</span>}
                 {cat === 'Sports' && <span>🏆</span>}
-                {cat === 'Conference' && <span>⚡</span>}
+                {cat === 'Conference' && <span>💻</span>}
+                {cat === 'Theatre' && <span>🎭</span>}
+                {cat === 'Workshop' && <span>🎨</span>}
                 {cat === 'Nightlife' && <span>🍸</span>}
                 <span>{cat}</span>
               </button>

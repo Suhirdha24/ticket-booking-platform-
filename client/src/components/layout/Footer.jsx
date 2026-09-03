@@ -185,16 +185,16 @@ export default function Footer() {
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
               <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                ⚡ 5-Minute Atomic Seat Locks
+                ⏱️ 5-Minute Seat Locks
               </li>
               <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                🔒 HMAC-SHA256 QR Verification
+                🔒 Verified QR Ticket Security
               </li>
               <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                🛡️ Verified Organizers Only
+                🛡️ Verified Organizers
               </li>
               <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                ✨ 24h Full Refund Protection
+                💳 24h Refund Guarantee
               </li>
             </ul>
           </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore.js';
 import { useReservationStore } from '../../store/reservationStore.js';
-import { useLocationStore } from '../../store/locationStore.js';
+import { useLocationStore, TAMIL_NADU_CITIES, OTHER_MAJOR_CITIES } from '../../store/locationStore.js';
 import {
   Ticket,
   Calendar,
@@ -30,6 +30,9 @@ import {
   ArrowRight,
   Store,
   Star,
+  Search,
+  Check,
+  Navigation,
 } from 'lucide-react';
 
 const CITIES = [
@@ -68,11 +71,19 @@ export default function Navbar() {
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuthStore();
   const { activeReservation, remainingSeconds } = useReservationStore();
-  const { selectedCity, openLocationModal } = useLocationStore();
+  const {
+    selectedCity,
+    setCity,
+    openLocationModal,
+    detectCurrentLocation,
+    isDetecting,
+  } = useLocationStore();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [activeNavPopup, setActiveNavPopup] = useState(null); // 'discover' | 'categories' | null
+  const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
+  const [citySearchQuery, setCitySearchQuery] = useState('');
 
   const navRef = useRef(null);
 
@@ -82,6 +93,7 @@ export default function Navbar() {
         setUserMenuOpen(false);
         setActiveNavPopup(null);
         setMobileMenuOpen(false);
+        setCityDropdownOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -93,16 +105,25 @@ export default function Navbar() {
     setUserMenuOpen(false);
     setActiveNavPopup(null);
     setMobileMenuOpen(false);
+    setCityDropdownOpen(false);
     navigate('/');
   };
 
   const togglePopup = (name) => {
+    setCityDropdownOpen(false);
     setActiveNavPopup((prev) => (prev === name ? null : name));
   };
 
   const closePopups = () => {
     setActiveNavPopup(null);
     setMobileMenuOpen(false);
+    setCityDropdownOpen(false);
+  };
+
+  const toggleCityDropdown = () => {
+    setCityDropdownOpen((prev) => !prev);
+    setActiveNavPopup(null);
+    setUserMenuOpen(false);
   };
 
   const formatTimer = (sec) => {
@@ -178,29 +199,337 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Location Selector Pill */}
-          <button
-            onClick={openLocationModal}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-              background: 'rgba(139, 92, 246, 0.12)',
-              border: '1px solid rgba(139, 92, 246, 0.3)',
-              borderRadius: 'var(--radius-pill)',
-              padding: '0.35rem 0.85rem',
-              color: '#A78BFA',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
-            title="Choose city"
-          >
-            <MapPin size={12} color="#A78BFA" />
-            <span>{selectedCity}</span>
-            <ChevronDown size={12} />
-          </button>
+          {/* Location Selector Pill & Interactive Dropdown */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={toggleCityDropdown}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                background: cityDropdownOpen ? 'rgba(139, 92, 246, 0.25)' : 'rgba(139, 92, 246, 0.12)',
+                border: cityDropdownOpen ? '1px solid rgba(139, 92, 246, 0.6)' : '1px solid rgba(139, 92, 246, 0.3)',
+                borderRadius: 'var(--radius-pill)',
+                padding: '0.35rem 0.85rem',
+                color: '#A78BFA',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              title="Choose city"
+              aria-expanded={cityDropdownOpen}
+              id="all-cities-dropdown-btn"
+            >
+              <MapPin size={12} color="#A78BFA" />
+              <span>{selectedCity}</span>
+              <ChevronDown
+                size={12}
+                style={{
+                  transform: cityDropdownOpen ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.2s ease',
+                }}
+              />
+            </button>
+
+            {/* City Dropdown Menu */}
+            {cityDropdownOpen && (
+              <div
+                className="glass-widget-card"
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 8px)',
+                  left: 0,
+                  width: '320px',
+                  maxHeight: '440px',
+                  zIndex: 1000,
+                  background: '#0D0C15',
+                  border: '1px solid rgba(139, 92, 246, 0.35)',
+                  borderRadius: '16px',
+                  padding: '1rem',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(139, 92, 246, 0.25)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                }}
+              >
+                {/* Search Input */}
+                <div style={{ position: 'relative' }}>
+                  <Search
+                    size={14}
+                    color="#A78BFA"
+                    style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)' }}
+                  />
+                  <input
+                    type="text"
+                    value={citySearchQuery}
+                    onChange={(e) => setCitySearchQuery(e.target.value)}
+                    placeholder="Search city or district..."
+                    style={{
+                      width: '100%',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      borderRadius: '8px',
+                      padding: '0.45rem 0.6rem 0.45rem 2.2rem',
+                      fontSize: '0.8rem',
+                      color: '#FFFFFF',
+                      outline: 'none',
+                    }}
+                    autoFocus
+                  />
+                  {citySearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setCitySearchQuery('')}
+                      style={{
+                        position: 'absolute',
+                        right: '0.5rem',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#94A3B8',
+                        cursor: 'pointer',
+                        padding: '2px',
+                      }}
+                    >
+                      <X size={12} />
+                    </button>
+                  )}
+                </div>
+
+                {/* All Cities Option */}
+                {(!citySearchQuery || 'all cities'.includes(citySearchQuery.toLowerCase().trim())) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCity('All Cities');
+                      setCityDropdownOpen(false);
+                      setCitySearchQuery('');
+                      if (location.pathname === '/events') {
+                        navigate('/events');
+                      }
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      padding: '0.55rem 0.75rem',
+                      borderRadius: '8px',
+                      background:
+                        selectedCity === 'All Cities'
+                          ? 'var(--gradient-purple)'
+                          : 'rgba(255, 255, 255, 0.04)',
+                      border:
+                        selectedCity === 'All Cities'
+                          ? 'none'
+                          : '1px solid rgba(255, 255, 255, 0.08)',
+                      color: '#FFFFFF',
+                      fontSize: '0.82rem',
+                      fontWeight: selectedCity === 'All Cities' ? 800 : 600,
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <MapPin size={13} color={selectedCity === 'All Cities' ? '#FFFFFF' : '#A78BFA'} />
+                      <span>All Cities (Pan India Discovery)</span>
+                    </div>
+                    {selectedCity === 'All Cities' && <Check size={14} color="#FFFFFF" />}
+                  </button>
+                )}
+
+                {/* Cities Scroll Area */}
+                <div
+                  className="no-scrollbar"
+                  style={{
+                    overflowY: 'auto',
+                    maxHeight: '200px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.75rem',
+                    paddingRight: '2px',
+                  }}
+                >
+                  {/* Filtered cities if searching */}
+                  {citySearchQuery ? (
+                    <div>
+                      <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#A78BFA', marginBottom: '0.4rem', textTransform: 'uppercase' }}>
+                        Matching Cities
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                        {[...TAMIL_NADU_CITIES, ...OTHER_MAJOR_CITIES]
+                          .filter((c) => c.toLowerCase().includes(citySearchQuery.toLowerCase()))
+                          .map((city) => {
+                            const isSel = selectedCity === city;
+                            return (
+                              <button
+                                key={city}
+                                type="button"
+                                onClick={() => {
+                                  setCity(city);
+                                  setCityDropdownOpen(false);
+                                  setCitySearchQuery('');
+                                  if (location.pathname === '/events') {
+                                    navigate(`/events?city=${encodeURIComponent(city)}`);
+                                  }
+                                }}
+                                style={{
+                                  background: isSel ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
+                                  border: isSel ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+                                  color: '#FFFFFF',
+                                  padding: '0.35rem 0.65rem',
+                                  borderRadius: 'var(--radius-pill)',
+                                  fontSize: '0.78rem',
+                                  fontWeight: isSel ? 800 : 500,
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                {city}
+                              </button>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Popular Tamil Nadu Cities */}
+                      <div>
+                        <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#A78BFA', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          📍 Tamil Nadu
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                          {['Chennai', 'Coimbatore', 'Madurai', 'Salem', 'Erode', 'Tiruchirappalli', 'Tirunelveli', 'Vellore', 'Puducherry'].map((city) => {
+                            const isSel = selectedCity === city;
+                            return (
+                              <button
+                                key={city}
+                                type="button"
+                                onClick={() => {
+                                  setCity(city);
+                                  setCityDropdownOpen(false);
+                                  if (location.pathname === '/events') {
+                                    navigate(`/events?city=${encodeURIComponent(city)}`);
+                                  }
+                                }}
+                                style={{
+                                  background: isSel ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
+                                  border: isSel ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+                                  color: '#FFFFFF',
+                                  padding: '0.35rem 0.65rem',
+                                  borderRadius: 'var(--radius-pill)',
+                                  fontSize: '0.78rem',
+                                  fontWeight: isSel ? 800 : 500,
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                {city}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Major Metro Cities */}
+                      <div>
+                        <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#A78BFA', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          🏙️ Metro Cities
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                          {['Bengaluru', 'Mumbai', 'New Delhi', 'Hyderabad', 'Kolkata', 'Pune', 'Kochi', 'Goa'].map((city) => {
+                            const isSel = selectedCity === city;
+                            return (
+                              <button
+                                key={city}
+                                type="button"
+                                onClick={() => {
+                                  setCity(city);
+                                  setCityDropdownOpen(false);
+                                  if (location.pathname === '/events') {
+                                    navigate(`/events?city=${encodeURIComponent(city)}`);
+                                  }
+                                }}
+                                style={{
+                                  background: isSel ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
+                                  border: isSel ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+                                  color: '#FFFFFF',
+                                  padding: '0.35rem 0.65rem',
+                                  borderRadius: 'var(--radius-pill)',
+                                  fontSize: '0.78rem',
+                                  fontWeight: isSel ? 800 : 500,
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                {city}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Dropdown Footer: GPS Detection & Full Modal Link */}
+                <div
+                  style={{
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    paddingTop: '0.6rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      detectCurrentLocation();
+                      setCityDropdownOpen(false);
+                    }}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#A78BFA',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      padding: '0.2rem 0',
+                    }}
+                  >
+                    <Navigation size={12} />
+                    <span>{isDetecting ? 'Detecting...' : 'Near Me'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCityDropdownOpen(false);
+                      openLocationModal();
+                    }}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#94A3B8',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.2rem',
+                    }}
+                  >
+                    <span>All 60+ Cities &rarr;</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 🌟 Center: Responsive Desktop Nav Links */}
@@ -604,7 +933,7 @@ export default function Navbar() {
                     justifyContent: 'space-between',
                   }}
                 >
-                  <span>🔥 Trending Concerts & Music</span>
+                  <span>🎵 Trending Concerts & Music</span>
                   <ArrowRight size={14} color="#A78BFA" />
                 </button>
               </div>
@@ -619,11 +948,36 @@ export default function Navbar() {
               </h4>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <button
+                  onClick={() => {
+                    closePopups();
+                    setCity('All Cities');
+                    navigate('/events');
+                  }}
+                  style={{
+                    background: selectedCity === 'All Cities' ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
+                    border: selectedCity === 'All Cities' ? 'none' : '1px solid rgba(255, 255, 255, 0.12)',
+                    color: '#FFFFFF',
+                    padding: '0.45rem 0.9rem',
+                    borderRadius: 'var(--radius-pill)',
+                    fontSize: '0.84rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <MapPin size={12} color={selectedCity === 'All Cities' ? '#FFFFFF' : '#A78BFA'} />
+                  <span>All Cities</span>
+                </button>
                 {CITIES.map((city) => (
                   <button
                     key={city}
                     onClick={() => {
                       closePopups();
+                      setCity(city);
                       navigate(`/events?city=${encodeURIComponent(city)}`);
                     }}
                     style={{

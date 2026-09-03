@@ -18,7 +18,6 @@ import {
 import { useAuthStore } from '../store/authStore.js';
 import { useLocationStore } from '../store/locationStore.js';
 import { useToastStore } from '../store/toastStore.js';
-import LocationModal from '../components/common/LocationModal.jsx';
 import api from '../api/client.js';
 
 export default function Profile() {
@@ -73,8 +72,6 @@ export default function Profile() {
 
   return (
     <div className="mobile-safe-bottom" style={{ minHeight: '100vh', paddingTop: '1.75rem' }}>
-      <LocationModal />
-
       <div className="container" style={{ maxWidth: '640px' }}>
         {/* Profile Card Header */}
         <div

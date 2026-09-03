@@ -176,8 +176,8 @@ export default function LocationModal() {
         >
           {[
             { id: 'ALL', label: 'All Cities' },
-            { id: 'TN', label: '🏛️ Tamil Nadu Hubs' },
-            { id: 'METRO', label: '🏙️ National Metros' },
+            { id: 'TN', label: '📍 Tamil Nadu Hubs' },
+            { id: 'METRO', label: '🏙️ Metro Cities' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -212,7 +212,7 @@ export default function LocationModal() {
           }}
         >
           {/* All Cities Option */}
-          {activeTab === 'ALL' && !searchQuery && (
+          {((activeTab === 'ALL' && !searchQuery) || (searchQuery && 'all cities'.includes(searchQuery.toLowerCase().trim()))) && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.5rem' }}>
               <button
                 type="button"
@@ -239,7 +239,7 @@ export default function LocationModal() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Sparkles size={14} color={selectedCity === 'All Cities' ? '#FFFFFF' : '#A78BFA'} />
+                  <MapPin size={14} color={selectedCity === 'All Cities' ? '#FFFFFF' : '#A78BFA'} />
                   <span>All Cities (Pan India Discovery)</span>
                 </div>
                 {selectedCity === 'All Cities' && <Check size={16} color="#FFFFFF" />}
@@ -260,7 +260,7 @@ export default function LocationModal() {
                   marginBottom: '0.6rem',
                 }}
               >
-                🏛️ Tamil Nadu Districts & Cities ({filteredTN.length})
+                📍 Tamil Nadu Districts & Cities ({filteredTN.length})
               </div>
               <div
                 style={{
@@ -320,7 +320,7 @@ export default function LocationModal() {
                   marginBottom: '0.6rem',
                 }}
               >
-                🏙️ National Metros & Major Hubs ({filteredOther.length})
+                🏙️ Metro Cities & Major Hubs ({filteredOther.length})
               </div>
               <div
                 style={{

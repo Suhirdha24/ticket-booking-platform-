@@ -5,6 +5,7 @@ import Navbar from './components/layout/Navbar.jsx';
 import Footer from './components/layout/Footer.jsx';
 import MobileBottomNav from './components/layout/MobileBottomNav.jsx';
 import Toast from './components/common/Toast.jsx';
+import LocationModal from './components/common/LocationModal.jsx';
 
 // Pages
 import Home from './pages/Home.jsx';
@@ -59,6 +60,7 @@ export default function App() {
         }}
       >
         <Navbar />
+        <LocationModal />
 
         <main style={{ flex: 1 }}>
           <Routes>
