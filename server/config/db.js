@@ -1,12 +1,13 @@
+import 'dotenv/config';
 import dns from 'node:dns';
 import mongoose from 'mongoose';
 
-// Ensure reliable DNS resolution for Atlas SRV records on Windows local dev ONLY
-if (process.env.NODE_ENV !== 'production') {
+// Ensure IPv4 is prioritized for faster socket connection on Windows
+if (dns.setDefaultResultOrder) {
   try {
-    dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+    dns.setDefaultResultOrder('ipv4first');
   } catch (e) {
-    // Ignore in environments where setServers is restricted
+    // Ignore if not supported
   }
 }
 
@@ -21,11 +22,17 @@ if (!cached) {
 }
 
 /**
+ * Direct shard replica set fallback for cluster0 if SRV query fails or is blocked on local network/ISP
+ */
+const DIRECT_FALLBACK_URI =
+  'mongodb://suhirdhasivakumar_db_user:6g0n1EIqfWMxmlRa@ac-vtazhux-shard-00-00.aucusac.mongodb.net:27017,ac-vtazhux-shard-00-01.aucusac.mongodb.net:27017,ac-vtazhux-shard-00-02.aucusac.mongodb.net:27017/ticket-booking-platform?ssl=true&authSource=admin&replicaSet=atlas-r08rr6-shard-0&retryWrites=true&w=majority';
+
+/**
  * Connect to MongoDB Atlas with connection caching for serverless environments.
  * Prevents redundant connection creation on Vercel Fluid Functions.
  */
 export async function connectDB() {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.MONGODB_URI || DIRECT_FALLBACK_URI;
 
   if (!uri) {
     throw new Error(
@@ -41,13 +48,23 @@ export async function connectDB() {
     const opts = {
       bufferCommands: false,
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 10000,
-      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 30000,
     };
 
-    cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
-      return mongooseInstance;
-    });
+    cached.promise = mongoose
+      .connect(uri, opts)
+      .catch((primaryError) => {
+        // If SRV record lookup failed (e.g. ECONNREFUSED on Windows), retry with direct replica set hostnames
+        if (uri.startsWith('mongodb+srv://') && DIRECT_FALLBACK_URI) {
+          console.warn('⚠️ Atlas SRV resolution failed; retrying with direct replica set hosts...');
+          return mongoose.connect(DIRECT_FALLBACK_URI, opts);
+        }
+        throw primaryError;
+      })
+      .then((mongooseInstance) => {
+        return mongooseInstance;
+      });
   }
 
   try {

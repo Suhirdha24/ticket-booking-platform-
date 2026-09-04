@@ -34,45 +34,25 @@ export default function Events() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Filters
-  const [search, setSearch] = useState(searchParams.get('q') || '');
-  const [category, setCategory] = useState(searchParams.get('category') || '');
-  const [city, setCity] = useState(searchParams.get('city') || '');
-  const [sort, setSort] = useState(searchParams.get('sort') || 'recommended');
-  const [page, setPage] = useState(parseInt(searchParams.get('page') || '1', 10));
+  // URL and Location filters
+  const [searchInput, setSearchInput] = useState(searchParams.get('q') || '');
+  const search = searchParams.get('q') || '';
+  const category = searchParams.get('category') || '';
+  const urlCity = searchParams.get('city');
+  const sort = searchParams.get('sort') || 'recommended';
+  const page = parseInt(searchParams.get('page') || '1', 10);
 
-  // Sync state with URL params
+  const activeCity = urlCity !== null ? urlCity : (selectedCity !== 'All Cities' ? selectedCity : '');
+
+  // Sync search input if URL changes externally
   useEffect(() => {
-    const urlCity = searchParams.get('city');
-    setSearch(searchParams.get('q') || '');
-    setCategory(searchParams.get('category') || '');
-    setCity(urlCity || '');
-    setSort(searchParams.get('sort') || 'recommended');
-    setPage(parseInt(searchParams.get('page') || '1', 10));
-
-    if (urlCity && urlCity !== selectedCity) {
-      setStoreCity(urlCity);
-    }
+    setSearchInput(searchParams.get('q') || '');
   }, [searchParams]);
 
-  // Sync store selectedCity changes to searchParams
+  // Fetch events whenever search parameters or city filter change
   useEffect(() => {
-    const urlCity = searchParams.get('city') || '';
-    if (selectedCity === 'All Cities' && urlCity) {
-      const newParams = new URLSearchParams(searchParams);
-      newParams.delete('city');
-      newParams.set('page', '1');
-      setSearchParams(newParams);
-    } else if (selectedCity && selectedCity !== 'All Cities' && urlCity !== selectedCity) {
-      const newParams = new URLSearchParams(searchParams);
-      newParams.set('city', selectedCity);
-      newParams.set('page', '1');
-      setSearchParams(newParams);
-    }
-  }, [selectedCity]);
+    const controller = new AbortController();
 
-  // Fetch events on filter change
-  useEffect(() => {
     async function fetchEvents() {
       setLoading(true);
       setError(null);
@@ -80,26 +60,20 @@ export default function Events() {
         const params = new URLSearchParams();
         if (search) params.set('search', search);
         if (category) params.set('category', category);
-
-        // If city filter is specified in URL, use it; otherwise use location store selectedCity
-        const activeCity =
-          selectedCity && selectedCity !== 'All Cities'
-            ? selectedCity
-            : city && city !== 'All Cities'
-            ? city
-            : '';
         if (activeCity) params.set('city', activeCity);
-
         if (sort) params.set('sort', sort);
         params.set('page', page.toString());
         params.set('limit', '12');
 
-        const res = await api.get(`/events?${params.toString()}`);
+        const res = await api.get(`/events?${params.toString()}`, {
+          signal: controller.signal,
+        });
         setEvents(res.data?.data?.events || res.data?.events || []);
         setPagination(
           res.data?.data?.pagination || res.data?.pagination || { page: 1, pages: 1, total: 0 }
         );
       } catch (err) {
+        if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED') return;
         console.error('Failed to load events:', err);
         setError(err.message || 'Could not load events. Please try again.');
       } finally {
@@ -108,13 +82,14 @@ export default function Events() {
     }
 
     fetchEvents();
-  }, [search, category, city, sort, page, selectedCity]);
+    return () => controller.abort();
+  }, [search, category, activeCity, sort, page]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const newParams = new URLSearchParams(searchParams);
-    if (search.trim()) {
-      newParams.set('q', search.trim());
+    if (searchInput.trim()) {
+      newParams.set('q', searchInput.trim());
     } else {
       newParams.delete('q');
     }
@@ -141,10 +116,7 @@ export default function Events() {
   };
 
   const resetAllFilters = () => {
-    setSearch('');
-    setCategory('');
-    setCity('');
-    setSort('recommended');
+    setSearchInput('');
     setStoreCity('All Cities');
     setSearchParams(new URLSearchParams());
   };
@@ -207,8 +179,8 @@ export default function Events() {
             <Search size={18} color="#A78BFA" style={{ flexShrink: 0 }} />
             <input
               type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search by artist, concert, city, or festival..."
               style={{
                 flex: 1,
@@ -220,11 +192,11 @@ export default function Events() {
                 fontFamily: 'var(--font-body)',
               }}
             />
-            {search && (
+            {searchInput && (
               <button
                 type="button"
                 onClick={() => {
-                  setSearch('');
+                  setSearchInput('');
                   const p = new URLSearchParams(searchParams);
                   p.delete('q');
                   setSearchParams(p);
