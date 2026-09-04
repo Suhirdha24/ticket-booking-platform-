@@ -15,16 +15,21 @@ import {
   ArrowRight,
   Crown,
   Layers,
+  Lock,
+  LogIn,
 } from 'lucide-react';
 import api from '../api/client.js';
+import { useAuthStore } from '../store/authStore.js';
 import { useFavoritesStore } from '../store/favoritesStore.js';
 import { useToastStore } from '../store/toastStore.js';
 import CountdownWidget from '../components/home/CountdownWidget.jsx';
+import AuthPromptModal from '../components/common/AuthPromptModal.jsx';
 import { getEventImage, getCategoryTheme } from '../utils/categoryImages.js';
 
 export default function EventDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
   const { isFavorite, toggleFavorite } = useFavoritesStore();
   const { addToast } = useToastStore();
 
@@ -32,6 +37,7 @@ export default function EventDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedTier, setSelectedTier] = useState(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     async function fetchEventDetails() {
@@ -52,6 +58,13 @@ export default function EventDetails() {
     }
     fetchEventDetails();
   }, [id]);
+
+  // When an unauthenticated user opens this event, initially show the sign-in option
+  useEffect(() => {
+    if (!loading && event && !isAuthenticated) {
+      setShowAuthModal(true);
+    }
+  }, [loading, event, isAuthenticated]);
 
   if (loading) {
     return (
@@ -460,19 +473,51 @@ export default function EventDetails() {
 
               {/* Direct Booking CTA */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                <Link
-                  to={`/events/${event._id}/seats?tier=${selectedTier?.category || 'ALL'}`}
-                  style={{ width: '100%', textDecoration: 'none' }}
-                >
-                  <button
-                    className="btn-purple-glow"
-                    style={{ width: '100%', padding: '1rem', fontSize: '1rem' }}
+                {!isAuthenticated && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '0.65rem',
+                      padding: '0.85rem 1rem',
+                      borderRadius: '12px',
+                      backgroundColor: 'rgba(139, 92, 246, 0.12)',
+                      border: '1px solid rgba(139, 92, 246, 0.3)',
+                      marginBottom: '0.25rem',
+                    }}
                   >
-                    <Star size={16} fill="#FFFFFF" />
-                    <span>Book {selectedTier ? `${selectedTier.category} Pass` : 'Tickets'} Now</span>
-                    <ArrowRight size={16} />
-                  </button>
-                </Link>
+                    <Lock size={16} color="#A78BFA" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div style={{ fontSize: '0.8rem', color: '#CBD5E1', lineHeight: 1.45 }}>
+                      <strong style={{ color: '#FFFFFF' }}>Sign-in required:</strong> You must sign in or register to select seats and reserve tickets.
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  className="btn-purple-glow"
+                  style={{ width: '100%', padding: '1rem', fontSize: '1rem', cursor: 'pointer' }}
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      setShowAuthModal(true);
+                    } else {
+                      navigate(`/events/${event._id}/seats?tier=${selectedTier?.category || 'ALL'}`);
+                    }
+                  }}
+                >
+                  {isAuthenticated ? (
+                    <>
+                      <Star size={16} fill="#FFFFFF" />
+                      <span>Book {selectedTier ? `${selectedTier.category} Pass` : 'Tickets'} Now</span>
+                      <ArrowRight size={16} />
+                    </>
+                  ) : (
+                    <>
+                      <LogIn size={16} />
+                      <span>Sign In to Book Tickets</span>
+                      <ArrowRight size={16} />
+                    </>
+                  )}
+                </button>
 
                 <div
                   style={{
@@ -493,6 +538,14 @@ export default function EventDetails() {
           </div>
         </div>
       </div>
+
+      {/* Auth Prompt Modal */}
+      <AuthPromptModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        event={event}
+        targetPath={`/events/${event._id}/seats?tier=${selectedTier?.category || 'ALL'}`}
+      />
     </div>
   );
 }

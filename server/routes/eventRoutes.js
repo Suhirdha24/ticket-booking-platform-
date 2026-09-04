@@ -41,7 +41,7 @@ export async function generateSeatsForEvent(eventParam, venueParam, pricingTiers
 
   if (!event.venue || event.venue.toString() !== venue._id.toString()) {
     event.venue = venue._id;
-    await event.save();
+    await Event.updateOne({ _id: event._id }, { venue: venue._id });
   }
 
   const tiers = pricingTiers.length > 0 ? pricingTiers : event?.pricing || [];
@@ -104,7 +104,14 @@ export async function generateSeatsForEvent(eventParam, venueParam, pricingTiers
     await Seat.collection.insertMany(seatsToInsert, { ordered: false });
     event.totalSeats = seatsToInsert.length;
     event.availableSeats = seatsToInsert.length;
-    await event.save();
+    await Event.updateOne(
+      { _id: event._id },
+      {
+        totalSeats: seatsToInsert.length,
+        availableSeats: seatsToInsert.length,
+        ...(venue?._id ? { venue: venue._id } : {}),
+      }
+    );
   }
 
   return seatsToInsert.length;

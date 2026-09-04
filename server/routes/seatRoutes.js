@@ -15,7 +15,11 @@ const router = express.Router({ mergeParams: true });
  */
 router.get('/', optionalAuth, async (req, res, next) => {
   try {
-    const { eventId } = req.params;
+    const eventId = req.params.eventId || req.params.id;
+
+    if (!eventId) {
+      return next(new AppError('Event ID is required', 400, 'INVALID_EVENT_ID'));
+    }
 
     const event = await Event.findById(eventId);
     if (!event) {
@@ -51,7 +55,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
 
       if (!event.venue) {
         event.venue = venue._id;
-        await event.save();
+        await Event.updateOne({ _id: event._id }, { venue: venue._id });
       }
 
       await generateSeatsForEvent(event, venue, event.pricing);

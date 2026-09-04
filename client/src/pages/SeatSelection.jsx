@@ -22,6 +22,7 @@ import {
   Sparkles,
   Layers,
   AlertCircle,
+  Lock,
 } from 'lucide-react';
 import Button from '../components/common/Button.jsx';
 
@@ -51,7 +52,15 @@ export default function SeatSelection() {
         api.get(`/events/${id}/seats`),
       ]);
       setEvent(eventRes.data.data?.event || eventRes.data.data);
-      setSeats(seatsRes.data.data?.seats || seatsRes.data.data || []);
+      const rawSeats = seatsRes.data?.data;
+      const parsedSeats = Array.isArray(rawSeats)
+        ? rawSeats
+        : Array.isArray(rawSeats?.seats)
+        ? rawSeats.seats
+        : Array.isArray(seatsRes.data?.seats)
+        ? seatsRes.data.seats
+        : [];
+      setSeats(parsedSeats);
     } catch (err) {
       setFetchError(err.message || 'Failed to load seating map');
       showErrorToast('Failed to load seating map', err.message);
@@ -127,6 +136,75 @@ export default function SeatSelection() {
     );
   }
 
+  if (!isAuthenticated) {
+    return (
+      <div className="container" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
+        <div
+          className="glass-panel"
+          style={{
+            padding: '3rem 2rem',
+            maxWidth: '520px',
+            margin: '0 auto',
+            borderColor: 'rgba(139, 92, 246, 0.35)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(139, 92, 246, 0.15)',
+          }}
+        >
+          <div
+            style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '16px',
+              background: 'rgba(139, 92, 246, 0.2)',
+              border: '1px solid rgba(139, 92, 246, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 1.25rem auto',
+              color: '#A78BFA',
+            }}
+          >
+            <Lock size={28} />
+          </div>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '0.75rem', color: '#FFFFFF' }}>
+            Sign In to Choose Seats
+          </h2>
+          <p style={{ color: '#94A3B8', marginBottom: '2rem', fontSize: '0.92rem', lineHeight: 1.6 }}>
+            Please sign in to your account to view the interactive seat map, select your passes, and reserve your tickets for this event.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <Link
+              to={`/login?redirect=/events/${id}/seats${selectedTier ? `?tier=${selectedTier}` : ''}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Button variant="primary" style={{ width: '100%', padding: '0.9rem', fontSize: '0.95rem' }}>
+                Sign In to Reserve Seats
+              </Button>
+            </Link>
+            <Link
+              to={`/register?redirect=/events/${id}/seats${selectedTier ? `?tier=${selectedTier}` : ''}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Button variant="secondary" style={{ width: '100%', padding: '0.85rem' }}>
+                Create New Account
+              </Button>
+            </Link>
+            <Link
+              to={`/events/${id}`}
+              style={{
+                marginTop: '0.75rem',
+                color: '#64748B',
+                fontSize: '0.85rem',
+                textDecoration: 'none',
+              }}
+            >
+              &larr; Back to Event Details
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (fetchError || !event) {
     return (
       <div className="container" style={{ padding: '5rem 1.5rem', textAlign: 'center' }}>
@@ -142,7 +220,7 @@ export default function SeatSelection() {
             <Button variant="primary" onClick={fetchEventAndSeats}>
               Retry Loading Seats
             </Button>
-            <Link to={`/event/${id}`}>
+            <Link to={`/events/${id}`}>
               <Button variant="secondary">Back to Event</Button>
             </Link>
           </div>
@@ -175,7 +253,7 @@ export default function SeatSelection() {
       >
         <div>
           <Link
-            to={`/event/${id}`}
+            to={`/events/${id}`}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
