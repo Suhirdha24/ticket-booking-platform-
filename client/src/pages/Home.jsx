@@ -44,7 +44,8 @@ export default function Home() {
   const [showVideoModal, setShowVideoModal] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
+    const controller = new AbortController();
+
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
@@ -54,21 +55,20 @@ export default function Home() {
         if (selectedCity && selectedCity !== 'All Cities') params.append('city', selectedCity);
         params.append('limit', '12');
 
-        const res = await api.get(`/events?${params.toString()}`);
-        if (isMounted) {
-          setEvents(res.data?.data?.events || res.data?.events || []);
-        }
+        const res = await api.get(`/events?${params.toString()}`, {
+          signal: controller.signal,
+        });
+        setEvents(res.data?.data?.events || res.data?.events || []);
       } catch (err) {
+        if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED') return;
         console.error('Failed to load events', err);
       } finally {
-        if (isMounted) setIsLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchEvents();
-    return () => {
-      isMounted = false;
-    };
+    return () => controller.abort();
   }, [selectedCategory, searchQuery, selectedCity]);
 
   const featuredEvent = events[0] || null;

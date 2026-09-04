@@ -201,7 +201,8 @@ router.get('/', async (req, res, next) => {
         .populate('venue', 'name address city capacity imageUrl')
         .sort(sortOption)
         .skip(skip)
-        .limit(limitNum),
+        .limit(limitNum)
+        .lean(),
       Event.countDocuments(query),
     ]);
 
@@ -229,7 +230,7 @@ router.get('/', async (req, res, next) => {
  */
 router.get('/:id', async (req, res, next) => {
   try {
-    const event = await Event.findById(req.params.id).populate('venue');
+    const event = await Event.findById(req.params.id).populate('venue').lean();
 
     if (!event) {
       return next(new AppError('Event not found', 404, 'EVENT_NOT_FOUND'));
