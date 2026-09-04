@@ -285,7 +285,7 @@ export default function Events() {
                 </button>
               )}
 
-              {(search || category || city) && (
+              {(search || category || activeCity) && (
                 <button
                   onClick={resetAllFilters}
                   style={{
