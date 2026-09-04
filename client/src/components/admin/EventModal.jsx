@@ -62,33 +62,23 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
         throw new Error('Please enter a venue name');
       }
 
-      // Check if venue already exists in DB (case-insensitive) or create it
+      // Resolve venueId if known from list, otherwise pass venueName directly for backend resolution
       const cleanVenueName = venueName.trim();
-      const cleanCity = city.trim() || 'General City';
+      const cleanCity = city.trim() || 'Mumbai';
       const existingVenue = venues.find(
         (v) => v.name.toLowerCase() === cleanVenueName.toLowerCase()
       );
-
-      let finalVenueId = existingVenue?._id;
-
-      if (!finalVenueId) {
-        const venueRes = await api.post('/venues', {
-          name: cleanVenueName,
-          city: cleanCity,
-          capacity: 1000,
-          address: `${cleanVenueName} Center`,
-        });
-        finalVenueId = venueRes.data.data._id;
-      }
+      const finalVenueId = existingVenue?._id;
 
       const defaultFallbackImage =
         'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&auto=format&fit=crop&q=80';
 
       const payload = {
-        title,
-        description,
-        category,
+        title: title.trim(),
+        description: description.trim(),
+        category: category.trim() || 'Concert',
         venueId: finalVenueId,
+        venueName: cleanVenueName,
         city: cleanCity,
         date: new Date(date),
         bannerUrl: bannerUrl.trim() || defaultFallbackImage,
@@ -108,7 +98,7 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
         showSuccessToast('Event Updated', 'Event details were updated successfully.');
       } else {
         await api.post('/events', payload);
-        showSuccessToast('Event Created', 'New event and its seat map were successfully generated.');
+        showSuccessToast('Event Created', 'New event and 160 seats were generated instantly.');
       }
 
       setIsSubmitting(false);
@@ -157,12 +147,23 @@ export default function EventModal({ isOpen, onClose, onEventSaved, eventToEdit,
             <label className="input-label">Category</label>
             <input
               type="text"
+              list="admin-category-options"
               className="input-field"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              placeholder="e.g. Concert, Sports, Tech, Comedy..."
+              placeholder="e.g. Concert, Sports, Festival, Comedy..."
               required
             />
+            <datalist id="admin-category-options">
+              <option value="Concert" />
+              <option value="Festival" />
+              <option value="Comedy" />
+              <option value="Sports" />
+              <option value="Conference" />
+              <option value="Theatre" />
+              <option value="Workshop" />
+              <option value="Nightlife" />
+            </datalist>
           </div>
 
           <div className="input-group">

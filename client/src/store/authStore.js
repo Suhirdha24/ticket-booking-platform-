@@ -8,11 +8,21 @@ export const useAuthStore = create((set, get) => ({
   isLoading: false,
   error: null,
 
-  login: async (email, password) => {
+  login: async (email, password, options = {}) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await api.post('/auth/login', { email, password });
+      const res = await api.post('/auth/login', {
+        email,
+        password,
+        portal: options.portal,
+        requiredRole: options.requiredRole,
+      });
       const { user, token } = res.data.data;
+
+      if (options.requiredRole === 'admin' && user.role !== 'admin') {
+        throw new Error('Access denied: This portal is exclusively for administrators.');
+      }
+
       localStorage.setItem('token', token);
       set({ user, token, isAuthenticated: true, isLoading: false });
       return user;

@@ -33,8 +33,8 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
+      required: [true, 'Mobile number is mandatory'],
       trim: true,
-      default: '',
     },
   },
   {

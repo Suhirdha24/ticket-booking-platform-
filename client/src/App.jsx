@@ -84,11 +84,11 @@ export default function App() {
               }
             />
 
-            {/* Organizer Hub Routes */}
+            {/* Organizer Hub Routes (Admin Only) */}
             <Route
               path="/organizer"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute adminOnly={true}>
                   <OrganizerDashboard />
                 </ProtectedRoute>
               }
@@ -96,7 +96,7 @@ export default function App() {
             <Route
               path="/organizer/create-event"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute adminOnly={true}>
                   <CreateEvent />
                 </ProtectedRoute>
               }

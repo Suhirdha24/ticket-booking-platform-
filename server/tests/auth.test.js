@@ -5,11 +5,19 @@ import User from '../models/User.js';
 
 describe('Auth & Authorization API', () => {
   it('1. should successfully register a new user', async () => {
+    // Send OTP first
+    const otpRes = await request(app).post('/api/auth/send-otp').send({
+      phone: '9876543210',
+    });
+    expect(otpRes.status).toBe(200);
+    const otp = otpRes.body.data.otpPreview;
+
     const res = await request(app).post('/api/auth/register').send({
       name: 'Alice Tester',
       email: 'alice@example.com',
       password: 'Password@123',
-      phone: '+1 555-0100',
+      phone: '9876543210',
+      otp,
     });
 
     expect(res.status).toBe(201);
@@ -24,6 +32,7 @@ describe('Auth & Authorization API', () => {
       name: 'Bob Tester',
       email: 'bob@example.com',
       password: 'Password@123',
+      phone: '9876543211',
       role: 'user',
     });
 
@@ -43,6 +52,7 @@ describe('Auth & Authorization API', () => {
       name: 'Charlie Tester',
       email: 'charlie@example.com',
       password: 'Password@123',
+      phone: '9876543212',
       role: 'user',
     });
 
@@ -56,11 +66,33 @@ describe('Auth & Authorization API', () => {
     expect(res.body.error.code).toBe('INVALID_CREDENTIALS');
   });
 
-  it('4. should enforce admin authorization RBAC on admin endpoints', async () => {
+  it('4. should reject regular user credentials at the admin login portal', async () => {
+    await User.create({
+      name: 'Normal User',
+      email: 'normal@example.com',
+      password: 'Password@123',
+      phone: '9876543213',
+      role: 'user',
+    });
+
+    const res = await request(app).post('/api/auth/login').send({
+      email: 'normal@example.com',
+      password: 'Password@123',
+      portal: 'admin',
+      requiredRole: 'admin',
+    });
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+    expect(res.body.error.code).toBe('ADMIN_ACCESS_REQUIRED');
+  });
+
+  it('5. should enforce admin authorization RBAC on admin endpoints', async () => {
     const regularUser = await User.create({
       name: 'Regular Joe',
       email: 'joe@example.com',
       password: 'Password@123',
+      phone: '9876543214',
       role: 'user',
     });
 

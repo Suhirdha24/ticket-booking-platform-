@@ -16,6 +16,7 @@ describe('Reservation API', () => {
       name: 'User One',
       email: 'user1@example.com',
       password: 'Password@123',
+      phone: '9876543212',
     });
     token1 = generateToken(user1);
 
@@ -23,6 +24,7 @@ describe('Reservation API', () => {
       name: 'User Two',
       email: 'user2@example.com',
       password: 'Password@123',
+      phone: '9876543213',
     });
     token2 = generateToken(user2);
 

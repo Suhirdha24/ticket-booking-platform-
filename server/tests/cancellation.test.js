@@ -17,6 +17,7 @@ describe('Cancellation API & Policy Enforcement', () => {
       name: 'Cancel Tester',
       email: 'canceler@example.com',
       password: 'Password@123',
+      phone: '9876543214',
     });
     token = generateToken(user);
 

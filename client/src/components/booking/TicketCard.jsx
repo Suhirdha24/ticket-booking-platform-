@@ -131,6 +131,57 @@ export default function TicketCard({ booking, isNew = false }) {
             position: 'relative',
           }}
         >
+          {/* EventLinqs Ticket Brand Banner */}
+          <div
+            className="ticket-brand-header"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingBottom: '0.85rem',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              marginBottom: '-0.2rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+              <div
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #8B5CF6, #6366F1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Ticket size={16} color="#FFFFFF" />
+              </div>
+              <span
+                style={{
+                  fontSize: '1.2rem',
+                  fontWeight: 900,
+                  letterSpacing: '0.04em',
+                  color: '#FFFFFF',
+                  textTransform: 'uppercase',
+                }}
+              >
+                EVENT<span style={{ color: '#A78BFA' }}>LINQS</span>
+              </span>
+            </div>
+            <span
+              style={{
+                fontSize: '0.72rem',
+                color: '#94A3B8',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                fontWeight: 700,
+              }}
+            >
+              Verified Live Pass
+            </span>
+          </div>
+
           {/* Header Tag */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span
@@ -389,8 +440,23 @@ export default function TicketCard({ booking, isNew = false }) {
             top: 0;
             width: 100%;
             background: #ffffff !important;
-            color: #000000 !important;
-            border: 2px solid #000000 !important;
+            color: #0f172a !important;
+            border: 2px solid #0f172a !important;
+            box-shadow: none !important;
+            border-radius: 12px !important;
+          }
+          .print-ticket .ticket-brand-header {
+            border-bottom: 2px solid #0f172a !important;
+          }
+          .print-ticket .ticket-brand-header span {
+            color: #0f172a !important;
+            font-weight: 900 !important;
+          }
+          .print-ticket h2,
+          .print-ticket div,
+          .print-ticket span,
+          .print-ticket strong {
+            color: #0f172a !important;
           }
           .no-print {
             display: none !important;

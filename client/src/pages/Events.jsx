@@ -292,6 +292,27 @@ export default function Events() {
                 <ChevronDown size={12} />
               </button>
 
+              {selectedCity && selectedCity !== 'All Cities' && (
+                <button
+                  onClick={() => setStoreCity('All Cities')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    padding: '0.45rem 0.85rem',
+                    borderRadius: 'var(--radius-pill)',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    color: '#E2E8F0',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Show All Cities
+                </button>
+              )}
+
               {(search || category || city) && (
                 <button
                   onClick={resetAllFilters}

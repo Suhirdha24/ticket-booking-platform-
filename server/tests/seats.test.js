@@ -14,6 +14,7 @@ describe('Seats API & Effective Status', () => {
       name: 'Tester',
       email: 'tester@example.com',
       password: 'Password@123',
+      phone: '9876543211',
     });
 
     const venue = await Venue.create({

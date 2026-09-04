@@ -70,27 +70,6 @@ export default function Footer() {
             >
               Feel the sound. Live the moment. Real-time ticket reservations, interactive seat maps, and secure digital event passes across India.
             </p>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                fontSize: '0.8rem',
-                color: '#34d399',
-              }}
-            >
-              <span
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  backgroundColor: '#10b981',
-                  boxShadow: '0 0 8px #10b981',
-                  display: 'inline-block',
-                }}
-              />
-              <span>Serverless Functions & MongoDB Atlas Active</span>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -154,11 +133,6 @@ export default function Footer() {
               <li>
                 <Link to="/favorites" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
                   Saved Favorites
-                </Link>
-              </li>
-              <li>
-                <Link to="/organizer" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
-                  Organizer Portal
                 </Link>
               </li>
               <li>

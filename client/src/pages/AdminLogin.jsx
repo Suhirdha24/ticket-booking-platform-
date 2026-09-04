@@ -38,19 +38,11 @@ export default function AdminLogin() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const loggedUser = await login(email, password);
-      if (loggedUser.role !== 'admin') {
-        showErrorToast(
-          'Access Restricted',
-          'This account does not have Admin privileges. Please use the User Sign In portal.'
-        );
-        navigate('/');
-        return;
-      }
+      const loggedUser = await login(email, password, { portal: 'admin', requiredRole: 'admin' });
       showSuccessToast('Admin Authorized', `Welcome back, Administrator ${loggedUser.name}`);
       navigate(redirect);
     } catch (err) {
-      showErrorToast('Admin Login Failed', err.message);
+      showErrorToast('Admin Access Denied', err.message || 'Invalid administrator credentials');
     }
   };
 

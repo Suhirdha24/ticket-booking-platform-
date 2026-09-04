@@ -17,6 +17,7 @@ describe('CRITICAL Concurrency: Race Condition Seat Collisions', () => {
       name: 'User Alpha',
       email: 'alpha@example.com',
       password: 'Password@123',
+      phone: '9876543215',
     });
     tokenA = generateToken(userA);
 
@@ -24,6 +25,7 @@ describe('CRITICAL Concurrency: Race Condition Seat Collisions', () => {
       name: 'User Beta',
       email: 'beta@example.com',
       password: 'Password@123',
+      phone: '9876543216',
     });
     tokenB = generateToken(userB);
 

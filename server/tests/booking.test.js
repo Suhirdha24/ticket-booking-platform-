@@ -17,6 +17,7 @@ describe('Booking & Payment API', () => {
       name: 'Booking Tester',
       email: 'booker@example.com',
       password: 'Password@123',
+      phone: '9876543210',
     });
     token = generateToken(user);
 

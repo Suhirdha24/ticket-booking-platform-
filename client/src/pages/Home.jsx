@@ -56,7 +56,7 @@ export default function Home() {
 
         const res = await api.get(`/events?${params.toString()}`);
         if (isMounted) {
-          setEvents(res.data?.events || []);
+          setEvents(res.data?.data?.events || res.data?.events || []);
         }
       } catch (err) {
         console.error('Failed to load events', err);

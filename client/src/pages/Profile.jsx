@@ -244,7 +244,7 @@ export default function Profile() {
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '1.15rem 1.25rem',
-              borderBottom: '1px solid var(--border-subtle)',
+              borderBottom: user?.role === 'admin' ? '1px solid var(--border-subtle)' : 'none',
               color: 'var(--text-main)',
               cursor: 'pointer',
             }}
@@ -276,42 +276,6 @@ export default function Profile() {
               <ChevronRight size={18} />
             </div>
           </div>
-
-          <Link
-            to="/organizer"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '1.15rem 1.25rem',
-              borderBottom: user?.role === 'admin' ? '1px solid var(--border-subtle)' : 'none',
-              color: 'var(--text-main)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'rgba(255, 138, 0, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--accent-orange)',
-                }}
-              >
-                <Store size={20} />
-              </div>
-              <div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700 }}>Organizer Portal</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  Host, publish and manage your events
-                </div>
-              </div>
-            </div>
-            <ChevronRight size={18} color="var(--text-subtle)" />
-          </Link>
 
           {user?.role === 'admin' && (
             <Link
