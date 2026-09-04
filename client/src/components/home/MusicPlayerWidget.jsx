@@ -1,19 +1,81 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, SkipForward, SkipBack, Music, Volume2 } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, Music } from 'lucide-react';
+
+const TRACKS = [
+  {
+    id: 1,
+    title: 'Festival Anthems',
+    artist: 'Playlist by EventLinqs',
+    cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=150&auto=format&fit=crop&q=80',
+    duration: 225, // 3:45
+  },
+  {
+    id: 2,
+    title: 'Neon Nights (Live Set)',
+    artist: 'Playlist by EventLinqs',
+    cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=150&auto=format&fit=crop&q=80',
+    duration: 198, // 3:18
+  },
+  {
+    id: 3,
+    title: 'Electric Horizon',
+    artist: 'Playlist by EventLinqs',
+    cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=150&auto=format&fit=crop&q=80',
+    duration: 242, // 4:02
+  },
+];
+
+const formatTime = (totalSeconds) => {
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = Math.floor(totalSeconds % 60);
+  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+};
 
 export default function MusicPlayerWidget() {
+  const [trackIndex, setTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(38); // percentage
+  const [currentTime, setCurrentTime] = useState(84); // Starts at 1:24
 
+  const currentTrack = TRACKS[trackIndex];
+  const duration = currentTrack.duration;
+  const progressPercent = Math.min(100, Math.max(0, (currentTime / duration) * 100));
+
+  // Dynamically update elapsed time (left-side number) while playing
   useEffect(() => {
     let interval;
     if (isPlaying) {
       interval = setInterval(() => {
-        setProgress((prev) => (prev >= 100 ? 0 : prev + 0.5));
+        setCurrentTime((prev) => {
+          if (prev >= duration) {
+            setTrackIndex((curr) => (curr + 1) % TRACKS.length);
+            return 0;
+          }
+          return prev + 1;
+        });
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isPlaying]);
+  }, [isPlaying, duration]);
+
+  const handleSeek = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    setCurrentTime(Math.floor(pos * duration));
+  };
+
+  const handleNext = () => {
+    setTrackIndex((prev) => (prev + 1) % TRACKS.length);
+    setCurrentTime(0);
+  };
+
+  const handlePrev = () => {
+    if (currentTime > 3) {
+      setCurrentTime(0);
+    } else {
+      setTrackIndex((prev) => (prev - 1 + TRACKS.length) % TRACKS.length);
+      setCurrentTime(0);
+    }
+  };
 
   return (
     <div
@@ -41,8 +103,8 @@ export default function MusicPlayerWidget() {
           }}
         >
           <img
-            src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=150&auto=format&fit=crop&q=80"
-            alt="Festival Anthems"
+            src={currentTrack.cover}
+            alt={currentTrack.title}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
           {isPlaying && (
@@ -72,7 +134,7 @@ export default function MusicPlayerWidget() {
               whiteSpace: 'nowrap',
             }}
           >
-            Festival Anthems
+            {currentTrack.title}
           </div>
           <div
             style={{
@@ -83,92 +145,119 @@ export default function MusicPlayerWidget() {
               whiteSpace: 'nowrap',
             }}
           >
-            Playlist by EventLinqs
+            {currentTrack.artist}
           </div>
         </div>
 
         {/* Animated Soundwave Visualizer Bars */}
-        <div className="soundwave-visualizer" style={{ opacity: isPlaying ? 1 : 0.4 }}>
-          <div className="soundwave-bar"></div>
-          <div className="soundwave-bar"></div>
-          <div className="soundwave-bar"></div>
-          <div className="soundwave-bar"></div>
-          <div className="soundwave-bar"></div>
-          <div className="soundwave-bar"></div>
-          <div className="soundwave-bar"></div>
-          <div className="soundwave-bar"></div>
+        <div className="soundwave-visualizer" style={{ opacity: isPlaying ? 1 : 0.35 }}>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((bar) => (
+            <div
+              key={bar}
+              className="soundwave-bar"
+              style={{
+                animationPlayState: isPlaying ? 'running' : 'paused',
+              }}
+            />
+          ))}
         </div>
       </div>
 
-      {/* Scrubber Progress Bar */}
+      {/* Scrubber Progress Bar & Dynamic Time Display */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-        <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600, minWidth: '24px' }}>
-          1:24
-        </span>
-        <div
-          onClick={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            setProgress(pos * 100);
+        {/* Left Side Elapsed Time Number */}
+        <span
+          style={{
+            fontSize: '0.7rem',
+            color: '#A78BFA',
+            fontWeight: 700,
+            minWidth: '28px',
+            fontVariantNumeric: 'tabular-nums',
           }}
+          title="Elapsed Time"
+        >
+          {formatTime(currentTime)}
+        </span>
+
+        {/* Interactive Scrubber Track */}
+        <div
+          onClick={handleSeek}
           style={{
             flex: 1,
-            height: '4px',
+            height: '5px',
             background: 'rgba(255, 255, 255, 0.15)',
             borderRadius: '9999px',
             position: 'relative',
             cursor: 'pointer',
           }}
+          title="Click to seek"
         >
           <div
             style={{
-              width: `${progress}%`,
+              width: `${progressPercent}%`,
               height: '100%',
               background: 'linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%)',
               borderRadius: '9999px',
               position: 'relative',
+              transition: isPlaying ? 'width 0.2s linear' : 'none',
             }}
           >
             <div
               style={{
                 position: 'absolute',
-                right: '-3px',
+                right: '-4px',
                 top: '-3px',
-                width: '10px',
-                height: '10px',
+                width: '11px',
+                height: '11px',
                 borderRadius: '50%',
                 background: '#FFFFFF',
-                boxShadow: '0 0 8px rgba(139, 92, 246, 0.8)',
+                boxShadow: '0 0 10px rgba(167, 139, 250, 0.9)',
               }}
-            ></div>
+            />
           </div>
         </div>
-        <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 600, minWidth: '24px' }}>
-          3:45
+
+        {/* Right Side Total Track Duration */}
+        <span
+          style={{
+            fontSize: '0.7rem',
+            color: '#94A3B8',
+            fontWeight: 600,
+            minWidth: '28px',
+            textAlign: 'right',
+            fontVariantNumeric: 'tabular-nums',
+          }}
+          title="Total Duration"
+        >
+          {formatTime(duration)}
         </span>
       </div>
 
       {/* Playback Controls */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.25rem' }}>
         <button
+          onClick={handlePrev}
           style={{
             background: 'transparent',
             border: 'none',
             color: '#94A3B8',
             cursor: 'pointer',
-            padding: '4px',
+            padding: '6px',
             display: 'flex',
+            borderRadius: '50%',
+            transition: 'color 0.2s ease',
           }}
           aria-label="Previous Track"
+          title="Previous Track"
         >
-          <SkipBack size={15} />
+          <SkipBack size={16} />
         </button>
 
         <button
           onClick={() => setIsPlaying(!isPlaying)}
           style={{
-            width: '32px',
-            height: '32px',
+            width: '34px',
+            height: '34px',
             borderRadius: '50%',
             background: 'var(--gradient-purple)',
             color: '#FFFFFF',
@@ -177,26 +266,31 @@ export default function MusicPlayerWidget() {
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(139, 92, 246, 0.5)',
-            transition: 'transform 0.15s ease',
+            boxShadow: '0 4px 14px rgba(139, 92, 246, 0.6)',
+            transition: 'transform 0.15s ease, box-shadow 0.2s ease',
           }}
           aria-label={isPlaying ? 'Pause' : 'Play'}
+          title={isPlaying ? 'Pause' : 'Play'}
         >
-          {isPlaying ? <Pause size={14} /> : <Play size={14} style={{ marginLeft: '2px' }} />}
+          {isPlaying ? <Pause size={15} /> : <Play size={15} style={{ marginLeft: '2px' }} />}
         </button>
 
         <button
+          onClick={handleNext}
           style={{
             background: 'transparent',
             border: 'none',
             color: '#94A3B8',
             cursor: 'pointer',
-            padding: '4px',
+            padding: '6px',
             display: 'flex',
+            borderRadius: '50%',
+            transition: 'color 0.2s ease',
           }}
           aria-label="Next Track"
+          title="Next Track"
         >
-          <SkipForward size={15} />
+          <SkipForward size={16} />
         </button>
       </div>
     </div>
