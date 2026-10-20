@@ -43,6 +43,25 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [showVideoModal, setShowVideoModal] = useState(false);
 
+  // Close modal on Escape key and manage body scroll lock
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showVideoModal) {
+        setShowVideoModal(false);
+      }
+    };
+    if (showVideoModal) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showVideoModal]);
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -100,6 +119,12 @@ export default function Home() {
           >
             {/* Left Column: Headlines & Action CTAs */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              {/* Live Platform Activity Ticker Bar */}
+              <div className="hero-ticker-bar">
+                <span className="live-pulse-dot" />
+                <span>Sonora Cyber-Violet Festival 2026 Live Now • Over 2,400+ Passes Booked</span>
+              </div>
+
               {/* Top Floating Badge Tag */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                 <div className="hero-tag-pill">
@@ -307,46 +332,90 @@ export default function Home() {
             }}
           >
             <div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                Live Experiences
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Live Experiences
+                </div>
+                {!isLoading && (
+                  <span
+                    style={{
+                      background: 'rgba(139, 92, 246, 0.15)',
+                      border: '1px solid rgba(139, 92, 246, 0.35)',
+                      color: '#C4B5FD',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      padding: '0.15rem 0.55rem',
+                      borderRadius: 'var(--radius-pill)',
+                    }}
+                  >
+                    {events.length} {events.length === 1 ? 'Event' : 'Events'}
+                  </span>
+                )}
               </div>
-              <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFF' }}>
+              <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFF', marginTop: '0.2rem' }}>
                 Explore Trending Events
               </h2>
             </div>
 
-            {/* Search Input Bar */}
-            <div style={{ position: 'relative', width: '100%', maxWidth: '360px' }}>
-              <Search
-                size={16}
-                color="#94A3B8"
-                style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }}
-              />
-              <input
-                type="text"
-                placeholder="Search artists, venues, festivals..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="form-input"
-                style={{ paddingLeft: '2.75rem', borderRadius: 'var(--radius-pill)' }}
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  style={{
-                    position: 'absolute',
-                    right: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#94A3B8',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <X size={15} />
-                </button>
-              )}
+            {/* Search Input Bar & Quick Trending Tags */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', width: '100%', maxWidth: '380px' }}>
+              <div style={{ position: 'relative', width: '100%' }}>
+                <Search
+                  size={16}
+                  color="#94A3B8"
+                  style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }}
+                />
+                <input
+                  type="text"
+                  placeholder="Search artists, venues, festivals..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="form-input"
+                  style={{ paddingLeft: '2.75rem', borderRadius: 'var(--radius-pill)' }}
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    style={{
+                      position: 'absolute',
+                      right: '1rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#94A3B8',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <X size={15} />
+                  </button>
+                )}
+              </div>
+
+              {/* Trending Quick Search Tags */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700 }}>Trending:</span>
+                {['Coldplay', 'Sunburn', 'Comedy', 'Rock', 'Electronic'].map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setSearchQuery(tag)}
+                    style={{
+                      background: searchQuery === tag ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
+                      border: searchQuery === tag ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: 'var(--radius-pill)',
+                      padding: '0.2rem 0.65rem',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      color: searchQuery === tag ? '#FFFFFF' : '#CBD5E1',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
