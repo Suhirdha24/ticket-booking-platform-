@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore.js';
 import { showSuccessToast, showErrorToast } from '../store/toastStore.js';
 import {
-  Ticket,
+  BookOpen,
   Lock,
   Mail,
   Eye,
@@ -13,7 +13,8 @@ import {
   ShieldCheck,
   ArrowRight,
   Star,
-  Shield,
+  Bookmark,
+  Quote,
 } from 'lucide-react';
 
 export default function Login() {
@@ -37,11 +38,16 @@ export default function Login() {
     e.preventDefault();
     try {
       const user = await login(email, password);
-      showSuccessToast('Welcome Back!', `Logged in as ${user.name}`);
+      showSuccessToast('Welcome Back! 📚', `Logged in as ${user.name}`);
       navigate(redirect);
     } catch (err) {
       showErrorToast('Login Failed', err.message);
     }
+  };
+
+  const handleFillDemo = () => {
+    setEmail('reader@example.com');
+    setPassword('Password@123');
   };
 
   return (
@@ -73,21 +79,21 @@ export default function Login() {
       <div
         className="container"
         style={{
-          maxWidth: '1080px',
+          maxWidth: '1040px',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '2.5rem',
           alignItems: 'stretch',
           position: 'relative',
           zIndex: 2,
         }}
       >
-        {/* 🌟 LEFT SHOWCASE COLUMN: BRANDING & SOCIAL PROOF */}
+        {/* LEFT COLUMN: BRANDING & LITERARY QUOTE */}
         <div
           className="glass-widget-card"
           style={{
             padding: '3rem 2.5rem',
-            backgroundColor: 'rgba(20, 18, 34, 0.85)',
+            backgroundColor: 'rgba(20, 18, 34, 0.9)',
             border: '1px solid rgba(139, 92, 246, 0.3)',
             borderRadius: '28px',
             display: 'flex',
@@ -95,238 +101,159 @@ export default function Login() {
             justifyContent: 'space-between',
             position: 'relative',
             overflow: 'hidden',
-            backgroundImage: `
-              linear-gradient(to bottom, rgba(14, 12, 24, 0.85) 0%, rgba(14, 12, 24, 0.98) 100%),
-              url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1000&auto=format&fit=crop&q=80')
-            `,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
           }}
         >
-          {/* Top Brand Header */}
           <div>
-            <div
-              className="hero-tag-pill"
-              style={{ marginBottom: '1.5rem' }}
-            >
-              <Sparkles size={13} color="#A78BFA" />
-              <span>Attendee Member Access</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.5rem' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  background: 'var(--gradient-purple)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
+                }}
+              >
+                <BookOpen size={20} color="#FFFFFF" />
+              </div>
+              <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FFFFFF' }}>
+                Book<span style={{ color: '#A78BFA' }}>Verse</span>
+              </span>
             </div>
 
-            <h1
+            <div style={{ fontSize: '0.78rem', color: '#A78BFA', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+              Welcome Back Reader
+            </div>
+
+            <h2 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.25, marginBottom: '1.25rem' }}>
+              Step Into Your Next Great Story
+            </h2>
+
+            {/* Literary Quote */}
+            <div
               style={{
-                fontSize: 'clamp(2rem, 4vw, 2.7rem)',
-                fontWeight: 900,
-                color: '#ffffff',
-                lineHeight: 1.15,
-                marginBottom: '1.25rem',
+                padding: '1.25rem 1.4rem',
+                background: 'rgba(139, 92, 246, 0.1)',
+                borderLeft: '4px solid #8B5CF6',
+                borderRadius: '0 16px 16px 0',
+                marginBottom: '2rem',
               }}
             >
-              Every Culture.<br />
-              Every Event.<br />
-              <span className="hero-script-subtitle" style={{ fontSize: '2.4rem', margin: '0.2rem 0' }}>
-                One Seamless Pass.
-              </span>
-            </h1>
-
-            <p style={{ color: '#94A3B8', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-              Sign in to reserve premium seats across 60+ Indian cities with instant QR tickets and zero double-booking locks.
-            </p>
-
-            {/* Feature Highlights */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Zap size={15} color="#A78BFA" />
-                </div>
-                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
-                  Live 160-Seat Interactive Stadium Grid
-                </span>
+              <Quote size={20} color="#A78BFA" style={{ transform: 'rotate(180deg)', marginBottom: '0.4rem' }} />
+              <div style={{ fontSize: '0.92rem', fontStyle: 'italic', color: '#DDD6FE', lineHeight: 1.6 }}>
+                &ldquo;A reader lives a thousand lives before he dies. The man who never reads lives only one.&rdquo;
               </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <ShieldCheck size={15} color="#A78BFA" />
-                </div>
-                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
-                  5-Minute Atomic Concurrency Hold Protection
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Ticket size={15} color="#A78BFA" />
-                </div>
-                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
-                  Instant Cryptographic Mobile Passes & Receipts
-                </span>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94A3B8', marginTop: '0.5rem' }}>
+                — George R.R. Martin
               </div>
             </div>
           </div>
 
-          {/* Social Proof Footer Pill */}
-          <div
-            style={{
-              padding: '1rem 1.25rem',
-              borderRadius: '16px',
-              background: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#A78BFA', marginBottom: '0.2rem' }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} fill="#A78BFA" />
-                ))}
-              </div>
-              <div style={{ fontSize: '0.82rem', color: '#ffffff', fontWeight: 700 }}>
-                Trusted by 350,000+ Fans
-              </div>
+          {/* Features list */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#CBD5E1', fontSize: '0.85rem' }}>
+              <Sparkles size={16} color="#A78BFA" />
+              <span>Smart Vibe & Mood Matcher</span>
             </div>
-
-            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#94A3B8' }}>
-              Across <strong style={{ color: '#A78BFA' }}>60+ Cities</strong>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#CBD5E1', fontSize: '0.85rem' }}>
+              <Bookmark size={16} color="#38BDF8" />
+              <span>Virtual Reading Shelves & Page Tracker</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#CBD5E1', fontSize: '0.85rem' }}>
+              <Star size={16} color="#F59E0B" />
+              <span>Verified Community Reader Reviews</span>
             </div>
           </div>
         </div>
 
-        {/* 🔐 RIGHT FORM COLUMN: USER SIGN IN CARD */}
+        {/* RIGHT COLUMN: LOGIN FORM */}
         <div
           className="glass-widget-card"
           style={{
-            padding: '3rem 2.5rem',
-            backgroundColor: '#0D0C15',
+            padding: '2.8rem 2.2rem',
+            backgroundColor: 'rgba(20, 18, 34, 0.95)',
             border: '1px solid rgba(139, 92, 246, 0.35)',
             borderRadius: '28px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(139, 92, 246, 0.3)',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
           }}
         >
-          {/* Navigation URL Tabs: User vs Admin */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '0.5rem',
-              background: 'rgba(255, 255, 255, 0.04)',
-              padding: '0.35rem',
-              borderRadius: '12px',
-              marginBottom: '1.75rem',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-            }}
-          >
-            <div
-              style={{
-                textAlign: 'center',
-                padding: '0.55rem',
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                color: '#FFFFFF',
-                background: 'var(--gradient-purple)',
-                borderRadius: '8px',
-                boxShadow: '0 2px 10px rgba(139, 92, 246, 0.4)',
-              }}
-            >
-              👤 User Sign In
-            </div>
-            <Link
-              to="/admin/login"
-              style={{
-                textAlign: 'center',
-                padding: '0.55rem',
-                fontSize: '0.82rem',
-                fontWeight: 600,
-                color: '#94a3b8',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                transition: 'all 0.2s',
-              }}
-            >
-              🛡️ Admin Portal
-            </Link>
-          </div>
-
-          {/* Form Header */}
-          <div style={{ marginBottom: '1.5rem' }}>
-            <div
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '12px',
-                background: 'var(--gradient-purple)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1rem',
-                boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
-              }}
-            >
-              <Ticket size={22} color="#FFFFFF" />
-            </div>
-            <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#ffffff' }}>
-              Attendee Sign In
-            </h2>
-            <p style={{ color: '#94A3B8', fontSize: '0.92rem', marginTop: '0.3rem', marginBottom: '1.75rem' }}>
-              Sign in to manage your tickets, bookings, and digital passes
+          <div style={{ marginBottom: '1.75rem' }}>
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.35rem' }}>
+              Sign In to Your Bookshelf
+            </h3>
+            <p style={{ color: '#94A3B8', fontSize: '0.88rem' }}>
+              Enter your credentials or click demo account to sign in immediately.
             </p>
           </div>
 
-          {/* Form Fields */}
-          <form
-            onSubmit={handleLogin}
-            style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+          {/* Quick Demo Credentials Button */}
+          <button
+            type="button"
+            onClick={handleFillDemo}
+            style={{
+              padding: '0.75rem',
+              borderRadius: '12px',
+              background: 'rgba(139, 92, 246, 0.15)',
+              border: '1px dashed #8B5CF6',
+              color: '#DDD6FE',
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              marginBottom: '1.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.45rem',
+            }}
           >
+            <Zap size={15} color="#A78BFA" />
+            <span>Use Demo Account: reader@example.com</span>
+          </button>
+
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
                 Email Address
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <Mail size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="email"
-                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. user@example.com"
+                  placeholder="your.email@example.com"
                   className="form-input"
-                  style={{ paddingLeft: '2.75rem' }}
+                  style={{ paddingLeft: '2.6rem' }}
+                  required
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
                 Password
               </label>
               <div style={{ position: 'relative' }}>
-                <Lock size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <Lock size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder="••••••••"
                   className="form-input"
-                  style={{ paddingLeft: '2.75rem', paddingRight: '2.75rem' }}
+                  style={{ paddingLeft: '2.6rem', paddingRight: '2.6rem' }}
+                  required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    position: 'absolute',
-                    right: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#94A3B8',
-                    cursor: 'pointer',
-                  }}
+                  style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer' }}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -337,18 +264,17 @@ export default function Login() {
               type="submit"
               disabled={isLoading}
               className="btn-purple-glow"
-              style={{ width: '100%', padding: '0.9rem', marginTop: '0.5rem' }}
+              style={{ width: '100%', padding: '1rem', fontSize: '1rem', marginTop: '0.5rem', justifyContent: 'center' }}
             >
-              <span>{isLoading ? 'Signing In...' : 'Sign In to EventLinqs'}</span>
+              <span>{isLoading ? 'Signing In...' : 'Sign In'}</span>
               <ArrowRight size={16} />
             </button>
           </form>
 
-          {/* Switch to Register */}
-          <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.88rem', color: '#94A3B8' }}>
-            Don't have an account?{' '}
-            <Link to="/register" style={{ color: '#A78BFA', fontWeight: 700 }}>
-              Create an Account &rarr;
+          <div style={{ marginTop: '1.75rem', textAlign: 'center', fontSize: '0.85rem', color: '#94A3B8' }}>
+            New to BookVerse?{' '}
+            <Link to="/register" style={{ color: '#A78BFA', fontWeight: 800, textDecoration: 'none' }}>
+              Create a free account
             </Link>
           </div>
         </div>

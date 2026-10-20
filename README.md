@@ -1,146 +1,56 @@
-# 🎟️ EventLinqs — Serverless Event Ticket Booking Platform
+# 📚 BookVerse — Intelligent Book Recommendation & Reading Discovery Platform
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://ticket-booking-platform-rouge.vercel.app/)
-[![Node.js](https://img.shields.io/badge/Node.js-24.x-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
-[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_ReplicaSet-forestgreen?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/atlas)
+[![Vite](https://img.shields.io/badge/Vite-6-purple?style=for-the-badge&logo=vite)](https://vitejs.dev/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas-forestgreen?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/atlas)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-> 🌐 **Live Production Website**: **[https://ticket-booking-platform-rouge.vercel.app/](https://ticket-booking-platform-rouge.vercel.app/)**
-
-A full-stack, production-grade, high-concurrency **Event Ticket Booking Platform** engineered specifically for **Vercel's Node.js Serverless Functions** architecture backed by **MongoDB Atlas Replica Sets**.
+> 📖 **BookVerse** is a modern, high-performance **Book Recommendation and Reading Tracking Application** crafted with React 18, Vite, Express, and MongoDB Atlas. It features a multi-algorithm recommendation engine, interactive vibe matcher, live reading progress tracking, bookshelf management, and reader community reviews.
 
 ---
 
 ## 🌟 Key Highlights & Features
 
-- **⚡ Serverless Architecture**: Powered by Vercel Serverless Functions (`api/index.js` wrapping Express 4 backend) with zero persistent server dependencies.
-- **🍃 Connection-Pooled Mongoose**: Global cached connection manager in `server/config/db.js` prevents connection exhaustion across serverless cold starts.
-- **🔒 Atomic Concurrency & 5-Minute Seat Locking**: Strict atomic seat reservation locking with optimistic version checks. If two attendees simultaneously attempt to claim the exact same seat, **exactly one succeeds (`HTTP 201`)** and the other immediately receives **`HTTP 409 Conflict` (`SEAT_ALREADY_HELD`)**.
-- **⏱️ Lazy Expiration (No Cron / setInterval Required)**: Seat locks expire strictly after 5 minutes based on authoritative server timestamps (`heldExpiresAt <= Date.now()`).
-- **💺 Interactive 160-Seat Stadium Map**: Visual seating grid with 50+ seats per tier:
-  - 👑 **VIP Front Row**: **50 Seats** (Rows A to E × 10 seats)
-  - ⭐ **Premium Central**: **50 Seats** (Rows A to E × 10 seats)
-  - 🎟️ **General Upper Tier**: **60 Seats** (Rows A to E × 12 seats)
-- **🏷️ Real-Time Tier Filter Pills**: Switch between All Sections, VIP, Premium, and General with real-time seat availability counts.
-- **💳 Multi-Method Mock Payments**:
-  - **UPI / Apps**: Google Pay, Paytm, PhonePe with smart 10-digit mobile number auto-formatting (e.g. `9876543290` → `9876543290@okhdfcbank`) and standard VPA support.
-  - **Credit / Debit Cards**: Card simulation with test failure modes.
-  - **Net Banking**: Instant bank checkout clearance.
-- **🎫 Cryptographic Digital E-Ticket Passes**: Scannable HMAC-SHA256 signed QR codes rendered on canvas, instant `.ics` Apple/Google calendar export, and print/PDF ready ticket passes.
-- **🛡️ 24-Hour Cancellation & Automated Refunds**: Enforces event cancellation cutoff windows before releasing seats back to `AVAILABLE` status.
-- **🔐 Dedicated Authentication Portals**:
-  - Attendee Sign-In: `/login` (and `/user/login`)
-  - Administrator Sign-In: `/admin/login`
-  - Anti-autofill security and duplicate user validation alerts with 1-click Sign-In redirection.
-- **📊 Admin Analytics & Event Management**: Multi-facet MongoDB aggregation pipeline computing gross revenue, category distributions, occupancy rates, and recent transaction logs.
-- **✨ Luxury Golden Glassmorphism**: Tailored dark-mode styling with amber gold accents, skeleton loaders, and micro-animations.
+### 1. 🧠 Multi-Algorithm Recommendation Engine
+- **Vibe / Mood Matcher Quiz**: An interactive recommendation tool where readers select emotional vibes (*Mind-Bending, Heartbreaking, Cosy & Warm, Dark & Gritty, Thought-Provoking*), preferred reading pace (*Fast, Moderate, Slow Burn*), and length (*Short, Medium, Epic*) to generate scored match percentages (80%–99%) with distinct match rationales.
+- **Personalized "For You" Feed**: Computes personalized recommendation scores factoring in user's shelf history, author affinities, genre preferences, and community ratings.
+- **Content-Based Similarity**: Deep similarity scoring across books sharing overlapping genres, moods, and author bibliography.
+
+### 2. 📖 Rich Book Catalog & Library Explorer
+- **Curated Multi-Genre Catalog**: Seeded with 20+ bestselling literary masterpieces across Sci-Fi, Fantasy, Mystery/Thriller, Non-Fiction, Philosophy, Romance, and Classics.
+- **Multi-Dimensional Filtering**: Search by title, author, or synopsis; filter by genres, mood vibes, minimum ratings, reading pace, and sort by rating, release year, popularity, or page count.
+- **Book Showcase**: Immersive 3D book cover cards with genre tags, spine styling, rating badge, and shelf quick-actions.
+
+### 3. 🔖 Reading Shelves & Page Progress Tracker
+- **4 Dedicated Shelves**:
+  - 📖 **Currently Reading** — Live reading progress tracker with interactive percentage slider, pages read out of total, and live progress updating.
+  - 🔖 **Want to Read** — Wishlist and reading queue.
+  - ✅ **Completed** — Log completed books, review your finished milestones, and calculate total pages read.
+  - ⭐ **Favorites** — Curated showcase of all-time favorite reads.
+- **Live Page Tracking Modal**: Update current page with a smooth drag slider or direct number input, with real-time recalculation of total pages read.
+
+### 4. 🎯 Annual Reading Challenge & Reader Stats
+- Set and track your yearly book completion goal (e.g., 20 books/year).
+- Dynamic progress bar with percentage complete, remaining books, and live reading statistics (Total Shelved, Currently Reading, Pages Read).
+
+### 5. ⭐ Community Reviews & Star Ratings
+- Readers can submit star ratings (1 to 5) with headlines and written reviews.
+- Automatic recalculation of `averageRating` and `ratingsCount` on the book schema upon every review submission.
+
+### 6. 🎨 Luxury Glassmorphic Aesthetic
+- Tailored modern dark mode with violet/indigo accents (`#8B5CF6`, `#6366F1`), gradient text, smooth hover transitions, and responsive mobile dock navigation.
 
 ---
 
-## 🏗️ Architecture & Request Flow
+## 🚀 Quick Start Guide
 
-```
-User Browser / Client
-   ↓
-Vercel Edge Network
-   ├── React / Vite Single Page Application (client/dist)
-   │     ├── /                      (Hero showcase & trending events)
-   │     ├── /events                (Catalog filters by category, city, date, price)
-   │     ├── /event/:id             (Event overview & pricing tiers)
-   │     ├── /event/:id/seats       (Interactive visual seat map & tier filters)
-   │     ├── /checkout/:id          (5-min reservation timer & mock payment form)
-   │     ├── /success/:id           (Confirmed digital pass with QR verification)
-   │     ├── /my-bookings           (Active & past tickets with cancellation)
-   │     ├── /login                 (Attendee authentication)
-   │     ├── /admin/login           (Dedicated administrator authentication)
-   │     └── /admin/*               (Analytics metrics & event management)
-   │
-   └── Express API (Serverless Handler in api/index.js)
-         ├── /api/auth/*            (JWT registration, login, profile)
-         ├── /api/events/*          (Event discovery & admin CRUD)
-         ├── /api/venues/*          (Venues & layout configurations)
-         ├── /api/events/:id/seats  (Dynamic seat effective status & auto-generation)
-         ├── /api/reservations/*    (Atomic concurrency locking)
-         ├── /api/bookings/*        (Transactional booking & payment)
-         ├── /api/admin/*           (Aggregation dashboard & oversight)
-         └── /api/health            (Status check)
-         ↓
-   MongoDB Atlas (Replica Set)
-```
+### Prerequisites
+- Node.js (v18 or higher)
+- MongoDB Atlas cluster or local MongoDB instance
 
----
-
-## 📁 Repository Structure
-
-```
-├── api/
-│   └── index.js                      # Vercel serverless function entrypoint
-├── server/
-│   ├── app.js                        # Express app, CORS, Helmet, routes, centralized error handling
-│   ├── server.js                     # Local development server ONLY (app.listen)
-│   ├── config/
-│   │   └── db.js                     # Serverless-cached Mongoose connection pool
-│   ├── models/
-│   │   ├── User.js                   # User model with bcrypt hashing & roles
-│   │   ├── Venue.js                  # Venue model with section layout blueprints
-│   │   ├── Event.js                  # Event model with pricing & cancellation policies
-│   │   ├── Seat.js                   # Event-specific seats with index { event: 1, seatNumber: 1 }
-│   │   ├── Reservation.js            # 5-minute temporary reservation lock schema
-│   │   └── Booking.js                # Confirmed booking snapshot & QR token schema
-│   ├── middleware/
-│   │   ├── auth.js                   # JWT authenticate & requireAdmin middlewares
-│   │   ├── validate.js               # Payload validation middlewares
-│   │   └── errorHandler.js          # Centralized error handler with standardized JSON envelopes
-│   ├── routes/
-│   │   ├── authRoutes.js             # /api/auth
-│   │   ├── eventRoutes.js            # /api/events (seat generator helper)
-│   │   ├── venueRoutes.js            # /api/venues
-│   │   ├── seatRoutes.js             # /api/events/:eventId/seats (effective status)
-│   │   ├── reservationRoutes.js      # /api/reservations (atomic concurrency lock)
-│   │   ├── bookingRoutes.js          # /api/bookings (transactional payment & booking)
-│   │   └── adminRoutes.js            # /api/admin (aggregations)
-│   ├── services/
-│   │   ├── paymentService.js         # Mock payment service (UPI, CARD, NET_BANKING)
-│   │   └── qrService.js              # Cryptographic QR HMAC token generator & verifier
-│   ├── scripts/
-│   │   └── seed.js                   # Database seeder (Admin, Users, Venues, Events, Seats)
-│   └── tests/
-│       ├── setup.js                  # MongoMemoryServer test harness
-│       ├── auth.test.js              # Auth & RBAC tests
-│       ├── events.test.js            # Event search & filter tests
-│       ├── seats.test.js             # Computed effective seat status tests
-│       ├── reservation.test.js       # Atomic reservation & 5-min expiry tests
-│       ├── concurrency.test.js       # CRITICAL: 2-user simultaneous collision test
-│       ├── booking.test.js           # Transactional booking & payment failure tests
-│       └── cancellation.test.js      # 24h cutoff cancellation tests
-├── client/
-│   ├── index.html                    # HTML entry point with Outfit & Inter typography
-│   ├── vite.config.js                # Vite build config with proxy to /api
-│   ├── src/
-│   │   ├── main.jsx                  # React DOM mount point
-│   │   ├── App.jsx                   # React Router registry & protected routes
-│   │   ├── index.css                 # Amber Gold Luxury design system tokens
-│   │   ├── api/client.js             # Axios client using relative /api baseURL
-│   │   ├── store/                    # Zustand state stores (auth, reservation, toast)
-│   │   ├── components/               # UI components (SeatMap, TicketCard, OrderSummary, etc.)
-│   │   └── pages/                    # Routed pages (Home, Events, SeatSelection, etc.)
-├── vercel.json                       # Vercel serverless routing, build command, SPA fallback
-├── package.json                      # Root configuration with dev, test, and build scripts
-└── README.md                         # Documentation
-```
-
----
-
-## 🚀 Quickstart & Local Development
-
-### 1. Prerequisites
-- **Node.js**: v20.x or v22+ (tested up to Node 24)
-- **MongoDB**: Local MongoDB instance or [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
-
-### 2. Installation
+### 1. Clone & Install Dependencies
 ```bash
-# Clone the repository
 git clone https://github.com/Suhirdha24/ticket-booking-platform-.git
 cd ticket-booking-platform-
 
@@ -148,111 +58,86 @@ cd ticket-booking-platform-
 npm install
 
 # Install client dependencies
-cd client && npm install && cd ..
+npm --prefix client install
 ```
 
-### 3. Environment Configuration
-Create a `.env` file in the project root:
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory:
 ```env
-MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/ticket-booking-platform?retryWrites=true&w=majority
-JWT_SECRET=eventhub_jwt_super_secret_key_2026
-JWT_EXPIRES_IN=7d
-QR_SECRET=eventhub_qr_hmac_secret_2026
-ADMIN_SECRET=eventhub_admin_secret_key_2026
 PORT=5000
-NODE_ENV=development
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key_here
+JWT_EXPIRES_IN=7d
+CLIENT_URL=http://localhost:5173
 ```
 
-### 4. Database Seeding
-Populate realistic venues, events across Indian cities, complete 160-seat stadium layouts, and demo accounts:
+### 3. Seed Database with Curated Books & Demo User
 ```bash
-npm run seed
+npm run seed:books
 ```
+*Seeds 20 bestselling books, demo user `reader@example.com` (`Password@123`), sample reading shelves, and community reviews.*
 
-### 5. Running the Local Dev Environment
+### 4. Launch Locally
 ```bash
-# Runs Express backend (Port 5000) and Vite frontend (Port 3000) concurrently with watch mode
 npm run dev
 ```
-
-Visit:
-- **Frontend**: `http://localhost:3000`
-- **Backend API Health**: `http://localhost:5000/api/health`
+- **Frontend App**: `http://localhost:5173`
+- **Backend API**: `http://localhost:5000`
 
 ---
 
-## 🧪 Automated Test Suite (15 Test Suites)
+## 🧪 Testing
 
-The project includes an automated test suite powered by **Vitest**, **Supertest**, and **MongoMemoryServer**:
-
+Run backend tests powered by Vitest:
 ```bash
 npm test
 ```
-
-### Core Verified Scenarios:
-1. **User Registration** (`POST /api/auth/register`)
-2. **User Login** (`POST /api/auth/login`)
-3. **Invalid Login Rejection** (Bad password / non-existent email)
-4. **Admin RBAC Enforcement** (403 Forbidden for non-admins)
-5. **Event Discovery & Filtering** (Search, category, date, price)
-6. **Seat Dynamic Effective Status** (Lazy expiration of held seats)
-7. **Successful 5-Minute Seat Reservation** (`POST /api/reservations`)
-8. **Expired Reservation Rejection** (`HTTP 400 RESERVATION_EXPIRED`)
-9. **Reservation Ownership Security** (User B cannot book User A's reservation)
-10. **Confirmed Transactional Booking** (`POST /api/bookings` with snapshots & QR)
-11. **Payment Failure Handling** (Rollback without confirming booking)
-12. **Duplicate Booking Prevention** (Cannot re-book completed reservation)
-13. **24-Hour Cutoff Cancellation Policy** (Enforces cancellation window)
-14. **Seat Release on Cancellation** (Seats transition back to `AVAILABLE`)
-15. **CRITICAL Concurrency Race Condition**: Two simultaneous users fighting for 1 seat -> **Exactly 1 succeeds (`201`), exactly 1 conflicts (`409 SEAT_ALREADY_HELD`)**, 0 double-bookings.
+*Validates book catalog queries, vibe matcher quiz, similar book recommendations, shelf CRUD, and review rating recalculations.*
 
 ---
 
-## 🔒 Concurrency & Seat Locking Strategy
+## 📡 Key API Routes
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User A
-    actor User B
-    participant API as Vercel Serverless Function
-    participant DB as MongoDB Atlas
+### 📚 Books
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/books` | Catalog listing with search, genre, mood, pace, rating & sorting |
+| `GET` | `/api/books/featured` | Spotlighted featured reads |
+| `GET` | `/api/books/trending` | Most popular and trending books |
+| `GET` | `/api/books/:id` | Full details, quotes, synopsis & reading pace |
 
-    Note over User A, User B: Simultaneously click Seat VIP-A1
-    User A->>API: POST /api/reservations (seat VIP-A1)
-    User B->>API: POST /api/reservations (seat VIP-A1)
-    
-    API->>DB: Atomic findOneAndUpdate with status: AVAILABLE or expired HELD
-    Note over DB: Lock claimed by User A (version incremented)
-    DB-->>API: User A update succeeds (modifiedCount = 1)
-    API-->>User A: HTTP 201 Created (Expires in 5:00)
+### 🧠 Recommendations
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/recommendations/for-you` | Personalized reading feed (auth/guest) |
+| `POST` | `/api/recommendations/vibe-matcher` | Interactive mood & pacing matcher quiz |
+| `GET` | `/api/recommendations/similar/:bookId` | Content-based similar books |
 
-    Note over DB: User B attempt matches 0 documents (Seat is now HELD with active future expiry)
-    DB-->>API: User B update matches 0
-    API-->>User B: HTTP 409 Conflict {"error": {"code": "SEAT_ALREADY_HELD"}}
-```
+### 📖 Reading Shelves
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/reading-list` | Get user's shelves with reading statistics |
+| `POST` | `/api/reading-list` | Add book to shelf or update reading page progress |
+| `DELETE` | `/api/reading-list/:bookId` | Remove book from reading list |
 
----
-
-## ☁️ Vercel Production Deployment
-
-### 1. Push to GitHub
-```bash
-git add .
-git commit -m "chore: deploy to vercel"
-git push -u origin main
-```
-
-### 2. Configure on Vercel
-1. Import repository on [vercel.com/new](https://vercel.com/new).
-2. Set Environment Variables:
-   - `MONGODB_URI`: MongoDB Atlas connection string
-   - `JWT_SECRET`: Secret key for JWT signing
-   - `QR_SECRET`: HMAC key for QR codes
-   - `NODE_ENV`: `production`
-3. Click **Deploy**.
+### ⭐ Reviews
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/reviews/book/:bookId` | Get all reviews for a book |
+| `POST` | `/api/reviews/book/:bookId` | Post star rating and written review |
+| `DELETE` | `/api/reviews/:id` | Delete own review |
 
 ---
 
-## 📄 License
-MIT License. Built with ❤️ for EventLinqs.
+## 👥 Demo User Credentials
+
+| Role | Email | Password |
+|---|---|---|
+| **Reader** | `reader@example.com` | `Password@123` |
+
+*(Or click "Quick Demo Reader" on the `/login` page for 1-click login).*
+
+---
+
+## 📜 License
+MIT License. Built with passion for readers worldwide.

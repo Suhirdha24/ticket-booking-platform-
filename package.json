@@ -1,7 +1,7 @@
 {
-  "name": "event-ticket-booking-platform",
+  "name": "bookverse-recommendation-platform",
   "version": "1.0.0",
-  "description": "Production-ready Event Ticket Booking Platform for Vercel Serverless and MongoDB Atlas",
+  "description": "Production-ready Book Recommendation and Reading Discovery Platform",
   "main": "server/server.js",
   "type": "module",
   "scripts": {
@@ -10,7 +10,8 @@
     "dev:client": "npm run dev --prefix client",
     "build": "npm --prefix client run build",
     "postinstall": "npm --prefix client install",
-    "seed": "node server/scripts/seed.js",
+    "seed": "node server/scripts/seedBooks.js",
+    "seed:books": "node server/scripts/seedBooks.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -30,8 +31,10 @@
     "vitest": "^4.1.0"
   },
   "keywords": [
-    "ticket-booking",
-    "event-platform",
+    "book-recommendation",
+    "reading-platform",
+    "vibe-matcher",
+    "bookshelf-tracker",
     "vercel-serverless",
     "mongodb-atlas",
     "react",

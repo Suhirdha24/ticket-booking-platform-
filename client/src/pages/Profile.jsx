@@ -1,453 +1,272 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useAuthStore } from '../store/authStore.js';
+import { showSuccessToast, showErrorToast } from '../store/toastStore.js';
 import {
   User,
-  Mail,
-  Phone,
-  MapPin,
-  Ticket,
-  Heart,
-  Store,
+  Target,
+  Sparkles,
+  BookOpen,
+  Check,
+  Save,
   Shield,
-  LogOut,
-  ChevronRight,
-  Edit3,
-  CheckCircle,
-  X,
+  Heart,
+  Compass,
 } from 'lucide-react';
-import { useAuthStore } from '../store/authStore.js';
-import { useLocationStore } from '../store/locationStore.js';
-import { useToastStore } from '../store/toastStore.js';
-import api from '../api/client.js';
+
+const ALL_GENRES = [
+  'Sci-Fi',
+  'Fantasy',
+  'Mystery',
+  'Thriller',
+  'Self-Help',
+  'Non-Fiction',
+  'Fiction',
+  'Romance',
+  'Philosophy',
+  'Classics',
+];
+
+const ALL_MOODS = [
+  'Mind-Bending',
+  'Emotional',
+  'Fast-Paced',
+  'Dark & Gripping',
+  'Cozy & Relaxing',
+  'Inspirational',
+];
 
 export default function Profile() {
-  const navigate = useNavigate();
-  const { user, isAuthenticated, logout, setUser } = useAuthStore();
-  const { selectedCity, openLocationModal } = useLocationStore();
-  const { addToast } = useToastStore();
+  const { user, updateProfile, isLoading } = useAuthStore();
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user?.name || '',
-    phone: user?.phone || '',
-    password: '',
-  });
-  const [saving, setSaving] = useState(false);
+  const [name, setName] = useState(user?.name || '');
+  const [bio, setBio] = useState(user?.bio || '');
+  const [annualGoal, setAnnualGoal] = useState(user?.annualReadingGoal || 15);
+  const [preferredGenres, setPreferredGenres] = useState(user?.preferredGenres || ['Fiction', 'Sci-Fi']);
+  const [preferredMoods, setPreferredMoods] = useState(user?.preferredMoods || ['Mind-Bending']);
 
-  if (!isAuthenticated) {
-    navigate('/login');
-    return null;
-  }
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '');
+      setBio(user.bio || '');
+      setAnnualGoal(user.annualReadingGoal || 15);
+      setPreferredGenres(user.preferredGenres || ['Fiction', 'Sci-Fi']);
+      setPreferredMoods(user.preferredMoods || ['Mind-Bending']);
+    }
+  }, [user]);
 
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const payload = {
-        name: formData.name,
-        phone: formData.phone,
-      };
-      if (formData.password) {
-        payload.password = formData.password;
-      }
-
-      const res = await api.put('/auth/profile', payload);
-      if (res.data?.data?.user) {
-        setUser(res.data.data.user);
-      }
-      addToast('Profile updated successfully!', 'success');
-      setEditModalOpen(false);
-    } catch (err) {
-      addToast(err.message || 'Failed to update profile', 'error');
-    } finally {
-      setSaving(false);
+  const toggleGenre = (genre) => {
+    if (preferredGenres.includes(genre)) {
+      setPreferredGenres(preferredGenres.filter((g) => g !== genre));
+    } else {
+      setPreferredGenres([...preferredGenres, genre]);
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    addToast('Signed out successfully', 'success');
-    navigate('/');
+  const toggleMood = (mood) => {
+    if (preferredMoods.includes(mood)) {
+      setPreferredMoods(preferredMoods.filter((m) => m !== mood));
+    } else {
+      setPreferredMoods([...preferredMoods, mood]);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await updateProfile({
+        name,
+        bio,
+        annualReadingGoal: Number(annualGoal),
+        preferredGenres,
+        preferredMoods,
+      });
+      showSuccessToast('Profile Updated! 🎉', 'Your reading preferences and challenge goal have been saved.');
+    } catch (err) {
+      showErrorToast('Failed to update profile', err.message);
+    }
   };
 
   return (
-    <div className="mobile-safe-bottom" style={{ minHeight: '100vh', paddingTop: '1.75rem' }}>
-      <div className="container" style={{ maxWidth: '640px' }}>
-        {/* Profile Card Header */}
-        <div
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-medium)',
-            borderRadius: 'var(--radius-xl)',
-            padding: '2rem 1.5rem',
-            textAlign: 'center',
-            marginBottom: '1.5rem',
-            boxShadow: 'var(--shadow-card)',
-            position: 'relative',
-          }}
-        >
-          {/* Avatar */}
-          <div
-            style={{
-              width: '84px',
-              height: '84px',
-              borderRadius: '50%',
-              background: '#0F172A',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '2.2rem',
-              fontWeight: 800,
-              margin: '0 auto 1rem auto',
-              boxShadow: '0 8px 24px rgba(15, 23, 42, 0.15)',
-            }}
-          >
-            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', paddingBottom: '6rem' }}>
+      <section
+        style={{
+          padding: '3rem 0 2rem',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundImage: 'radial-gradient(circle at 80% 30%, rgba(139, 92, 246, 0.2) 0%, transparent 60%)',
+        }}
+      >
+        <div className="container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+            <User size={17} />
+            <span>Reader Account & Preferences</span>
           </div>
-
-          <h1 style={{ fontSize: '1.65rem', fontWeight: 800, marginBottom: '0.25rem', color: '#0F172A' }}>
-            {user?.name}
+          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.5rem' }}>
+            Customize Your Reading DNA
           </h1>
-
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
-            {user?.email}
+          <p style={{ color: '#94A3B8', fontSize: '0.95rem' }}>
+            Tailor your preferred genres and emotional moods to train the recommendation engine for your exact tastes.
           </p>
-
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-              background: user?.role === 'admin' ? 'rgba(245, 185, 0, 0.15)' : 'rgba(255, 255, 255, 0.08)',
-              border: `1px solid ${user?.role === 'admin' ? 'var(--border-gold)' : 'var(--border-subtle)'}`,
-              padding: '0.3rem 0.85rem',
-              borderRadius: 'var(--radius-pill)',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              color: user?.role === 'admin' ? 'var(--primary-gold)' : 'var(--text-main)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-            }}
-          >
-            {user?.role === 'admin' ? <Shield size={13} /> : <User size={13} />}
-            <span>{user?.role === 'admin' ? 'Platform Administrator' : 'Verified Member'}</span>
-          </div>
-
-          <div style={{ marginTop: '1.25rem' }}>
-            <button
-              onClick={() => {
-                setFormData({
-                  name: user?.name || '',
-                  phone: user?.phone || '',
-                  password: '',
-                });
-                setEditModalOpen(true);
-              }}
-              className="btn-secondary"
-              style={{ padding: '0.5rem 1.15rem', fontSize: '0.82rem' }}
-            >
-              <Edit3 size={14} color="var(--primary-gold)" />
-              <span>Edit Profile</span>
-            </button>
-          </div>
         </div>
+      </section>
 
-        {/* Quick Links Menu */}
-        <div
+      <div className="container" style={{ paddingTop: '2.5rem', maxWidth: '780px' }}>
+        <form
+          onSubmit={handleSubmit}
+          className="glass-widget-card"
           style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-xl)',
-            overflow: 'hidden',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <Link
-            to="/my-bookings"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '1.15rem 1.25rem',
-              borderBottom: '1px solid var(--border-subtle)',
-              color: 'var(--text-main)',
-              transition: 'background 0.2s',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'var(--gradient-gold-subtle)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--primary-gold)',
-                }}
-              >
-                <Ticket size={20} />
-              </div>
-              <div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700 }}>My Bookings</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  View confirmed e-tickets, QR passes & calendar events
-                </div>
-              </div>
-            </div>
-            <ChevronRight size={18} color="var(--text-subtle)" />
-          </Link>
-
-          <Link
-            to="/favorites"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '1.15rem 1.25rem',
-              borderBottom: '1px solid var(--border-subtle)',
-              color: 'var(--text-main)',
-              transition: 'background 0.2s',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'rgba(244, 63, 94, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#f43f5e',
-                }}
-              >
-                <Heart size={20} />
-              </div>
-              <div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700 }}>My Favorites</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  Events and festivals saved to your personal wishlist
-                </div>
-              </div>
-            </div>
-            <ChevronRight size={18} color="var(--text-subtle)" />
-          </Link>
-
-          <div
-            onClick={openLocationModal}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '1.15rem 1.25rem',
-              borderBottom: user?.role === 'admin' ? '1px solid var(--border-subtle)' : 'none',
-              color: 'var(--text-main)',
-              cursor: 'pointer',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'var(--gradient-gold-subtle)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--primary-gold)',
-                }}
-              >
-                <MapPin size={20} />
-              </div>
-              <div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700 }}>Current City</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  Selected: {selectedCity}
-                </div>
-              </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary-gold)', fontSize: '0.82rem', fontWeight: 700 }}>
-              <span>Change</span>
-              <ChevronRight size={18} />
-            </div>
-          </div>
-
-          {user?.role === 'admin' && (
-            <Link
-              to="/admin"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '1.15rem 1.25rem',
-                color: 'var(--text-main)',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '10px',
-                    background: 'var(--gradient-gold-subtle)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--primary-gold)',
-                  }}
-                >
-                  <Shield size={20} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 700 }}>Admin Dashboard</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                    Revenue metrics, event approvals, and user oversight
-                  </div>
-                </div>
-              </div>
-              <ChevronRight size={18} color="var(--text-subtle)" />
-            </Link>
-          )}
-        </div>
-
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          style={{
+            padding: '2.5rem',
+            borderRadius: '24px',
+            backgroundColor: 'rgba(20, 18, 34, 0.9)',
+            border: '1px solid rgba(139, 92, 246, 0.35)',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.6rem',
-            width: '100%',
-            padding: '1rem',
-            background: 'rgba(244, 63, 94, 0.08)',
-            border: '1px solid rgba(244, 63, 94, 0.25)',
-            borderRadius: 'var(--radius-xl)',
-            color: '#f43f5e',
-            fontSize: '0.95rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
+            flexDirection: 'column',
+            gap: '2rem',
           }}
         >
-          <LogOut size={18} />
-          <span>Sign Out</span>
-        </button>
+          {/* User Basic Info */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <img
+              src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'}
+              alt={user?.name}
+              style={{ width: '70px', height: '70px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #8B5CF6' }}
+            />
+            <div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF' }}>{user?.name}</div>
+              <div style={{ fontSize: '0.85rem', color: '#94A3B8' }}>{user?.email}</div>
+            </div>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
+              Display Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="form-input"
+              required
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
+              Reader Bio
+            </label>
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              className="form-input"
+              rows="3"
+              placeholder="Tell other readers what stories and themes captivate you..."
+              style={{ resize: 'none' }}
+            />
+          </div>
+
+          {/* Annual Goal */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <label style={{ fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Target size={16} color="#FBBF24" />
+                <span>Annual Reading Goal (2026)</span>
+              </label>
+              <span style={{ fontSize: '1rem', fontWeight: 900, color: '#A78BFA' }}>
+                {annualGoal} Books
+              </span>
+            </div>
+            <input
+              type="range"
+              min="1"
+              max="100"
+              value={annualGoal}
+              onChange={(e) => setAnnualGoal(Number(e.target.value))}
+              style={{ width: '100%', accentColor: '#8B5CF6', cursor: 'pointer' }}
+            />
+          </div>
+
+          {/* Preferred Genres Selection */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.75rem' }}>
+              Your Favorite Genres (Influences Recommendations)
+            </label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {ALL_GENRES.map((g) => {
+                const isSelected = preferredGenres.includes(g);
+                return (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => toggleGenre(g)}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      borderRadius: 'var(--radius-pill)',
+                      background: isSelected ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.04)',
+                      border: isSelected ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.08)',
+                      color: isSelected ? '#FFFFFF' : '#CBD5E1',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <span>{g}</span>
+                    {isSelected && <Check size={14} />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Preferred Moods Selection */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.75rem' }}>
+              Preferred Emotional Moods & Vibes
+            </label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {ALL_MOODS.map((m) => {
+                const isSelected = preferredMoods.includes(m);
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => toggleMood(m)}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      borderRadius: 'var(--radius-pill)',
+                      background: isSelected ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255, 255, 255, 0.04)',
+                      border: isSelected ? '1.5px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
+                      color: isSelected ? '#FFFFFF' : '#CBD5E1',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <span>✦ {m}</span>
+                    {isSelected && <Check size={14} />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="btn-purple-glow"
+            style={{ padding: '1rem', fontSize: '1rem', justifyContent: 'center' }}
+          >
+            <Save size={18} />
+            <span>Save Reading Preferences</span>
+          </button>
+        </form>
       </div>
-
-      {/* ✏️ EDIT PROFILE MODAL */}
-      {editModalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1rem',
-            background: 'rgba(0, 0, 0, 0.75)',
-            backdropFilter: 'blur(12px)',
-          }}
-          onClick={() => setEditModalOpen(false)}
-        >
-          <div
-            style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-medium)',
-              borderRadius: 'var(--radius-xl)',
-              width: '100%',
-              maxWidth: '440px',
-              padding: '1.75rem',
-              boxShadow: 'var(--shadow-floating)',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '1.25rem',
-              }}
-            >
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Edit Profile</h3>
-              <button
-                onClick={() => setEditModalOpen(false)}
-                className="btn-icon"
-                style={{ width: '32px', height: '32px' }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <form onSubmit={handleEditSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.35rem', display: 'block' }}>
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                  className="form-input"
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.35rem', display: 'block' }}>
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+91 98765 43210"
-                  className="form-input"
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.35rem', display: 'block' }}>
-                  New Password (optional)
-                </label>
-                <input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="Leave blank to keep current password"
-                  className="form-input"
-                />
-              </div>
-
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
-                <button
-                  type="button"
-                  onClick={() => setEditModalOpen(false)}
-                  className="btn-secondary"
-                  style={{ flex: 1 }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="btn-primary"
-                  style={{ flex: 1 }}
-                >
-                  {saving ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

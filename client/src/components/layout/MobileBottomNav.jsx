@@ -1,19 +1,13 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Ticket, Compass, Heart, User } from 'lucide-react';
+import { Home, BookOpen, Sparkles, Bookmark, User } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore.js';
-import { useFavoritesStore } from '../../store/favoritesStore.js';
+import { useBookshelfStore } from '../../store/bookshelfStore.js';
 
 export default function MobileBottomNav() {
   const location = useLocation();
   const { isAuthenticated } = useAuthStore();
-  const { favoriteIds } = useFavoritesStore();
-
-  // Hide during seat selection and checkout to maximize viewport
-  const isExcluded =
-    location.pathname.includes('/seats') || location.pathname.includes('/checkout');
-
-  if (isExcluded) return null;
+  const { stats } = useBookshelfStore();
 
   const navLinks = [
     {
@@ -23,20 +17,20 @@ export default function MobileBottomNav() {
       exact: true,
     },
     {
-      to: isAuthenticated ? '/my-bookings' : '/login',
-      label: 'Tickets',
-      icon: Ticket,
+      to: '/books',
+      label: 'Catalog',
+      icon: BookOpen,
     },
     {
-      to: '/events',
-      label: 'Discover',
-      icon: Compass,
+      to: '/recommendations',
+      label: 'Vibe Match',
+      icon: Sparkles,
     },
     {
-      to: '/favorites',
-      label: 'Favorites',
-      icon: Heart,
-      badge: favoriteIds.length > 0 ? favoriteIds.length : null,
+      to: isAuthenticated ? '/my-bookshelf' : '/login',
+      label: 'My Shelf',
+      icon: Bookmark,
+      badge: stats.totalShelved > 0 ? stats.totalShelved : null,
     },
     {
       to: isAuthenticated ? '/profile' : '/login',
@@ -71,7 +65,7 @@ export default function MobileBottomNav() {
                     width: '7px',
                     height: '7px',
                     borderRadius: '50%',
-                    background: '#F43F5E',
+                    background: '#8B5CF6',
                   }}
                 />
               )}

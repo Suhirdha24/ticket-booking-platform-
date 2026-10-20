@@ -1,5 +1,5 @@
 import React from 'react';
-import { Ticket, Shield, Sparkles, Heart } from 'lucide-react';
+import { BookOpen, Sparkles, Heart, Bookmark, ShieldCheck, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
@@ -28,47 +28,45 @@ export default function Footer() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.6rem',
+                gap: '0.65rem',
                 marginBottom: '1rem',
               }}
             >
-              {/* Soundwave Bars */}
               <div
                 style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  background: 'var(--gradient-purple)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '3px',
-                  height: '20px',
+                  justifyContent: 'center',
+                  boxShadow: '0 0 15px rgba(139, 92, 246, 0.4)',
                 }}
               >
-                <div className="soundwave-bar" style={{ height: '8px', background: '#8B5CF6' }}></div>
-                <div className="soundwave-bar" style={{ height: '16px', background: '#A78BFA' }}></div>
-                <div className="soundwave-bar" style={{ height: '20px', background: '#8B5CF6' }}></div>
-                <div className="soundwave-bar" style={{ height: '12px', background: '#C4B5FD' }}></div>
+                <BookOpen size={18} color="#FFFFFF" />
               </div>
-
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontSize: '1.25rem',
                   fontWeight: 900,
                   color: '#ffffff',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.04em',
+                  letterSpacing: '-0.02em',
                 }}
               >
-                Event<span style={{ color: '#A78BFA' }}>Linqs</span>
+                Book<span style={{ color: '#A78BFA' }}>Verse</span>
               </span>
             </div>
             <p
               style={{
-                fontSize: '0.88rem',
+                fontSize: '0.86rem',
                 color: '#94A3B8',
                 lineHeight: 1.6,
                 marginBottom: '1.25rem',
               }}
             >
-              Feel the sound. Live the moment. Real-time ticket reservations, interactive seat maps, and secure digital event passes across India.
+              Discover stories you will never forget. Intelligent content-based book recommendations, real-time mood vibe matching, personal reading goals, and community reviews.
             </p>
           </div>
 
@@ -88,29 +86,29 @@ export default function Footer() {
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
               <li>
-                <Link to="/events" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
-                  All Live Events
+                <Link to="/books" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  All Curated Books
                 </Link>
               </li>
               <li>
-                <Link to="/events?category=Concert" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
-                  Concerts & Music
+                <Link to="/books?genre=Sci-Fi" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  Sci-Fi & Speculative
                 </Link>
               </li>
               <li>
-                <Link to="/events?category=Festival" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
-                  Festivals & Carnivals
+                <Link to="/books?genre=Mystery" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  Mystery & Thrillers
                 </Link>
               </li>
               <li>
-                <Link to="/events?category=Conference" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
-                  Tech & Summits
+                <Link to="/books?genre=Self-Help" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  Personal Growth & Habits
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Account & Passes */}
+          {/* Smart Features */}
           <div>
             <h4
               style={{
@@ -122,28 +120,28 @@ export default function Footer() {
                 letterSpacing: '0.08em',
               }}
             >
-              My Hub
+              Recommendation AI
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
               <li>
-                <Link to="/my-bookings" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
-                  My Passes & Tickets
+                <Link to="/recommendations" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  Interactive Vibe Matcher
                 </Link>
               </li>
               <li>
-                <Link to="/favorites" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
-                  Saved Favorites
+                <Link to="/my-bookshelf" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  Annual Reading Challenge
                 </Link>
               </li>
               <li>
-                <Link to="/admin" style={{ color: '#CBD5E1', fontSize: '0.88rem', transition: 'color 0.2s' }}>
-                  Admin Portal
+                <Link to="/my-bookshelf" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  Personalized Reading Shelves
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Technology & Security */}
+          {/* Reader Community */}
           <div>
             <h4
               style={{
@@ -155,20 +153,20 @@ export default function Footer() {
                 letterSpacing: '0.08em',
               }}
             >
-              Security
+              Reader Guarantee
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
               <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                ⏱️ 5-Minute Seat Locks
+                ✨ 98% Match Accuracy
               </li>
               <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                🔒 Verified QR Ticket Security
+                🎯 Zero Filler, High-Signal Reads
               </li>
               <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                🛡️ Verified Organizers
+                📖 Verified Community Ratings
               </li>
               <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                💳 24h Refund Guarantee
+                ⚡ Instant Progress Tracking
               </li>
             </ul>
           </div>
@@ -188,10 +186,10 @@ export default function Footer() {
           }}
         >
           <div>
-            &copy; {new Date().getFullYear()} EventLinqs Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} BookVerse AI. Inspiring reader journeys everywhere.
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            <span>Designed for live moments</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#A78BFA' }}>
+            <span>Curated with passion for avid readers</span>
           </div>
         </div>
       </div>

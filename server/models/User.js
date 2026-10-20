@@ -33,8 +33,34 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      required: [true, 'Mobile number is mandatory'],
       trim: true,
+      default: '',
+    },
+    avatar: {
+      type: String,
+      default: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    },
+    bio: {
+      type: String,
+      maxlength: 250,
+      default: 'Avid reader exploring new stories and perspectives.',
+    },
+    preferredGenres: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    preferredMoods: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    annualReadingGoal: {
+      type: Number,
+      default: 15,
+      min: 1,
     },
   },
   {

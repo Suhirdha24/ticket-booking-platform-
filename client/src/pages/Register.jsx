@@ -1,143 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import api from '../api/client.js';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore.js';
 import { showSuccessToast, showErrorToast } from '../store/toastStore.js';
 import {
-  Ticket,
+  BookOpen,
   Lock,
   Mail,
   User,
-  Phone,
-  Sparkles,
-  Zap,
-  ShieldCheck,
-  Star,
-  ArrowRight,
   Eye,
   EyeOff,
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-  RefreshCw,
+  Sparkles,
+  ArrowRight,
+  Check,
+  Quote,
 } from 'lucide-react';
+
+const SUGGESTED_GENRES = [
+  'Sci-Fi',
+  'Fantasy',
+  'Mystery',
+  'Thriller',
+  'Self-Help',
+  'Non-Fiction',
+  'Fiction',
+  'Romance',
+  'Philosophy',
+];
 
 export default function Register() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
   const { register, isLoading } = useAuthStore();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [alreadyExists, setAlreadyExists] = useState(false);
+  const [selectedGenres, setSelectedGenres] = useState(['Fiction', 'Sci-Fi']);
 
-  // OTP Verification States
-  const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [otpPreview, setOtpPreview] = useState('');
-  const [countdown, setCountdown] = useState(0);
-
-  // Countdown timer for OTP resend
-  useEffect(() => {
-    let timer;
-    if (countdown > 0) {
-      timer = setInterval(() => setCountdown((c) => c - 1), 1000);
-    }
-    return () => clearInterval(timer);
-  }, [countdown]);
-
-  const handleSendOtp = async () => {
-    const cleanPhone = phone.trim().replace(/[^0-9]/g, '');
-    if (cleanPhone.length < 10) {
-      showErrorToast('Invalid Phone', 'Please enter a valid 10-digit mobile number before requesting an OTP');
-      return;
-    }
-
-    setIsSendingOtp(true);
-    try {
-      const res = await api.post('/auth/send-otp', { phone: cleanPhone });
-      const preview = res.data?.data?.otpPreview || '';
-      setOtpPreview(preview);
-      setOtpSent(true);
-      setCountdown(60);
-      showSuccessToast(
-        'OTP Sent Successfully',
-        preview
-          ? `6-digit OTP sent to +91 ${cleanPhone.slice(-10)} (Demo Code: ${preview})`
-          : `6-digit OTP sent to +91 ${cleanPhone.slice(-10)}`
-      );
-    } catch (err) {
-      showErrorToast('Failed to Send OTP', err.message || 'Could not send verification code');
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    if (!otp || otp.trim().length < 6) {
-      showErrorToast('Invalid Code', 'Please enter the 6-digit OTP sent to your phone');
-      return;
-    }
-
-    setIsVerifyingOtp(true);
-    try {
-      await api.post('/auth/verify-otp', {
-        phone: phone.trim().replace(/[^0-9]/g, ''),
-        otp: otp.trim(),
-      });
-      setOtpVerified(true);
-      showSuccessToast('Phone Verified!', 'Your mobile number has been verified successfully.');
-    } catch (err) {
-      showErrorToast('OTP Verification Failed', err.message || 'Incorrect verification code');
-    } finally {
-      setIsVerifyingOtp(false);
+  const toggleGenre = (genre) => {
+    if (selectedGenres.includes(genre)) {
+      setSelectedGenres(selectedGenres.filter((g) => g !== genre));
+    } else {
+      setSelectedGenres([...selectedGenres, genre]);
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setAlreadyExists(false);
-
-    if (!phone || phone.trim().replace(/[^0-9]/g, '').length < 10) {
-      showErrorToast('Phone Required', 'Mobile number is mandatory for registration');
-      return;
-    }
-
-    if (!otpVerified) {
-      showErrorToast('Verification Required', 'Please verify your mobile number with the 6-digit OTP before continuing');
-      return;
-    }
-
     try {
       const user = await register({
         name,
         email,
         password,
-        phone: phone.trim().replace(/[^0-9]/g, ''),
-        otp: otp.trim(),
+        preferredGenres: selectedGenres,
+        preferredMoods: ['Mind-Bending', 'Emotional'],
+        annualReadingGoal: 15,
       });
-      showSuccessToast('Registration Successful!', `Welcome to EventLinqs, ${user.name}`);
-      navigate(redirect);
+
+      showSuccessToast('Account Created! 📚', `Welcome to BookVerse, ${user.name}!`);
+      navigate('/recommendations');
     } catch (err) {
-      const errorMsg = err.message || '';
-      if (
-        errorMsg.toLowerCase().includes('already exists') ||
-        errorMsg.toLowerCase().includes('duplicate') ||
-        errorMsg.toLowerCase().includes('user_exists') ||
-        err.code === 'USER_EXISTS'
-      ) {
-        setAlreadyExists(true);
-        showErrorToast('User Already Exists', `An account with ${email} is already registered. Please sign in.`);
-      } else {
-        showErrorToast('Registration Failed', errorMsg);
-      }
+      showErrorToast('Registration Failed', err.message);
     }
   };
 
@@ -153,461 +76,223 @@ export default function Register() {
         backgroundColor: '#08070D',
       }}
     >
-      {/* Background ambient purple aura */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '20%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '750px',
-          height: '450px',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }}
-      />
-
       <div
         className="container"
         style={{
-          maxWidth: '1080px',
+          maxWidth: '1040px',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '2.5rem',
           alignItems: 'stretch',
           position: 'relative',
           zIndex: 2,
         }}
       >
-        {/* 🌟 LEFT SHOWCASE COLUMN: BRANDING & SOCIAL PROOF */}
+        {/* LEFT SHOWCASE COLUMN */}
         <div
           className="glass-widget-card"
           style={{
             padding: '3rem 2.5rem',
-            backgroundColor: 'rgba(20, 18, 34, 0.85)',
+            backgroundColor: 'rgba(20, 18, 34, 0.9)',
             border: '1px solid rgba(139, 92, 246, 0.3)',
             borderRadius: '28px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            position: 'relative',
-            overflow: 'hidden',
-            backgroundImage: `
-              linear-gradient(to bottom, rgba(14, 12, 24, 0.85) 0%, rgba(14, 12, 24, 0.98) 100%),
-              url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1000&auto=format&fit=crop&q=80')
-            `,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
           }}
         >
           <div>
-            <div
-              className="hero-tag-pill"
-              style={{ marginBottom: '1.5rem' }}
-            >
-              <Sparkles size={13} color="#A78BFA" />
-              <span>Join EventLinqs Club</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.5rem' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  background: 'var(--gradient-purple)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
+                }}
+              >
+                <BookOpen size={20} color="#FFFFFF" />
+              </div>
+              <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FFFFFF' }}>
+                Book<span style={{ color: '#A78BFA' }}>Verse</span>
+              </span>
             </div>
 
-            <h1
+            <div style={{ fontSize: '0.78rem', color: '#A78BFA', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+              Join Free Today
+            </div>
+
+            <h2 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.25, marginBottom: '1.25rem' }}>
+              Start Your Personalized Reading Odyssey
+            </h2>
+
+            {/* Literary Quote */}
+            <div
               style={{
-                fontSize: 'clamp(2rem, 4vw, 2.7rem)',
-                fontWeight: 900,
-                color: '#ffffff',
-                lineHeight: 1.15,
-                marginBottom: '1.25rem',
+                padding: '1.25rem 1.4rem',
+                background: 'rgba(139, 92, 246, 0.1)',
+                borderLeft: '4px solid #8B5CF6',
+                borderRadius: '0 16px 16px 0',
+                marginBottom: '2rem',
               }}
             >
-              Discover &<br />
-              Experience Live Moments<br />
-              <span className="hero-script-subtitle" style={{ fontSize: '2.4rem', margin: '0.2rem 0' }}>
-                Across Tamil Nadu & India.
-              </span>
-            </h1>
-
-            <p style={{ color: '#94A3B8', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-              Create your account in seconds to unlock early-bird tickets, interactive seat maps, and cryptographic mobile QR passes.
-            </p>
-
-            {/* Feature Highlights */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Zap size={15} color="#A78BFA" />
-                </div>
-                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
-                  4,750+ Live Events in 60+ Cities & Districts
-                </span>
+              <Quote size={20} color="#A78BFA" style={{ transform: 'rotate(180deg)', marginBottom: '0.4rem' }} />
+              <div style={{ fontSize: '0.92rem', fontStyle: 'italic', color: '#DDD6FE', lineHeight: 1.6 }}>
+                &ldquo;There is no friend as loyal as a book.&rdquo;
               </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <ShieldCheck size={15} color="#A78BFA" />
-                </div>
-                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
-                  100% Guaranteed Seat Allocation & 24h Full Refunds
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Ticket size={15} color="#A78BFA" />
-                </div>
-                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
-                  Instant Automated Digital Tickets & Receipts
-                </span>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94A3B8', marginTop: '0.5rem' }}>
+                — Ernest Hemingway
               </div>
             </div>
           </div>
 
-          {/* Social Proof Footer Pill */}
-          <div
-            style={{
-              padding: '1rem 1.25rem',
-              borderRadius: '16px',
-              background: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#A78BFA', marginBottom: '0.2rem' }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} fill="#A78BFA" />
-                ))}
-              </div>
-              <div style={{ fontSize: '0.82rem', color: '#ffffff', fontWeight: 700 }}>
-                12,000+ Curated Events
-              </div>
-            </div>
-
-            <div style={{ textAlign: 'right', fontSize: '0.82rem', color: '#94A3B8' }}>
-              Rated <strong style={{ color: '#A78BFA' }}>4.9 / 5.0</strong>
+          <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.5rem' }}>
+            <div style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.6 }}>
+              ✨ Over 10,000+ avid readers discovering stories through AI and mood matching every day.
             </div>
           </div>
         </div>
 
-        {/* 🔐 RIGHT FORM COLUMN: USER REGISTRATION CARD */}
+        {/* RIGHT COLUMN: REGISTRATION FORM */}
         <div
           className="glass-widget-card"
           style={{
-            padding: '3rem 2.5rem',
-            backgroundColor: '#0D0C15',
+            padding: '2.8rem 2.2rem',
+            backgroundColor: 'rgba(20, 18, 34, 0.95)',
             border: '1px solid rgba(139, 92, 246, 0.35)',
             borderRadius: '28px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px -10px rgba(139, 92, 246, 0.3)',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
           }}
         >
-          {/* Header */}
-          <div style={{ marginBottom: '1.5rem' }}>
-            <div
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '12px',
-                background: 'var(--gradient-purple)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1rem',
-                boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
-              }}
-            >
-              <Ticket size={22} color="#FFFFFF" />
-            </div>
-            <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#ffffff' }}>
-              Create an Account
-            </h2>
-            <p style={{ color: '#94A3B8', fontSize: '0.92rem', marginTop: '0.3rem', marginBottom: '1.5rem' }}>
-              Join EventLinqs to start booking verified live experiences
+          <div style={{ marginBottom: '1.75rem' }}>
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.35rem' }}>
+              Create Reader Account
+            </h3>
+            <p style={{ color: '#94A3B8', fontSize: '0.88rem' }}>
+              Select your favorite genres for instant personalized recommendations.
             </p>
           </div>
 
-          {/* Already exists notification banner */}
-          {alreadyExists && (
-            <div
-              style={{
-                padding: '0.9rem 1.15rem',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(244, 63, 94, 0.15)',
-                border: '1px solid rgba(244, 63, 94, 0.4)',
-                marginBottom: '1.25rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-              }}
-            >
-              <AlertTriangle size={18} color="#FB7185" style={{ flexShrink: 0 }} />
-              <div style={{ fontSize: '0.86rem', color: '#FFFFFF' }}>
-                An account with this email exists.{' '}
-                <Link to={`/login?email=${encodeURIComponent(email)}`} style={{ color: '#A78BFA', fontWeight: 800 }}>
-                  Click to Sign In &rarr;
-                </Link>
-              </div>
-            </div>
-          )}
-
-          {/* Form Fields */}
-          <form
-            onSubmit={handleRegister}
-            style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}
-          >
+          <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
-                Full Name
+              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+                Your Name
               </label>
               <div style={{ position: 'relative' }}>
-                <User size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <User size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="text"
-                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Jane Doe"
+                  placeholder="e.g. Maya Lin"
                   className="form-input"
-                  style={{ paddingLeft: '2.75rem' }}
+                  style={{ paddingLeft: '2.6rem' }}
+                  required
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.45rem' }}>
                 Email Address
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <Mail size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="email"
-                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
+                  placeholder="your.email@example.com"
                   className="form-input"
-                  style={{ paddingLeft: '2.75rem' }}
+                  style={{ paddingLeft: '2.6rem' }}
+                  required
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0', marginBottom: '0.45rem' }}>
-                Password
+              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+                Password (min. 6 characters)
               </label>
               <div style={{ position: 'relative' }}>
-                <Lock size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <Lock size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  required
-                  minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="At least 6 characters"
+                  placeholder="••••••••"
                   className="form-input"
-                  style={{ paddingLeft: '2.75rem', paddingRight: '2.75rem' }}
+                  style={{ paddingLeft: '2.6rem', paddingRight: '2.6rem' }}
+                  minLength={6}
+                  required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    position: 'absolute',
-                    right: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#94A3B8',
-                    cursor: 'pointer',
-                  }}
+                  style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer' }}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            {/* Mobile Number (Mandatory) */}
+            {/* Favorite Genres Selection */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
-                <label style={{ fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0' }}>
-                  Mobile Number <span style={{ color: '#F43F5E' }}>*</span>
-                </label>
-                {otpVerified && (
-                  <span style={{ fontSize: '0.78rem', color: '#10B981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <CheckCircle2 size={13} /> Mobile Verified
-                  </span>
-                )}
-              </div>
-
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <div style={{ position: 'relative', flex: 1 }}>
-                  <Phone size={16} color="#A78BFA" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
-                  <input
-                    type="tel"
-                    required
-                    disabled={otpVerified}
-                    value={phone}
-                    onChange={(e) => {
-                      setPhone(e.target.value);
-                      if (otpVerified) setOtpVerified(false);
-                      if (otpSent) setOtpSent(false);
-                    }}
-                    placeholder="10-digit mobile number"
-                    className="form-input"
-                    style={{
-                      paddingLeft: '2.75rem',
-                      borderColor: otpVerified ? 'rgba(16, 185, 129, 0.5)' : undefined,
-                    }}
-                  />
-                </div>
-
-                {!otpVerified && (
-                  <button
-                    type="button"
-                    disabled={isSendingOtp || countdown > 0 || phone.trim().replace(/[^0-9]/g, '').length < 10}
-                    onClick={handleSendOtp}
-                    style={{
-                      padding: '0.75rem 1.1rem',
-                      borderRadius: '12px',
-                      background: countdown > 0 ? 'rgba(255, 255, 255, 0.08)' : 'linear-gradient(135deg, #8B5CF6, #6366F1)',
-                      color: countdown > 0 ? '#94A3B8' : '#FFFFFF',
-                      border: '1px solid rgba(139, 92, 246, 0.3)',
-                      fontSize: '0.82rem',
-                      fontWeight: 700,
-                      cursor: countdown > 0 || phone.trim().replace(/[^0-9]/g, '').length < 10 ? 'not-allowed' : 'pointer',
-                      whiteSpace: 'nowrap',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      transition: 'all 0.2s',
-                    }}
-                  >
-                    {isSendingOtp ? (
-                      'Sending...'
-                    ) : countdown > 0 ? (
-                      <>
-                        <Clock size={13} /> {countdown}s
-                      </>
-                    ) : otpSent ? (
-                      <>
-                        <RefreshCw size={13} /> Resend OTP
-                      </>
-                    ) : (
-                      'Send OTP'
-                    )}
-                  </button>
-                )}
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                Pick 2+ Favorite Genres:
+              </label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                {SUGGESTED_GENRES.map((g) => {
+                  const isSel = selectedGenres.includes(g);
+                  return (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => toggleGenre(g)}
+                      style={{
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: 'var(--radius-pill)',
+                        background: isSel ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.04)',
+                        border: isSel ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.08)',
+                        color: isSel ? '#FFFFFF' : '#CBD5E1',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                      }}
+                    >
+                      <span>{g}</span>
+                      {isSel && <Check size={12} />}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* OTP Verification Box */}
-            {otpSent && !otpVerified && (
-              <div
-                style={{
-                  padding: '1.25rem',
-                  borderRadius: '16px',
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  border: '1px solid rgba(139, 92, 246, 0.35)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.85rem',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#E2E8F0' }}>
-                    Enter 6-Digit OTP Code
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: '#A78BFA' }}>
-                    Sent to +91 {phone.trim().slice(-10)}
-                  </span>
-                </div>
-
-                {otpPreview && (
-                  <div
-                    onClick={() => setOtp(otpPreview)}
-                    style={{
-                      padding: '0.5rem 0.75rem',
-                      borderRadius: '8px',
-                      background: 'rgba(16, 185, 129, 0.15)',
-                      border: '1px dashed rgba(16, 185, 129, 0.4)',
-                      fontSize: '0.8rem',
-                      color: '#34D399',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <span>
-                      ⚡ Demo OTP: <strong>{otpPreview}</strong>
-                    </span>
-                    <span style={{ fontSize: '0.72rem', textDecoration: 'underline' }}>
-                      Click to Auto-fill
-                    </span>
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
-                    placeholder="Enter 6-digit OTP"
-                    className="form-input"
-                    style={{
-                      letterSpacing: '0.3em',
-                      fontWeight: 800,
-                      fontSize: '1.1rem',
-                      textAlign: 'center',
-                    }}
-                  />
-                  <button
-                    type="button"
-                    disabled={isVerifyingOtp || otp.length < 6}
-                    onClick={handleVerifyOtp}
-                    style={{
-                      padding: '0 1.25rem',
-                      borderRadius: '12px',
-                      background: otp.length === 6 ? '#10B981' : 'rgba(255, 255, 255, 0.1)',
-                      color: '#FFFFFF',
-                      border: 'none',
-                      fontSize: '0.84rem',
-                      fontWeight: 700,
-                      cursor: otp.length === 6 ? 'pointer' : 'not-allowed',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {isVerifyingOtp ? 'Verifying...' : 'Verify OTP'}
-                  </button>
-                </div>
-              </div>
-            )}
-
             <button
               type="submit"
-              disabled={isLoading || !otpVerified}
+              disabled={isLoading}
               className="btn-purple-glow"
-              style={{
-                width: '100%',
-                padding: '0.9rem',
-                marginTop: '0.5rem',
-                opacity: !otpVerified ? 0.6 : 1,
-                cursor: !otpVerified ? 'not-allowed' : 'pointer',
-              }}
+              style={{ width: '100%', padding: '1rem', fontSize: '1rem', marginTop: '0.5rem', justifyContent: 'center' }}
             >
-              <span>{isLoading ? 'Creating Account...' : otpVerified ? 'Create Account & Get Started' : 'Verify Mobile Number to Continue'}</span>
+              <span>{isLoading ? 'Creating Account...' : 'Join BookVerse'}</span>
               <ArrowRight size={16} />
             </button>
           </form>
 
-          {/* Switch to Login */}
-          <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.88rem', color: '#94A3B8' }}>
+          <div style={{ marginTop: '1.75rem', textAlign: 'center', fontSize: '0.85rem', color: '#94A3B8' }}>
             Already have an account?{' '}
-            <Link to="/login" style={{ color: '#A78BFA', fontWeight: 700 }}>
-              Sign In &rarr;
+            <Link to="/login" style={{ color: '#A78BFA', fontWeight: 800, textDecoration: 'none' }}>
+              Sign in here
             </Link>
           </div>
         </div>

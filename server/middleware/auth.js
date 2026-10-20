@@ -108,3 +108,19 @@ export function generateToken(user) {
     }
   );
 }
+
+// Aliases for standard route naming conventions
+export const protect = authenticate;
+export const authorize = (...roles) => (req, res, next) => {
+  if (!req.user || !roles.includes(req.user.role)) {
+    return next(
+      new AppError(
+        'Access forbidden. Insufficient role permissions.',
+        403,
+        'FORBIDDEN'
+      )
+    );
+  }
+  next();
+};
+

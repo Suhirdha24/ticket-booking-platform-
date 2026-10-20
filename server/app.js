@@ -3,8 +3,14 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 
-// Import route handlers
+// Import Book Recommendation route handlers
 import authRoutes from './routes/authRoutes.js';
+import bookRoutes from './routes/bookRoutes.js';
+import recommendationRoutes from './routes/recommendationRoutes.js';
+import readingListRoutes from './routes/readingListRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
+
+// Legacy / platform routes
 import eventRoutes from './routes/eventRoutes.js';
 import venueRoutes from './routes/venueRoutes.js';
 import seatRoutes from './routes/seatRoutes.js';
@@ -25,12 +31,12 @@ const app = express();
 // Security headers with Helmet
 app.use(
   helmet({
-    contentSecurityPolicy: false, // Allows flexible integration in serverless/Vite setup
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
   })
 );
 
-// CORS configuration (allow requests from frontend or any origin in production)
+// CORS configuration
 app.use(
   cors({
     origin: true,
@@ -44,17 +50,24 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Expose GET /api/health
+// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
+    service: 'BookVerse Recommendation API',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
   });
 });
 
-// Register API Routes
+// Register Book Recommendation API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/books', bookRoutes);
+app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/reading-list', readingListRoutes);
+app.use('/api/reviews', reviewRoutes);
+
+// Register legacy event routes for compatibility
 app.use('/api/events/:eventId/seats', seatRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/venues', venueRoutes);

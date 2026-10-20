@@ -27,10 +27,10 @@ export function validateRegister(req, res, next) {
   }
 
   const { phone } = req.body;
-  if (!phone || typeof phone !== 'string' || phone.trim().replace(/[^0-9]/g, '').length < 10) {
+  if (phone && (typeof phone !== 'string' || phone.trim().replace(/[^0-9]/g, '').length < 10)) {
     return next(
       new AppError(
-        'A valid 10-digit mobile number is required',
+        'A valid 10-digit mobile number is required if provided',
         400,
         'VALIDATION_ERROR'
       )

@@ -107,22 +107,8 @@ router.post('/verify-otp', async (req, res, next) => {
 router.post('/register', validateRegister, async (req, res, next) => {
   try {
     const { name, email, password, phone, otp, role } = req.body;
-    const cleanPhone = normalizePhone(phone);
-
-    // Verify OTP
-    const otpRecord = otpStore.get(cleanPhone);
-    const isOtpValid = otpRecord && (otpRecord.verified || (otp && otpRecord.otp === otp.toString().trim()));
-
-    // Allow in test/development environments if mock OTP matches or bypass if seeded
-    if (!isOtpValid && process.env.NODE_ENV !== 'test') {
-      return next(
-        new AppError(
-          'Mobile number OTP verification is mandatory. Please verify your mobile number with the OTP code.',
-          400,
-          'OTP_REQUIRED'
-        )
-      );
-    }
+    // Phone is optional for reading platform registration
+    const cleanPhone = phone ? normalizePhone(phone) : '';
 
     // Check if email already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -132,15 +118,16 @@ router.post('/register', validateRegister, async (req, res, next) => {
       );
     }
 
-    // Check if phone already exists
-    const existingPhone = await User.findOne({ phone: cleanPhone });
-    if (existingPhone) {
-      return next(
-        new AppError('An account with this mobile number already exists', 400, 'PHONE_EXISTS')
-      );
+    if (cleanPhone) {
+      const existingPhone = await User.findOne({ phone: cleanPhone });
+      if (existingPhone) {
+        return next(
+          new AppError('An account with this mobile number already exists', 400, 'PHONE_EXISTS')
+        );
+      }
     }
 
-    // Protect admin role assignment (default to user unless secret key matches or in dev/seed)
+    // Protect admin role assignment
     let assignedRole = 'user';
     if (role === 'admin' && req.body.adminSecret === process.env.ADMIN_SECRET) {
       assignedRole = 'admin';
@@ -152,10 +139,12 @@ router.post('/register', validateRegister, async (req, res, next) => {
       password,
       phone: cleanPhone,
       role: assignedRole,
+      preferredGenres: req.body.preferredGenres || ['Fiction', 'Sci-Fi', 'Mystery'],
+      preferredMoods: req.body.preferredMoods || ['Mind-Bending', 'Emotional'],
+      annualReadingGoal: req.body.annualReadingGoal || 15,
+      avatar: req.body.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      bio: req.body.bio || 'Avid reader exploring new stories and perspectives.',
     });
-
-    // Clean up OTP record
-    otpStore.delete(cleanPhone);
 
     const token = generateToken(user);
 
@@ -168,6 +157,11 @@ router.post('/register', validateRegister, async (req, res, next) => {
           email: user.email,
           role: user.role,
           phone: user.phone,
+          avatar: user.avatar,
+          bio: user.bio,
+          preferredGenres: user.preferredGenres,
+          preferredMoods: user.preferredMoods,
+          annualReadingGoal: user.annualReadingGoal,
         },
         token,
       },
@@ -204,12 +198,11 @@ router.post('/login', validateLogin, async (req, res, next) => {
       );
     }
 
-    // Strict separation: Reject non-admin credentials at Admin login portal
     const isAdminPortal = portal === 'admin' || requiredRole === 'admin';
     if (isAdminPortal && user.role !== 'admin') {
       return next(
         new AppError(
-          'Access denied: This portal is exclusively for administrators. Regular user accounts must sign in through the user login portal.',
+          'Access denied: This portal is exclusively for administrators.',
           403,
           'ADMIN_ACCESS_REQUIRED'
         )
@@ -227,6 +220,11 @@ router.post('/login', validateLogin, async (req, res, next) => {
           email: user.email,
           role: user.role,
           phone: user.phone,
+          avatar: user.avatar,
+          bio: user.bio,
+          preferredGenres: user.preferredGenres || [],
+          preferredMoods: user.preferredMoods || [],
+          annualReadingGoal: user.annualReadingGoal || 15,
         },
         token,
       },
@@ -252,6 +250,11 @@ router.get('/me', authenticate, async (req, res, next) => {
           email: req.user.email,
           role: req.user.role,
           phone: req.user.phone,
+          avatar: req.user.avatar,
+          bio: req.user.bio,
+          preferredGenres: req.user.preferredGenres || [],
+          preferredMoods: req.user.preferredMoods || [],
+          annualReadingGoal: req.user.annualReadingGoal || 15,
           createdAt: req.user.createdAt,
         },
       },
@@ -263,12 +266,21 @@ router.get('/me', authenticate, async (req, res, next) => {
 
 /**
  * @route   PUT /api/auth/profile
- * @desc    Update current user profile
+ * @desc    Update current user profile and reading preferences
  * @access  Private
  */
 router.put('/profile', authenticate, async (req, res, next) => {
   try {
-    const { name, phone, password } = req.body;
+    const {
+      name,
+      phone,
+      password,
+      avatar,
+      bio,
+      preferredGenres,
+      preferredMoods,
+      annualReadingGoal,
+    } = req.body;
 
     const user = await User.findById(req.user._id).select('+password');
     if (!user) {
@@ -277,6 +289,12 @@ router.put('/profile', authenticate, async (req, res, next) => {
 
     if (name) user.name = name;
     if (phone !== undefined) user.phone = phone;
+    if (avatar !== undefined) user.avatar = avatar;
+    if (bio !== undefined) user.bio = bio;
+    if (preferredGenres !== undefined) user.preferredGenres = preferredGenres;
+    if (preferredMoods !== undefined) user.preferredMoods = preferredMoods;
+    if (annualReadingGoal !== undefined) user.annualReadingGoal = annualReadingGoal;
+
     if (password) {
       if (password.length < 6) {
         return next(
@@ -301,6 +319,11 @@ router.put('/profile', authenticate, async (req, res, next) => {
           email: user.email,
           role: user.role,
           phone: user.phone,
+          avatar: user.avatar,
+          bio: user.bio,
+          preferredGenres: user.preferredGenres,
+          preferredMoods: user.preferredMoods,
+          annualReadingGoal: user.annualReadingGoal,
         },
       },
     });

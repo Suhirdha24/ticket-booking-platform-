@@ -1,326 +1,310 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/client.js';
-import { useLocationStore } from '../store/locationStore.js';
-import EventCard from '../components/events/EventCard.jsx';
-import MusicPlayerWidget from '../components/home/MusicPlayerWidget.jsx';
-import CountdownWidget from '../components/home/CountdownWidget.jsx';
-import LineupWidget from '../components/home/LineupWidget.jsx';
-import PerforatedTicketWidget from '../components/home/PerforatedTicketWidget.jsx';
+import BookCard from '../components/books/BookCard.jsx';
+import MoodMatcherWidget from '../components/books/MoodMatcherWidget.jsx';
 import {
   Sparkles,
-  Star,
-  Zap,
-  Play,
+  BookOpen,
   ArrowRight,
   Search,
-  MapPin,
-  Calendar,
+  Star,
+  Compass,
+  Bookmark,
+  Target,
   Flame,
-  Music,
-  Plus,
-  X,
+  CheckCircle2,
+  Heart,
+  Quote,
 } from 'lucide-react';
 
-const CATEGORIES = [
-  'All',
-  'Concert',
-  'Festival',
-  'Comedy',
-  'Sports',
-  'Conference',
-  'Theatre',
-  'Workshop',
-  'Nightlife',
+const GENRES = [
+  { name: 'All', icon: '📚' },
+  { name: 'Sci-Fi', icon: '🚀' },
+  { name: 'Mystery', icon: '🕵️' },
+  { name: 'Thriller', icon: '⚡' },
+  { name: 'Fantasy', icon: '🧙' },
+  { name: 'Self-Help', icon: '🌱' },
+  { name: 'Non-Fiction', icon: '💡' },
+  { name: 'Romance', icon: '💖' },
+  { name: 'Philosophy', icon: '🏛️' },
+  { name: 'Classics', icon: '📜' },
 ];
 
 export default function Home() {
   const navigate = useNavigate();
-  const { selectedCity } = useLocationStore();
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [featuredBooks, setFeaturedBooks] = useState([]);
+  const [trendingBooks, setTrendingBooks] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showVideoModal, setShowVideoModal] = useState(false);
-
-  // Close modal on Escape key and manage body scroll lock
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && showVideoModal) {
-        setShowVideoModal(false);
-      }
-    };
-    if (showVideoModal) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [showVideoModal]);
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchEvents = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
       try {
-        const params = new URLSearchParams();
-        if (selectedCategory !== 'All') params.append('category', selectedCategory);
-        if (searchQuery) params.append('search', searchQuery);
-        if (selectedCity && selectedCity !== 'All Cities') params.append('city', selectedCity);
-        params.append('limit', '12');
-
-        const res = await api.get(`/events?${params.toString()}`, {
-          signal: controller.signal,
-        });
-        setEvents(res.data?.data?.events || res.data?.events || []);
+        const [featuredRes, trendingRes] = await Promise.all([
+          api.get('/books/featured'),
+          api.get('/books/trending'),
+        ]);
+        setFeaturedBooks(featuredRes.data?.data || []);
+        setTrendingBooks(trendingRes.data?.data || []);
       } catch (err) {
-        if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED') return;
-        console.error('Failed to load events', err);
+        console.error('Failed to load home page books', err);
       } finally {
         setIsLoading(false);
       }
     };
+    fetchData();
+  }, []);
 
-    fetchEvents();
-    return () => controller.abort();
-  }, [selectedCategory, searchQuery, selectedCity]);
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/books?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
-  const featuredEvent = events[0] || null;
+  const filteredTrending =
+    selectedGenre === 'All'
+      ? trendingBooks
+      : trendingBooks.filter((b) => (b.genres || []).includes(selectedGenre));
+
+  const spotlightBook = featuredBooks[0] || trendingBooks[0] || null;
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF' }}>
       {/* ========================================================================= */}
-      {/* 🚀 1. SONORA HERO SECTION (MATCHING REFERENCE UI) */}
+      {/* 🚀 1. HERO SECTION WITH 3D BOOK SHOWCASE */}
       {/* ========================================================================= */}
       <section
         style={{
           position: 'relative',
-          padding: '2.5rem 0 3.5rem',
+          padding: '3rem 0 4rem',
           overflow: 'hidden',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundImage: 'radial-gradient(circle at 75% 30%, rgba(139, 92, 246, 0.22) 0%, transparent 55%)',
+          backgroundImage:
+            'radial-gradient(circle at 75% 30%, rgba(139, 92, 246, 0.25) 0%, transparent 60%), radial-gradient(circle at 15% 70%, rgba(56, 189, 248, 0.15) 0%, transparent 50%)',
         }}
       >
         <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-          {/* Main Hero Grid */}
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '2.5rem',
+              gap: '3rem',
               alignItems: 'center',
-              minHeight: '520px',
+              minHeight: '480px',
             }}
           >
-            {/* Left Column: Headlines & Action CTAs */}
+            {/* Left Column: Headline & Search */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-              {/* Live Platform Activity Ticker Bar */}
               <div className="hero-ticker-bar">
                 <span className="live-pulse-dot" />
-                <span>Sonora Cyber-Violet Festival 2026 Live Now • Over 2,400+ Passes Booked</span>
+                <span>Smart AI & Vibe Recommendation Engine Active • 98% Match Accuracy</span>
               </div>
 
-              {/* Top Floating Badge Tag */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
                 <div className="hero-tag-pill">
                   <span className="tag-icon">✦</span>
-                  <span>Live Music</span>
+                  <span>Personalized Reads</span>
                 </div>
                 <div className="hero-tag-pill">
                   <span className="tag-icon">★</span>
-                  <span>Good Vibes</span>
+                  <span>Curated Bestsellers</span>
                 </div>
               </div>
 
-              {/* Massive Bold Headline */}
-              <h1 className="hero-huge-title">
-                Feel<br />The Sound
+              <h1 className="hero-huge-title" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)' }}>
+                Discover Books<br />You'll Never Forget
               </h1>
 
-              {/* Script Calligraphy Subtitle */}
-              <span className="hero-script-subtitle">
-                Live the Moment
+              <span className="hero-script-subtitle" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)' }}>
+                Tailored to your current vibe
               </span>
 
-              {/* Sub-paragraph */}
               <p
                 style={{
                   fontSize: '1.05rem',
                   color: '#94A3B8',
-                  maxWidth: '460px',
+                  maxWidth: '480px',
                   lineHeight: 1.6,
                   marginBottom: '2rem',
                 }}
               >
-                Join thousands of music lovers for an unforgettable festival experience. Every beat, every stage, all in one place.
+                Stop wandering endless bestseller lists. Get hyper-personalized recommendations based on your favorite genres, emotional mood, and reading pace.
               </p>
 
-              {/* Double Hero CTA Buttons */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-                <Link to="/events">
+              {/* Instant Search Bar */}
+              <form onSubmit={handleSearchSubmit} style={{ width: '100%', maxWidth: '440px', marginBottom: '1.5rem' }}>
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <Search
+                    size={18}
+                    color="#94A3B8"
+                    style={{ position: 'absolute', left: '1.1rem', top: '50%', transform: 'translateY(-50%)' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search by title, author, or keyword (e.g. Andy Weir, Sci-Fi)..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="form-input"
+                    style={{
+                      paddingLeft: '3rem',
+                      paddingRight: '6.5rem',
+                      height: '52px',
+                      borderRadius: 'var(--radius-pill)',
+                      fontSize: '0.92rem',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    className="btn-purple-glow"
+                    style={{
+                      position: 'absolute',
+                      right: '6px',
+                      top: '6px',
+                      bottom: '6px',
+                      padding: '0 1.25rem',
+                      fontSize: '0.84rem',
+                      borderRadius: 'var(--radius-pill)',
+                    }}
+                  >
+                    Search
+                  </button>
+                </div>
+              </form>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <Link to="/recommendations">
                   <button className="btn-purple-glow">
-                    <Star size={16} fill="#FFFFFF" color="#FFFFFF" />
-                    <span>Get Your Tickets</span>
+                    <Sparkles size={16} />
+                    <span>Launch Vibe Matcher</span>
                   </button>
                 </Link>
 
-                <button
-                  onClick={() => setShowVideoModal(true)}
-                  className="btn-frosted-play"
-                >
-                  <div className="play-circle">
-                    <Play size={15} fill="#FFFFFF" style={{ marginLeft: '2px' }} />
-                  </div>
-                  <span>Watch Aftermovie</span>
-                </button>
+                <Link to="/books">
+                  <button className="btn-secondary" style={{ padding: '0.85rem 1.6rem', borderRadius: 'var(--radius-pill)', fontWeight: 800 }}>
+                    <Compass size={16} />
+                    <span>Browse All 20+ Masterpieces</span>
+                  </button>
+                </Link>
               </div>
             </div>
 
-            {/* Right Column: Hero Visual Backdrop + 120K+ & Perforated Ticket Widgets */}
+            {/* Right Column: 3D Spotlight Book & Statistics Card */}
             <div
               style={{
-                position: 'relative',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                minHeight: '480px',
+                position: 'relative',
               }}
             >
-              {/* Central Concert Hero Image (Girl with Sunglasses & Purple Lighting) */}
-              <div
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  maxWidth: '420px',
-                  height: '460px',
-                  borderRadius: '32px',
-                  overflow: 'hidden',
-                  boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.25)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                }}
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80"
-                  alt="Festival Live Atmosphere"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+              {spotlightBook && (
                 <div
+                  className="glass-widget-card"
                   style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(8, 7, 13, 0.85) 0%, rgba(139, 92, 246, 0.15) 50%, transparent 100%)',
-                  }}
-                ></div>
-
-                {/* Floating Tag over Image */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '20px',
-                    right: '20px',
+                    position: 'relative',
+                    width: '100%',
+                    maxWidth: '420px',
+                    padding: '2rem',
+                    borderRadius: '30px',
+                    background: 'linear-gradient(135deg, rgba(20, 18, 34, 0.95) 0%, rgba(13, 12, 21, 0.95) 100%)',
+                    border: '1.5px solid rgba(139, 92, 246, 0.4)',
+                    boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.25)',
                   }}
                 >
-                  <div className="hero-tag-pill">
-                    <span style={{ color: '#F59E0B' }}>⭐</span>
-                    <span>Unforgettable</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#F59E0B', fontSize: '0.78rem', fontWeight: 800 }}>
+                      <Star size={15} fill="#F59E0B" />
+                      <span>Book of the Week</span>
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-pill)', fontWeight: 800 }}>
+                      {spotlightBook.genres?.[0]}
+                    </span>
                   </div>
-                </div>
-              </div>
 
-              {/* Floating Top-Right Widget: 120K+ People Joined */}
-              <div
-                className="glass-widget-card"
-                style={{
-                  position: 'absolute',
-                  top: '-15px',
-                  right: '-10px',
-                  padding: '1rem 1.25rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.4rem',
-                  minWidth: '170px',
-                  zIndex: 2,
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <div className="avatar-group">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80" alt="Attendee" />
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=80" alt="Attendee" />
-                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=80" alt="Attendee" />
+                  <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', marginBottom: '1.25rem' }}>
+                    <div
+                      style={{
+                        width: '110px',
+                        height: '160px',
+                        borderRadius: '6px 10px 10px 6px',
+                        overflow: 'hidden',
+                        boxShadow: '8px 12px 25px rgba(0, 0, 0, 0.7)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <img
+                        src={spotlightBook.coverImage}
+                        alt={spotlightBook.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.3, marginBottom: '0.3rem' }}>
+                        {spotlightBook.title}
+                      </h3>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#A78BFA', marginBottom: '0.5rem' }}>
+                        by {spotlightBook.author}
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: '#CBD5E1', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <Star size={13} fill="#F59E0B" color="#F59E0B" />
+                        <span style={{ fontWeight: 800 }}>{spotlightBook.averageRating}</span>
+                        <span style={{ color: '#64748B' }}>({spotlightBook.ratingsCount} reviews)</span>
+                      </div>
+                    </div>
                   </div>
-                  <div
-                    style={{
-                      width: '26px',
-                      height: '26px',
-                      borderRadius: '50%',
-                      background: 'var(--gradient-purple)',
-                      color: '#FFFFFF',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.75rem',
-                      fontWeight: 900,
-                    }}
-                  >
-                    +
-                  </div>
-                </div>
 
-                <div style={{ fontSize: '1.45rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.1 }}>
-                  120K+
-                </div>
-                <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
-                  People Joined Last Year
-                </div>
-              </div>
+                  {spotlightBook.quotes?.[0] && (
+                    <div
+                      style={{
+                        padding: '0.85rem 1rem',
+                        background: 'rgba(255, 255, 255, 0.04)',
+                        borderLeft: '3px solid #8B5CF6',
+                        borderRadius: '0 10px 10px 0',
+                        fontSize: '0.82rem',
+                        fontStyle: 'italic',
+                        color: '#DDD6FE',
+                        marginBottom: '1.25rem',
+                      }}
+                    >
+                      &ldquo;{spotlightBook.quotes[0]}&rdquo;
+                    </div>
+                  )}
 
-              {/* Floating Bottom-Right Widget: 3D Slanted Perforated Ticket Pass */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '-25px',
-                  right: '-20px',
-                  zIndex: 3,
-                }}
-              >
-                <PerforatedTicketWidget featuredEventId={featuredEvent?._id} />
-              </div>
+                  <Link to={`/books/${spotlightBook._id}`} style={{ textDecoration: 'none' }}>
+                    <button
+                      className="btn-purple-glow"
+                      style={{ width: '100%', padding: '0.85rem', fontSize: '0.9rem', justifyContent: 'center' }}
+                    >
+                      <span>Explore Synopsis & Reviews</span>
+                      <ArrowRight size={15} />
+                    </button>
+                  </Link>
+                </div>
+              )}
             </div>
-          </div>
-
-          {/* Bottom Hero Widgets Bar: Music Player | Countdown | Lineup */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '1.25rem',
-              marginTop: '3.5rem',
-              alignItems: 'stretch',
-            }}
-          >
-            {/* Widget 1: Interactive Festival Music Player */}
-            <MusicPlayerWidget />
-
-            {/* Widget 2: Festival Starts In Countdown */}
-            <CountdownWidget />
-
-            {/* Widget 3: Latest Headliner Lineup */}
-            <LineupWidget />
           </div>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 🎪 2. CURATED EVENT DISCOVERY & CATEGORY EXPLORER */}
+      {/* 🔮 2. INTERACTIVE MOOD & VIBE MATCHER WIDGET */}
       {/* ========================================================================= */}
-      <section style={{ padding: '3.5rem 0' }}>
+      <section style={{ padding: '3.5rem 0', position: 'relative' }}>
         <div className="container">
-          {/* Header & Search Bar */}
+          <MoodMatcherWidget />
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 📚 3. TRENDING MASTERPIECES WITH GENRE FILTERS */}
+      {/* ========================================================================= */}
+      <section style={{ padding: '2rem 0 4rem' }}>
+        <div className="container">
           <div
             style={{
               display: 'flex',
@@ -332,94 +316,33 @@ export default function Home() {
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  Live Experiences
-                </div>
-                {!isLoading && (
-                  <span
-                    style={{
-                      background: 'rgba(139, 92, 246, 0.15)',
-                      border: '1px solid rgba(139, 92, 246, 0.35)',
-                      color: '#C4B5FD',
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      padding: '0.15rem 0.55rem',
-                      borderRadius: 'var(--radius-pill)',
-                    }}
-                  >
-                    {events.length} {events.length === 1 ? 'Event' : 'Events'}
-                  </span>
-                )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                <Flame size={16} />
+                <span>Community Favorites</span>
               </div>
-              <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFF', marginTop: '0.2rem' }}>
-                Explore Trending Events
+              <h2 style={{ fontSize: '2.1rem', fontWeight: 900, color: '#FFFFFF', marginTop: '0.2rem' }}>
+                Trending & Highly Rated Books
               </h2>
             </div>
 
-            {/* Search Input Bar & Quick Trending Tags */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', width: '100%', maxWidth: '380px' }}>
-              <div style={{ position: 'relative', width: '100%' }}>
-                <Search
-                  size={16}
-                  color="#94A3B8"
-                  style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }}
-                />
-                <input
-                  type="text"
-                  placeholder="Search artists, venues, festivals..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="form-input"
-                  style={{ paddingLeft: '2.75rem', borderRadius: 'var(--radius-pill)' }}
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    style={{
-                      position: 'absolute',
-                      right: '1rem',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      background: 'transparent',
-                      border: 'none',
-                      color: '#94A3B8',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <X size={15} />
-                  </button>
-                )}
+            <Link to="/books" style={{ textDecoration: 'none' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  color: '#A78BFA',
+                  fontSize: '0.9rem',
+                  fontWeight: 800,
+                }}
+              >
+                <span>View Full Catalog</span>
+                <ArrowRight size={15} />
               </div>
-
-              {/* Trending Quick Search Tags */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700 }}>Trending:</span>
-                {['Coldplay', 'Sunburn', 'Comedy', 'Rock', 'Electronic'].map((tag) => (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => setSearchQuery(tag)}
-                    style={{
-                      background: searchQuery === tag ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
-                      border: searchQuery === tag ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: 'var(--radius-pill)',
-                      padding: '0.2rem 0.65rem',
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      color: searchQuery === tag ? '#FFFFFF' : '#CBD5E1',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease',
-                    }}
-                  >
-                    #{tag}
-                  </button>
-                ))}
-              </div>
-            </div>
+            </Link>
           </div>
 
-          {/* Category Filter Chips Bar */}
+          {/* Genre Chips */}
           <div
             className="no-scrollbar"
             style={{
@@ -430,44 +353,36 @@ export default function Home() {
               marginBottom: '2.5rem',
             }}
           >
-            {CATEGORIES.map((cat) => (
+            {GENRES.map((g) => (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`sonora-filter-chip ${selectedCategory === cat ? 'active' : ''}`}
+                key={g.name}
+                onClick={() => setSelectedGenre(g.name)}
+                className={`sonora-filter-chip ${selectedGenre === g.name ? 'active' : ''}`}
               >
-                {cat === 'All' && <span>🎟️</span>}
-                {cat === 'Concert' && <span>🎸</span>}
-                {cat === 'Festival' && <span>🎪</span>}
-                {cat === 'Comedy' && <span>🎤</span>}
-                {cat === 'Sports' && <span>🏆</span>}
-                {cat === 'Conference' && <span>💻</span>}
-                {cat === 'Theatre' && <span>🎭</span>}
-                {cat === 'Workshop' && <span>🎨</span>}
-                {cat === 'Nightlife' && <span>🍸</span>}
-                <span>{cat}</span>
+                <span>{g.icon}</span>
+                <span>{g.name}</span>
               </button>
             ))}
           </div>
 
-          {/* Events Grid */}
+          {/* Books Grid */}
           {isLoading ? (
             <div
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '1.5rem',
+                gap: '1.75rem',
               }}
             >
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <div
                   key={n}
                   className="glass-widget-card"
-                  style={{ height: '360px', opacity: 0.5, animation: 'pulse 1.5s infinite' }}
-                ></div>
+                  style={{ height: '420px', opacity: 0.5, animation: 'pulse 1.5s infinite' }}
+                />
               ))}
             </div>
-          ) : events.length === 0 ? (
+          ) : filteredTrending.length === 0 ? (
             <div
               className="glass-widget-card"
               style={{
@@ -479,33 +394,27 @@ export default function Home() {
                 gap: '1rem',
               }}
             >
-              <Music size={48} color="#8B5CF6" />
+              <BookOpen size={48} color="#8B5CF6" />
               <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF' }}>
-                No events found
+                No books in this category yet
               </h3>
               <p style={{ color: '#94A3B8', maxWidth: '400px' }}>
-                We couldn't find events matching your search or category filter.
+                Check out all books or try another genre filter.
               </p>
-              <button
-                onClick={() => {
-                  setSelectedCategory('All');
-                  setSearchQuery('');
-                }}
-                className="btn-purple-glow"
-              >
-                Reset Filters
+              <button onClick={() => setSelectedGenre('All')} className="btn-purple-glow">
+                View All Books
               </button>
             </div>
           ) : (
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))',
-                gap: '1.5rem',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: '1.75rem',
               }}
             >
-              {events.map((event) => (
-                <EventCard key={event._id} event={event} />
+              {filteredTrending.slice(0, 8).map((book) => (
+                <BookCard key={book._id} book={book} />
               ))}
             </div>
           )}
@@ -513,82 +422,46 @@ export default function Home() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 🎬 3. AFTERMOVIE VIDEO MODAL POPUP */}
+      {/* 🎯 4. ANNUAL READING CHALLENGE & COMMUNITY TEASER */}
       {/* ========================================================================= */}
-      {showVideoModal && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.88)',
-            backdropFilter: 'blur(15px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 2000,
-            padding: '1rem',
-          }}
-          onClick={() => setShowVideoModal(false)}
-        >
+      <section style={{ padding: '3rem 0 5rem' }}>
+        <div className="container">
           <div
             className="glass-widget-card"
             style={{
-              width: '100%',
-              maxWidth: '850px',
-              overflow: 'hidden',
-              position: 'relative',
-              background: '#0D0C15',
+              padding: '3rem 2rem',
+              borderRadius: '28px',
+              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(56, 189, 248, 0.08) 100%)',
+              border: '1px solid rgba(139, 92, 246, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '2rem',
             }}
-            onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
-            <div
-              style={{
-                padding: '1rem 1.5rem',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <Sparkles size={16} color="#8B5CF6" />
-                <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#FFFFFF' }}>
-                  Sonora Official Aftermovie
-                </span>
+            <div style={{ maxWidth: '600px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#FBBF24', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                <Target size={16} />
+                <span>Build a Consistent Reading Habit</span>
               </div>
-              <button
-                onClick={() => setShowVideoModal(false)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: 'none',
-                  color: '#FFFFFF',
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                <X size={16} />
-              </button>
+              <h3 style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.75rem' }}>
+                Track Your Reading Goal & Build Your Virtual Library
+              </h3>
+              <p style={{ color: '#CBD5E1', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                Set an annual book goal, track live progress with page-by-page milestones, organize books across customizable shelves, and see your reading habits transform.
+              </p>
             </div>
 
-            {/* Embedded Festival Aftermovie Video / Trailer Player */}
-            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, background: '#000000' }}>
-              <iframe
-                title="Sonora Festival Aftermovie"
-                src="https://www.youtube-nocookie.com/embed/fJ9rUzIMcZQ?autoplay=1&mute=0"
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
+            <Link to="/my-bookshelf" style={{ textDecoration: 'none' }}>
+              <button className="btn-purple-glow" style={{ padding: '1rem 2rem', fontSize: '1rem' }}>
+                <span>Open My Bookshelf</span>
+                <ArrowRight size={18} />
+              </button>
+            </Link>
           </div>
         </div>
-      )}
+      </section>
     </div>
   );
 }
