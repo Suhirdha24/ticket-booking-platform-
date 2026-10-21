@@ -378,6 +378,23 @@ button, input, select, textarea {
   padding: 0 1rem;
 }
 
+@media (min-width: 769px) {
+  .floating-dock-wrapper {
+    display: none !important;
+  }
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 .floating-dock {
   pointer-events: auto;
   display: flex;

@@ -80,7 +80,7 @@ router.get('/', async (req, res, next) => {
       minRating,
       sort = 'rating',
       page = 1,
-      limit = 12,
+      limit = 24,
     } = req.query;
 
     const pageNum = Math.max(1, parseInt(page, 10));
@@ -144,30 +144,31 @@ router.get('/', async (req, res, next) => {
       Book.countDocuments(query),
     ]);
 
-    // If local search returns fewer than requested limit, or if specific language is requested,
-    // seamlessly query Open Library worldwide database to provide full Amazon-scale selection
-    if (
-      (books.length < limitNum && (search || (language && language !== 'All'))) ||
-      (language && language !== 'All' && books.length === 0)
-    ) {
-      const olResults = await OpenLibraryService.search({
-        query: search || '',
-        language,
-        genre: genre !== 'All' ? genre : '',
-        page: pageNum,
-        limit: limitNum,
-        sort,
-      });
+    // If local database results are fewer than requested limit,
+    // seamlessly query Open Library worldwide database to provide full Amazon-scale catalog
+    if (books.length < limitNum) {
+      try {
+        const olResults = await OpenLibraryService.search({
+          query: search || '',
+          language,
+          genre: genre !== 'All' ? genre : '',
+          page: pageNum,
+          limit: limitNum,
+          sort,
+        });
 
-      if (olResults.books.length > 0) {
-        // Merge without duplicating existing titles
-        const existingTitles = new Set(books.map((b) => b.title.toLowerCase().trim()));
-        const uniqueGlobalBooks = olResults.books.filter(
-          (b) => !existingTitles.has(b.title.toLowerCase().trim())
-        );
+        if (olResults.books && olResults.books.length > 0) {
+          // Merge without duplicating existing titles
+          const existingTitles = new Set(books.map((b) => b.title.toLowerCase().trim()));
+          const uniqueGlobalBooks = olResults.books.filter(
+            (b) => !existingTitles.has(b.title.toLowerCase().trim())
+          );
 
-        books = [...books, ...uniqueGlobalBooks].slice(0, limitNum);
-        total = Math.max(total + uniqueGlobalBooks.length, olResults.total);
+          books = [...books, ...uniqueGlobalBooks].slice(0, limitNum);
+          total = Math.max(total + uniqueGlobalBooks.length, olResults.total);
+        }
+      } catch (olErr) {
+        console.warn('Open Library catalog query fallback warning:', olErr.message);
       }
     }
 
