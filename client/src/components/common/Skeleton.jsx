@@ -29,3 +29,45 @@ export function SeatMapSkeleton() {
     </div>
   );
 }
+
+export function BookCardSkeleton() {
+  return (
+    <div
+      style={{
+        height: '390px',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '14px',
+        backgroundColor: '#FFFFFF',
+        border: '1px solid var(--border-subtle)',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        className="skeleton"
+        style={{
+          height: '240px',
+          width: '100%',
+          borderRadius: 0,
+        }}
+      />
+      <div
+        style={{
+          padding: '1.15rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.65rem',
+          flex: 1,
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="skeleton" style={{ height: '18px', width: '32%', borderRadius: '4px' }} />
+          <div className="skeleton" style={{ height: '18px', width: '22%', borderRadius: '4px' }} />
+        </div>
+        <div className="skeleton" style={{ height: '22px', width: '88%', borderRadius: '4px' }} />
+        <div className="skeleton" style={{ height: '16px', width: '48%', borderRadius: '4px' }} />
+        <div className="skeleton" style={{ height: '14px', width: '96%', borderRadius: '4px', marginTop: 'auto' }} />
+      </div>
+    </div>
+  );
+}

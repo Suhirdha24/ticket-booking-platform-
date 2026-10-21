@@ -44,9 +44,12 @@ const CODE_TO_LANGUAGE_MAP = {
   mar: 'Marathi',
 };
 
+const searchCache = new Map();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
+
 export class OpenLibraryService {
   /**
-   * Search global Open Library database
+   * Search global Open Library database with in-memory caching and fast field projection
    */
   static async search({
     query = '',
@@ -56,6 +59,12 @@ export class OpenLibraryService {
     limit = 20,
     sort = 'relevance',
   }) {
+    const cacheKey = `${query.trim()}_${language}_${genre}_${page}_${limit}_${sort}`;
+    const cached = searchCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      return cached.data;
+    }
+
     try {
       const searchTerms = [];
 
@@ -71,7 +80,7 @@ export class OpenLibraryService {
 
       let url = `https://openlibrary.org/search.json?q=${encodeURIComponent(
         searchTerms.join(' ')
-      )}&page=${page}&limit=${limit}`;
+      )}&page=${page}&limit=${limit}&fields=key,title,author_name,cover_i,language,isbn,first_publish_year,ratings_average,ratings_count,subject,number_of_pages_median,first_sentence,publisher`;
 
       // Language filter
       if (language && language !== 'All') {
@@ -87,6 +96,7 @@ export class OpenLibraryService {
         headers: {
           'User-Agent': 'BookVerse-MegaBookstore/2.0 (contact@bookverse.app)',
         },
+        signal: AbortSignal.timeout(6000),
       });
 
       if (!response.ok) {
@@ -152,12 +162,15 @@ export class OpenLibraryService {
           };
         });
 
-      return {
+      const result = {
         books,
         total: data.numFound || books.length,
         page,
         totalPages: Math.ceil((data.numFound || books.length) / limit),
       };
+
+      searchCache.set(cacheKey, { timestamp: Date.now(), data: result });
+      return result;
     } catch (err) {
       console.error('OpenLibraryService.search error:', err.message);
       return { books: [], total: 0, page: 1, totalPages: 1 };

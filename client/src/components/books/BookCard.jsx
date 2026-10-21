@@ -113,6 +113,7 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                 objectFit: 'cover',
               }}
               onError={(e) => {
+                e.target.onerror = null;
                 e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80';
               }}
             />
@@ -223,7 +224,7 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                 }}
               >
                 <Star size={13} fill="#F59E0B" color="#F59E0B" />
-                <span>{book.averageRating?.toFixed(1) || '4.5'}</span>
+                <span>{Number(book.averageRating || 4.5).toFixed(1)}</span>
                 <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)', fontWeight: 400 }}>
                   ({book.ratingsCount || 0})
                 </span>

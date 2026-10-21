@@ -195,6 +195,10 @@ export default function BookDetails() {
                 src={book.coverImage}
                 alt={book.title}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80';
+                }}
               />
               <div className="book-3d-spine-crease" />
             </div>
@@ -401,7 +405,7 @@ export default function BookDetails() {
                 ))}
               </div>
               <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-heading)' }}>
-                {book.averageRating?.toFixed(1) || '4.5'}
+                {Number(book.averageRating || 4.5).toFixed(1)}
               </span>
               <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                 ({book.ratingsCount || 0} reviews)

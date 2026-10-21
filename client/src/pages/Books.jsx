@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../api/client.js';
 import BookCard from '../components/books/BookCard.jsx';
+import { BookCardSkeleton } from '../components/common/Skeleton.jsx';
 import {
   Search,
   X,
@@ -10,6 +11,7 @@ import {
   RotateCcw,
   Globe,
   Filter,
+  AlertTriangle,
 } from 'lucide-react';
 
 const LANGUAGES = [
@@ -81,6 +83,8 @@ export default function Books() {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   // Sync state with URL params
   useEffect(() => {
@@ -96,8 +100,10 @@ export default function Books() {
 
   // Fetch books from API
   useEffect(() => {
+    let isMounted = true;
     const fetchBooks = async () => {
       setIsLoading(true);
+      setLoadError(null);
       try {
         const params = new URLSearchParams();
         if (search && search.trim()) params.append('search', search.trim());
@@ -112,18 +118,29 @@ export default function Books() {
         params.append('limit', '24');
 
         const res = await api.get(`/books?${params.toString()}`);
-        setBooks(res.data.data?.books || []);
-        setTotal(res.data.data?.total || 0);
-        setTotalPages(res.data.data?.totalPages || 1);
+        if (isMounted) {
+          setBooks(res.data.data?.books || []);
+          setTotal(res.data.data?.total || 0);
+          setTotalPages(res.data.data?.totalPages || 1);
+          setLoadError(null);
+        }
       } catch (err) {
-        console.error('Failed to load books catalog', err);
+        if (isMounted) {
+          console.error('Failed to load books catalog', err);
+          setLoadError(err.message || 'Unable to load bookstore catalog. Please try again.');
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchBooks();
-  }, [search, selectedGenre, selectedMood, selectedLanguage, selectedPace, selectedLength, minRating, sort, page]);
+    return () => {
+      isMounted = false;
+    };
+  }, [search, selectedGenre, selectedMood, selectedLanguage, selectedPace, selectedLength, minRating, sort, page, retryCount]);
 
   const handleResetFilters = () => {
     setSearch('');
@@ -715,18 +732,50 @@ export default function Books() {
             marginBottom: '2.5rem',
           }}
         >
-          {isLoading ? (
-            [1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-              <div
-                key={n}
+          {loadError ? (
+            <div
+              style={{
+                gridColumn: '1 / -1',
+                textAlign: 'center',
+                padding: '4rem 1.5rem',
+                backgroundColor: '#FFFFFF',
+                borderRadius: '14px',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <AlertTriangle size={42} color="var(--accent-rose)" style={{ margin: '0 auto 1rem' }} />
+              <h3
                 style={{
-                  height: '380px',
-                  borderRadius: '14px',
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid var(--border-subtle)',
+                  fontSize: '1.2rem',
+                  fontWeight: 700,
+                  color: 'var(--text-heading)',
+                  marginBottom: '0.4rem',
                 }}
-              />
-            ))
+              >
+                Error Loading Books
+              </h3>
+              <p
+                style={{
+                  color: 'var(--text-muted)',
+                  fontSize: '0.9rem',
+                  maxWidth: '460px',
+                  margin: '0 auto 1.5rem',
+                }}
+              >
+                {loadError}
+              </p>
+              <button
+                type="button"
+                onClick={() => setRetryCount((c) => c + 1)}
+                className="btn btn-primary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', margin: '0 auto' }}
+              >
+                <RotateCcw size={15} />
+                <span>Try Again</span>
+              </button>
+            </div>
+          ) : isLoading ? (
+            Array.from({ length: 8 }).map((_, idx) => <BookCardSkeleton key={idx} />)
           ) : books.length > 0 ? (
             books.map((book) => <BookCard key={book._id} book={book} />)
           ) : (
