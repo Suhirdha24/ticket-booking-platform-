@@ -75,7 +75,38 @@ router.post('/', async (req, res, next) => {
       });
     }
 
-    const book = await Book.findById(bookId);
+    let book = null;
+    if (bookId.startsWith('ol_')) {
+      const cleanKey = bookId.replace('ol_', '');
+      book = await Book.findOne({ openLibraryId: cleanKey });
+      if (!book) {
+        const OpenLibraryService = (await import('../services/openLibraryService.js')).default;
+        const olBook = await OpenLibraryService.getWork(bookId);
+        if (olBook) {
+          book = await Book.create({
+            title: olBook.title,
+            author: olBook.author,
+            description: olBook.description,
+            coverImage: olBook.coverImage,
+            genres: olBook.genres,
+            publishedYear: olBook.publishedYear,
+            publisher: olBook.publisher,
+            pageCount: olBook.pageCount,
+            language: olBook.language,
+            averageRating: olBook.averageRating,
+            ratingsCount: olBook.ratingsCount,
+            openLibraryId: olBook.openLibraryId,
+            amazonLink: olBook.amazonLink,
+            previewLink: olBook.previewLink,
+            moodTags: olBook.moodTags,
+            readingPace: olBook.readingPace,
+          });
+        }
+      }
+    } else {
+      book = await Book.findById(bookId);
+    }
+
     if (!book) {
       return res.status(404).json({
         success: false,
@@ -83,9 +114,11 @@ router.post('/', async (req, res, next) => {
       });
     }
 
+    const resolvedBookId = book._id;
+
     let item = await ReadingList.findOne({
       user: req.user._id,
-      book: bookId,
+      book: resolvedBookId,
     });
 
     if (item) {
@@ -107,7 +140,7 @@ router.post('/', async (req, res, next) => {
     } else {
       item = await ReadingList.create({
         user: req.user._id,
-        book: bookId,
+        book: resolvedBookId,
         status,
         progressPages: progressPages || (status === 'COMPLETED' ? book.pageCount : 0),
         userRating,

@@ -13,6 +13,7 @@ import {
   X,
   Compass,
   ChevronDown,
+  Globe,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -210,6 +211,29 @@ export default function Navbar() {
               />
             </div>
           </form>
+
+          {/* Global Language Selector */}
+          <Link
+            to="/books"
+            title="Browse Books in all 15+ World Languages"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.45rem 0.7rem',
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '8px',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: 'var(--text-heading)',
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <Globe size={14} color="var(--primary)" />
+            <span>Languages</span>
+          </Link>
 
           {/* User Auth State */}
           {isAuthenticated ? (

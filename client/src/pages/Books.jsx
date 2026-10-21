@@ -8,7 +8,27 @@ import {
   BookOpen,
   ArrowUpDown,
   RotateCcw,
+  Globe,
+  Sparkles,
 } from 'lucide-react';
+
+const LANGUAGES = [
+  { label: '🌐 All Languages (30M+)', value: 'All' },
+  { label: '🇺🇸 English', value: 'English' },
+  { label: '🇮🇳 Tamil (தமிழ்)', value: 'Tamil' },
+  { label: '🇮🇳 Hindi (हिन्दी)', value: 'Hindi' },
+  { label: '🇪🇸 Spanish (Español)', value: 'Spanish' },
+  { label: '🇫🇷 French (Français)', value: 'French' },
+  { label: '🇩🇪 German (Deutsch)', value: 'German' },
+  { label: '🇯🇵 Japanese (日本語)', value: 'Japanese' },
+  { label: '🇸🇦 Arabic (العربية)', value: 'Arabic' },
+  { label: '🇮🇳 Telugu (తెలుగు)', value: 'Telugu' },
+  { label: '🇮🇳 Bengali (বাংলা)', value: 'Bengali' },
+  { label: '🇮🇹 Italian (Italiano)', value: 'Italian' },
+  { label: '🇷🇺 Russian (Русский)', value: 'Russian' },
+  { label: '🇨🇳 Chinese (中文)', value: 'Chinese' },
+  { label: '🇮🇳 Malayalam (മലയാളം)', value: 'Malayalam' },
+];
 
 const GENRES = [
   'All',
@@ -40,10 +60,12 @@ export default function Books() {
   const initialSearch = searchParams.get('search') || '';
   const initialGenre = searchParams.get('genre') || 'All';
   const initialMood = searchParams.get('mood') || 'All';
+  const initialLanguage = searchParams.get('language') || 'All';
 
   const [search, setSearch] = useState(initialSearch);
   const [selectedGenre, setSelectedGenre] = useState(initialGenre);
   const [selectedMood, setSelectedMood] = useState(initialMood);
+  const [selectedLanguage, setSelectedLanguage] = useState(initialLanguage);
   const [selectedPace, setSelectedPace] = useState('All');
   const [selectedLength, setSelectedLength] = useState('');
   const [minRating, setMinRating] = useState('');
@@ -60,9 +82,11 @@ export default function Books() {
     const s = searchParams.get('search');
     const g = searchParams.get('genre');
     const m = searchParams.get('mood');
+    const l = searchParams.get('language');
     if (s !== null) setSearch(s);
     if (g !== null) setSelectedGenre(g);
     if (m !== null) setSelectedMood(m);
+    if (l !== null) setSelectedLanguage(l);
   }, [searchParams]);
 
   // Fetch books from API
@@ -74,6 +98,7 @@ export default function Books() {
         if (search) params.append('search', search);
         if (selectedGenre !== 'All') params.append('genre', selectedGenre);
         if (selectedMood !== 'All') params.append('mood', selectedMood);
+        if (selectedLanguage !== 'All') params.append('language', selectedLanguage);
         if (selectedPace !== 'All') params.append('pace', selectedPace);
         if (selectedLength) params.append('length', selectedLength);
         if (minRating) params.append('minRating', minRating);
@@ -93,12 +118,13 @@ export default function Books() {
     };
 
     fetchBooks();
-  }, [search, selectedGenre, selectedMood, selectedPace, selectedLength, minRating, sort, page]);
+  }, [search, selectedGenre, selectedMood, selectedLanguage, selectedPace, selectedLength, minRating, sort, page]);
 
   const handleResetFilters = () => {
     setSearch('');
     setSelectedGenre('All');
     setSelectedMood('All');
+    setSelectedLanguage('All');
     setSelectedPace('All');
     setSelectedLength('');
     setMinRating('');
@@ -122,28 +148,74 @@ export default function Books() {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '0.45rem',
               color: 'var(--primary)',
-              fontSize: '0.8rem',
+              backgroundColor: 'var(--primary-light)',
+              padding: '0.3rem 0.75rem',
+              borderRadius: '999px',
+              fontSize: '0.78rem',
               fontWeight: 700,
               textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              marginBottom: '0.4rem',
+              letterSpacing: '0.05em',
+              marginBottom: '0.65rem',
             }}
           >
-            <BookOpen size={16} />
-            <span>Library Catalog</span>
+            <Globe size={14} />
+            <span>30M+ Books Worldwide • Global Multi-Language Catalog</span>
           </div>
           <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.4rem' }}>
             Explore All Masterpieces
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: '600px' }}>
-            Filter by genre, mood, reading pace, and length to find the exact book tailored for your reading journey.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: '680px' }}>
+            Act like Amazon’s global bookstore: Search any title in English, Tamil (தமிழ்), Hindi (हिन्दी), Spanish, French, German, Japanese, and more.
           </p>
         </div>
       </section>
 
-      <div className="container" style={{ paddingTop: '2rem' }}>
+      <div className="container" style={{ paddingTop: '1.75rem' }}>
+        {/* Language Quick Pills Bar */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.45rem' }}>
+            <Globe size={15} color="var(--primary)" />
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-heading)' }}>
+              Browse By Language:
+            </span>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: '0.45rem',
+              overflowX: 'auto',
+              paddingBottom: '0.35rem',
+            }}
+          >
+            {LANGUAGES.slice(0, 10).map((l) => (
+              <button
+                key={l.value}
+                type="button"
+                onClick={() => {
+                  setSelectedLanguage(l.value);
+                  setPage(1);
+                }}
+                style={{
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: '999px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  border: selectedLanguage === l.value ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)',
+                  backgroundColor: selectedLanguage === l.value ? 'var(--primary-light)' : '#FFFFFF',
+                  color: selectedLanguage === l.value ? 'var(--primary)' : 'var(--text-body)',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Search & Sort Controls Bar */}
         <div
           style={{
@@ -156,7 +228,7 @@ export default function Books() {
           }}
         >
           {/* Search Input */}
-          <div style={{ position: 'relative', width: '100%', maxWidth: '360px' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '380px' }}>
             <Search
               size={16}
               color="var(--text-subtle)"
@@ -164,7 +236,7 @@ export default function Books() {
             />
             <input
               type="text"
-              placeholder="Search title, author, or keyword..."
+              placeholder="Search any book worldwide by title, author, ISBN..."
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -198,7 +270,7 @@ export default function Books() {
           {/* Sort Dropdown & Counter */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-              {total} {total === 1 ? 'Book' : 'Books'}
+              {total.toLocaleString()} {total === 1 ? 'Book' : 'Books Available'}
             </span>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
@@ -269,6 +341,35 @@ export default function Books() {
             border: '1px solid var(--border-subtle)',
           }}
         >
+          {/* Language Selector Dropdown */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <Globe size={15} color="var(--primary)" />
+            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Language:</span>
+            <select
+              value={selectedLanguage}
+              onChange={(e) => {
+                setSelectedLanguage(e.target.value);
+                setPage(1);
+              }}
+              style={{
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                border: '1px solid var(--border-medium)',
+                background: '#FFFFFF',
+                color: 'var(--text-heading)',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.value} value={l.value}>
+                  {l.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Mood filter */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Mood:</span>

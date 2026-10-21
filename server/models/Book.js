@@ -24,9 +24,19 @@ const bookSchema = new mongoose.Schema(
     },
     isbn: {
       type: String,
-      unique: true,
       sparse: true,
       trim: true,
+    },
+    openLibraryId: {
+      type: String,
+      sparse: true,
+      index: true,
+    },
+    amazonLink: {
+      type: String,
+    },
+    previewLink: {
+      type: String,
     },
     genres: [
       {

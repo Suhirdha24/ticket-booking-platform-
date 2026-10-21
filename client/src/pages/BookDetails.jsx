@@ -18,6 +18,9 @@ import {
   MessageSquare,
   CheckCircle2,
   Share2,
+  ExternalLink,
+  Globe,
+  ShoppingBag,
 } from 'lucide-react';
 
 export default function BookDetails() {
@@ -176,12 +179,13 @@ export default function BookDetails() {
           {/* Left Column: Book Cover & Shelf Action */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div
+              className="book-3d-item"
               style={{
                 position: 'relative',
                 width: '220px',
                 height: '320px',
                 borderRadius: '6px 12px 12px 6px',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08)',
+                boxShadow: 'var(--book-shadow)',
                 overflow: 'hidden',
                 marginBottom: '1.75rem',
                 backgroundColor: 'var(--bg-subtle)',
@@ -192,6 +196,7 @@ export default function BookDetails() {
                 alt={book.title}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
+              <div className="book-3d-spine-crease" />
             </div>
 
             {/* Reading Status Buttons */}
@@ -248,6 +253,82 @@ export default function BookDetails() {
                 <Heart size={14} fill={shelfItem?.isFavorite ? 'currentColor' : 'none'} />
                 <span>{shelfItem?.isFavorite ? 'In Favorites' : 'Add to Favorites'}</span>
               </button>
+            </div>
+
+            {/* Amazon Mega Bookstore Purchasing Options */}
+            <div
+              style={{
+                width: '100%',
+                maxWidth: '260px',
+                marginTop: '1.25rem',
+                padding: '1.15rem',
+                backgroundColor: '#FFFBEB',
+                border: '1.5px solid #FCD34D',
+                borderRadius: '12px',
+                boxShadow: '0 4px 12px rgba(245, 158, 11, 0.08)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#92400E', letterSpacing: '-0.02em' }}>
+                  amazon
+                </span>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, backgroundColor: '#FEF3C7', color: '#B45309', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
+                  Verified Editions
+                </span>
+              </div>
+
+              <a
+                href={book.amazonLink || `https://www.amazon.com/s?k=${encodeURIComponent((book.isbn || `${book.title} ${book.author}`).trim())}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  width: '100%',
+                  padding: '0.75rem',
+                  backgroundColor: '#F59E0B',
+                  color: '#FFFFFF',
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  boxShadow: '0 2px 6px rgba(245, 158, 11, 0.35)',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                <ShoppingBag size={15} />
+                <span>Buy on Amazon</span>
+                <ExternalLink size={13} />
+              </a>
+
+              {book.previewLink && (
+                <a
+                  href={book.previewLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.45rem',
+                    width: '100%',
+                    padding: '0.55rem',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #E2E8F0',
+                    color: 'var(--text-heading)',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    borderRadius: '8px',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <BookOpen size={13} />
+                  <span>Read Free Sample</span>
+                  <ExternalLink size={12} />
+                </a>
+              )}
             </div>
           </div>
 
@@ -380,6 +461,40 @@ export default function BookDetails() {
               </div>
             )}
 
+            {/* Amazon-Style Format Tabs */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ fontSize: '0.84rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.5rem' }}>
+                Available Editions & Formats:
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(115px, 1fr))', gap: '0.5rem' }}>
+                {[
+                  { name: 'Paperback', price: '$14.99', badge: 'Standard' },
+                  { name: 'Hardcover', price: '$24.99', badge: 'Collector' },
+                  { name: 'Kindle eBook', price: '$9.99', badge: 'Instant' },
+                  { name: 'Audiobook', price: '$0.00', badge: 'Audible Free' },
+                ].map((fmt) => (
+                  <button
+                    key={fmt.name}
+                    type="button"
+                    onClick={() => setSelectedFormat(fmt.name)}
+                    style={{
+                      padding: '0.65rem 0.5rem',
+                      borderRadius: '8px',
+                      border: selectedFormat === fmt.name ? '2px solid #F59E0B' : '1px solid var(--border-medium)',
+                      backgroundColor: selectedFormat === fmt.name ? '#FFFBEB' : '#FFFFFF',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <div style={{ fontSize: '0.72rem', color: '#B45309', fontWeight: 700 }}>{fmt.badge}</div>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-heading)' }}>{fmt.name}</div>
+                    <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#B45309', marginTop: '0.15rem' }}>{fmt.price}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Synopsis */}
             <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.45rem' }}>
               About this Book
@@ -392,27 +507,37 @@ export default function BookDetails() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(125px, 1fr))',
                 gap: '0.75rem',
                 borderTop: '1px solid var(--border-subtle)',
                 paddingTop: '1.25rem',
               }}
             >
               <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Language</div>
+                <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#B45309' }}>
+                  {book.language || 'English'}
+                </div>
+              </div>
+              <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
                 <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Page Count</div>
                 <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-heading)' }}>{book.pageCount} pages</div>
               </div>
               <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Pacing</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-heading)' }}>{book.readingPace}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Publisher</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-heading)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {book.publisher || 'World Editions'}
+                </div>
               </div>
               <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
                 <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Published Year</div>
                 <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-heading)' }}>{book.publishedYear}</div>
               </div>
               <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>ISBN</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-heading)' }}>{book.isbn}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>ISBN / ID</div>
+                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-heading)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {book.isbn || book.openLibraryId || 'Global Catalog'}
+                </div>
               </div>
             </div>
           </div>

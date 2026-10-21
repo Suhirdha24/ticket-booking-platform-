@@ -1,14 +1,72 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Book from '../models/Book.js';
 import Review from '../models/Review.js';
 import RecommendationService from '../services/recommendationService.js';
+import OpenLibraryService from '../services/openLibraryService.js';
 import { protect, authorize } from '../middleware/auth.js';
 
 const router = express.Router();
 
+const GLOBAL_SUPPORTED_LANGUAGES = [
+  'English',
+  'Hindi',
+  'Tamil',
+  'Spanish',
+  'French',
+  'German',
+  'Japanese',
+  'Arabic',
+  'Telugu',
+  'Bengali',
+  'Italian',
+  'Russian',
+  'Chinese',
+  'Malayalam',
+  'Kannada',
+  'Marathi',
+];
+
+/**
+ * @route   GET /api/books/languages
+ * @desc    Get all supported book languages worldwide
+ */
+router.get('/languages', (req, res) => {
+  res.status(200).json({
+    success: true,
+    data: GLOBAL_SUPPORTED_LANGUAGES,
+  });
+});
+
+/**
+ * @route   GET /api/books/global-search
+ * @desc    Instant global search across 30M+ books in all languages
+ */
+router.get('/global-search', async (req, res, next) => {
+  try {
+    const { q, language = 'All' } = req.query;
+    if (!q || !q.trim()) {
+      return res.status(200).json({ success: true, data: [] });
+    }
+
+    const results = await OpenLibraryService.search({
+      query: q.trim(),
+      language,
+      limit: 8,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: results.books,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 /**
  * @route   GET /api/books
- * @desc    Get all books with search, genre, mood, rating, and sort filters
+ * @desc    Get all books with search, language, genre, mood, rating, and sort filters
  */
 router.get('/', async (req, res, next) => {
   try {
@@ -18,11 +76,16 @@ router.get('/', async (req, res, next) => {
       mood,
       pace,
       length,
+      language = 'All',
       minRating,
       sort = 'rating',
       page = 1,
       limit = 12,
     } = req.query;
+
+    const pageNum = Math.max(1, parseInt(page, 10));
+    const limitNum = Math.max(1, Math.min(50, parseInt(limit, 10)));
+    const skip = (pageNum - 1) * limitNum;
 
     const query = {};
 
@@ -33,6 +96,11 @@ router.get('/', async (req, res, next) => {
         { author: { $regex: search.trim(), $options: 'i' } },
         { description: { $regex: search.trim(), $options: 'i' } },
       ];
+    }
+
+    // Language filter
+    if (language && language !== 'All') {
+      query.language = { $regex: new RegExp(`^${language}$`, 'i') };
     }
 
     // Genre filter
@@ -71,14 +139,37 @@ router.get('/', async (req, res, next) => {
     else if (sort === 'pages_asc') sortOrder = { pageCount: 1 };
     else if (sort === 'pages_desc') sortOrder = { pageCount: -1 };
 
-    const pageNum = Math.max(1, parseInt(page, 10));
-    const limitNum = Math.max(1, Math.min(50, parseInt(limit, 10)));
-    const skip = (pageNum - 1) * limitNum;
-
-    const [books, total] = await Promise.all([
+    let [books, total] = await Promise.all([
       Book.find(query).sort(sortOrder).skip(skip).limit(limitNum).lean(),
       Book.countDocuments(query),
     ]);
+
+    // If local search returns fewer than requested limit, or if specific language is requested,
+    // seamlessly query Open Library worldwide database to provide full Amazon-scale selection
+    if (
+      (books.length < limitNum && (search || (language && language !== 'All'))) ||
+      (language && language !== 'All' && books.length === 0)
+    ) {
+      const olResults = await OpenLibraryService.search({
+        query: search || '',
+        language,
+        genre: genre !== 'All' ? genre : '',
+        page: pageNum,
+        limit: limitNum,
+        sort,
+      });
+
+      if (olResults.books.length > 0) {
+        // Merge without duplicating existing titles
+        const existingTitles = new Set(books.map((b) => b.title.toLowerCase().trim()));
+        const uniqueGlobalBooks = olResults.books.filter(
+          (b) => !existingTitles.has(b.title.toLowerCase().trim())
+        );
+
+        books = [...books, ...uniqueGlobalBooks].slice(0, limitNum);
+        total = Math.max(total + uniqueGlobalBooks.length, olResults.total);
+      }
+    }
 
     res.status(200).json({
       success: true,
@@ -151,7 +242,45 @@ router.get('/genres', async (req, res, next) => {
  */
 router.get('/:id', async (req, res, next) => {
   try {
-    const book = await Book.findById(req.params.id).lean();
+    const { id } = req.params;
+    let book = null;
+
+    // Check if ID is an Open Library work key or invalid Mongo ObjectId
+    const isOpenLibraryId = id.startsWith('ol_') || !mongoose.Types.ObjectId.isValid(id);
+
+    if (isOpenLibraryId) {
+      const cleanKey = id.replace('ol_', '');
+      book = await Book.findOne({ openLibraryId: cleanKey }).lean();
+
+      if (!book) {
+        // Fetch from Open Library and auto-cache to MongoDB
+        const olBook = await OpenLibraryService.getWork(id);
+        if (olBook) {
+          const created = await Book.create({
+            title: olBook.title,
+            author: olBook.author,
+            description: olBook.description,
+            coverImage: olBook.coverImage,
+            genres: olBook.genres,
+            publishedYear: olBook.publishedYear,
+            publisher: olBook.publisher,
+            pageCount: olBook.pageCount,
+            language: olBook.language,
+            averageRating: olBook.averageRating,
+            ratingsCount: olBook.ratingsCount,
+            openLibraryId: olBook.openLibraryId,
+            amazonLink: olBook.amazonLink,
+            previewLink: olBook.previewLink,
+            moodTags: olBook.moodTags,
+            readingPace: olBook.readingPace,
+          });
+          book = created.toObject();
+        }
+      }
+    } else {
+      book = await Book.findById(id).lean();
+    }
+
     if (!book) {
       return res.status(404).json({
         success: false,
@@ -159,9 +288,10 @@ router.get('/:id', async (req, res, next) => {
       });
     }
 
+    // Fetch similar books and reviews
     const [similarBooks, reviews] = await Promise.all([
-      RecommendationService.getSimilarBooks(book._id, 6),
-      Review.find({ book: book._id }).sort({ createdAt: -1 }).limit(10).lean(),
+      RecommendationService.getSimilarBooks(book._id, 6).catch(() => []),
+      Review.find({ book: book._id }).sort({ createdAt: -1 }).limit(10).lean().catch(() => []),
     ]);
 
     res.status(200).json({
@@ -225,7 +355,7 @@ router.delete('/:id', protect, authorize('admin'), async (req, res, next) => {
         error: { code: 'BOOK_NOT_FOUND', message: 'Book not found' },
       });
     }
-    res.status(200).json({ success: true, message: 'Book removed successfully' });
+    res.status(200).json({ success: true, data: {} });
   } catch (error) {
     next(error);
   }
