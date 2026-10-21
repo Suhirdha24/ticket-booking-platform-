@@ -422,3 +422,94 @@ button, input, select, textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* ==========================================================================
+   AUTH PAGES & BOOK SHOWCASE STYLING
+   ========================================================================== */
+.auth-page-container {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background-color: var(--bg-main);
+}
+
+.auth-split-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  background: #FFFFFF;
+  border-radius: 24px;
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.auth-visual-side {
+  background: linear-gradient(145deg, #F8FAFC 0%, #EEF2FF 50%, #F1F5F9 100%);
+  border-right: 1px solid var(--border-subtle);
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-form-side {
+  padding: 3.25rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #FFFFFF;
+}
+
+@media (max-width: 960px) {
+  .auth-split-wrapper {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
+  .auth-visual-side {
+    display: none;
+  }
+  .auth-form-side {
+    padding: 2.5rem 1.75rem;
+  }
+}
+
+.book-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.75rem 0;
+}
+
+.showcase-book-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.showcase-book-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  border-color: var(--primary-light);
+}
+
+.showcase-book-img {
+  width: 52px;
+  height: 74px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+}
+

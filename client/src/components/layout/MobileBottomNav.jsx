@@ -39,6 +39,11 @@ export default function MobileBottomNav() {
     },
   ];
 
+  // Don't render floating bottom nav on authentication pages to keep auth clean & unobscured
+  if (['/login', '/register', '/user/login'].includes(location.pathname)) {
+    return null;
+  }
+
   return (
     <div className="floating-dock-wrapper" aria-label="Bottom Navigation Dock">
       <nav className="floating-dock">
