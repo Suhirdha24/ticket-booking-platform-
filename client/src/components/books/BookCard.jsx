@@ -4,29 +4,12 @@ import {
   Star,
   Bookmark,
   Check,
-  BookOpen,
   Sparkles,
-  Clock,
-  Flame,
-  CheckCircle2,
   ChevronDown,
 } from 'lucide-react';
 import { useBookshelfStore } from '../../store/bookshelfStore.js';
 import { useAuthStore } from '../../store/authStore.js';
 import { showWarningToast } from '../../store/toastStore.js';
-
-const GENRE_COLORS = {
-  'Sci-Fi': { text: '#38BDF8', bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.35)' },
-  Fantasy: { text: '#C084FC', bg: 'rgba(192, 132, 252, 0.15)', border: 'rgba(192, 132, 252, 0.35)' },
-  Mystery: { text: '#F43F5E', bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.35)' },
-  Thriller: { text: '#FB7185', bg: 'rgba(251, 113, 133, 0.15)', border: 'rgba(251, 113, 133, 0.35)' },
-  'Self-Help': { text: '#34D399', bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.35)' },
-  'Non-Fiction': { text: '#FBBF24', bg: 'rgba(251, 191, 36, 0.15)', border: 'rgba(251, 191, 36, 0.35)' },
-  Fiction: { text: '#A78BFA', bg: 'rgba(167, 139, 250, 0.15)', border: 'rgba(167, 139, 250, 0.35)' },
-  Romance: { text: '#F472B6', bg: 'rgba(244, 114, 182, 0.15)', border: 'rgba(244, 114, 182, 0.35)' },
-  Classics: { text: '#F59E0B', bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.35)' },
-  Philosophy: { text: '#818CF8', bg: 'rgba(129, 140, 248, 0.15)', border: 'rgba(129, 140, 248, 0.35)' },
-};
 
 export default function BookCard({ book, matchPercentage, matchReasons }) {
   const { getBookShelfStatus, updateShelfItem } = useBookshelfStore();
@@ -38,7 +21,6 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
 
   const currentShelf = getBookShelfStatus(book._id);
   const primaryGenre = book.genres?.[0] || 'Fiction';
-  const genreTheme = GENRE_COLORS[primaryGenre] || GENRE_COLORS.Fiction;
 
   const handleShelfClick = async (e, status) => {
     e.preventDefault();
@@ -60,30 +42,29 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
 
   return (
     <div
-      className="glass-widget-card"
+      className="card-clean"
       style={{
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: '22px',
-        backgroundColor: 'rgba(20, 18, 34, 0.85)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '14px',
+        backgroundColor: '#FFFFFF',
+        border: '1px solid var(--border-medium)',
         overflow: 'hidden',
         position: 'relative',
-        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'all 0.2s ease',
         height: '100%',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = genreTheme.text;
-        e.currentTarget.style.transform = 'translateY(-6px)';
-        e.currentTarget.style.boxShadow = `0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px ${genreTheme.border}`;
+        e.currentTarget.style.borderColor = 'var(--primary)';
+        e.currentTarget.style.transform = 'translateY(-3px)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-card-hover)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+        e.currentTarget.style.borderColor = 'var(--border-medium)';
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = 'var(--shadow-card)';
       }}
     >
-      {/* Clickable Card Link */}
       <Link
         to={`/books/${book._id}`}
         style={{
@@ -94,45 +75,33 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
           flex: 1,
         }}
       >
-        {/* Book Cover Container with 3D Depth & Lighting */}
+        {/* Book Cover Container */}
         <div
           style={{
             position: 'relative',
-            height: '270px',
+            height: '240px',
             width: '100%',
             overflow: 'hidden',
-            backgroundColor: '#0D0C15',
+            backgroundColor: 'var(--bg-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '1.25rem',
-            background: 'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15) 0%, #08070D 85%)',
+            borderBottom: '1px solid var(--border-subtle)',
           }}
         >
-          {/* Realistic 3D Book Graphic */}
+          {/* Book Graphic */}
           <div
             style={{
               position: 'relative',
-              width: '145px',
-              height: '215px',
-              borderRadius: '6px 12px 12px 6px',
-              boxShadow: '10px 15px 30px rgba(0, 0, 0, 0.8), 2px 0 10px rgba(0,0,0,0.5)',
+              width: '130px',
+              height: '190px',
+              borderRadius: '4px 8px 8px 4px',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)',
               overflow: 'hidden',
-              transition: 'transform 0.4s ease',
+              backgroundColor: '#E2E8F0',
             }}
           >
-            {/* Book Spine Edge Highlight */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: '6px',
-                background: 'linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0.3) 100%)',
-                zIndex: 2,
-              }}
-            />
             <img
               src={book.coverImage}
               alt={book.title}
@@ -153,50 +122,48 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
             <div
               style={{
                 position: 'absolute',
-                top: '0.85rem',
-                left: '0.85rem',
-                background: 'rgba(16, 185, 129, 0.85)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(16, 185, 129, 0.4)',
-                color: '#FFFFFF',
-                padding: '0.28rem 0.65rem',
-                borderRadius: 'var(--radius-pill)',
+                top: '0.75rem',
+                left: '0.75rem',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid var(--accent-emerald)',
+                color: 'var(--accent-emerald)',
+                padding: '0.2rem 0.55rem',
+                borderRadius: '9999px',
                 fontSize: '0.72rem',
-                fontWeight: 900,
+                fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.3rem',
-                boxShadow: '0 0 15px rgba(16, 185, 129, 0.5)',
-                zIndex: 3,
+                gap: '0.25rem',
+                boxShadow: 'var(--shadow-xs)',
+                zIndex: 2,
               }}
             >
-              <Sparkles size={12} fill="#FFFFFF" />
+              <Sparkles size={11} />
               <span>{matchPercentage || book.matchPercentage}% Match</span>
             </div>
           )}
 
-          {/* Quick Shelf Status Badge if already in list */}
+          {/* Shelf Status Pill */}
           {currentShelf && (
             <div
               style={{
                 position: 'absolute',
-                top: '0.85rem',
-                right: '0.85rem',
-                background: 'rgba(139, 92, 246, 0.85)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(139, 92, 246, 0.4)',
-                color: '#FFFFFF',
-                padding: '0.28rem 0.6rem',
-                borderRadius: 'var(--radius-pill)',
-                fontSize: '0.68rem',
-                fontWeight: 800,
+                top: '0.75rem',
+                right: '0.75rem',
+                backgroundColor: 'var(--primary-light)',
+                border: '1px solid var(--primary-border)',
+                color: 'var(--primary)',
+                padding: '0.2rem 0.55rem',
+                borderRadius: '9999px',
+                fontSize: '0.7rem',
+                fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.3rem',
-                zIndex: 3,
+                gap: '0.25rem',
+                zIndex: 2,
               }}
             >
-              <Check size={12} />
+              <Check size={11} />
               <span>
                 {currentShelf === 'CURRENTLY_READING'
                   ? 'Reading'
@@ -211,12 +178,12 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
         {/* Book Information Section */}
         <div
           style={{
-            padding: '1.25rem',
+            padding: '1.15rem',
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
             justifyContent: 'space-between',
-            gap: '0.85rem',
+            gap: '0.75rem',
           }}
         >
           <div>
@@ -226,18 +193,18 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginBottom: '0.45rem',
+                marginBottom: '0.4rem',
               }}
             >
               <span
                 style={{
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  color: genreTheme.text,
-                  background: genreTheme.bg,
-                  border: `1px solid ${genreTheme.border}`,
-                  padding: '0.2rem 0.55rem',
-                  borderRadius: 'var(--radius-pill)',
+                  fontSize: '0.74rem',
+                  fontWeight: 600,
+                  color: 'var(--text-muted)',
+                  background: 'var(--bg-subtle)',
+                  border: '1px solid var(--border-subtle)',
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: '4px',
                 }}
               >
                 {primaryGenre}
@@ -247,15 +214,15 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.3rem',
+                  gap: '0.25rem',
                   fontSize: '0.82rem',
-                  fontWeight: 800,
-                  color: '#F59E0B',
+                  fontWeight: 700,
+                  color: 'var(--text-heading)',
                 }}
               >
                 <Star size={13} fill="#F59E0B" color="#F59E0B" />
                 <span>{book.averageRating?.toFixed(1) || '4.5'}</span>
-                <span style={{ fontSize: '0.7rem', color: '#64748B' }}>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)', fontWeight: 400 }}>
                   ({book.ratingsCount || 0})
                 </span>
               </div>
@@ -264,11 +231,11 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
             {/* Title */}
             <h3
               style={{
-                fontSize: '1.15rem',
-                fontWeight: 900,
-                color: '#FFFFFF',
-                lineHeight: 1.3,
-                marginBottom: '0.3rem',
+                fontSize: '1rem',
+                fontWeight: 700,
+                color: 'var(--text-heading)',
+                lineHeight: 1.35,
+                marginBottom: '0.25rem',
                 display: '-webkit-box',
                 WebkitLineClamp: 1,
                 WebkitBoxOrient: 'vertical',
@@ -282,10 +249,9 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
             {/* Author */}
             <div
               style={{
-                fontSize: '0.84rem',
-                fontWeight: 700,
-                color: '#94A3B8',
-                marginBottom: '0.55rem',
+                fontSize: '0.82rem',
+                color: 'var(--text-muted)',
+                marginBottom: '0.5rem',
               }}
             >
               by {book.author}
@@ -295,7 +261,7 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
             <p
               style={{
                 fontSize: '0.8rem',
-                color: '#94A3B8',
+                color: 'var(--text-body)',
                 lineHeight: 1.45,
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
@@ -307,50 +273,22 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
             </p>
           </div>
 
-          {/* Mood Tags & Page Count Footer */}
+          {/* Footer Info & Shelf Button */}
           <div>
-            {book.moodTags && book.moodTags.length > 0 && (
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '0.35rem',
-                  flexWrap: 'wrap',
-                  marginBottom: '0.8rem',
-                }}
-              >
-                {book.moodTags.slice(0, 2).map((mood) => (
-                  <span
-                    key={mood}
-                    style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 700,
-                      color: '#C4B5FD',
-                      background: 'rgba(139, 92, 246, 0.1)',
-                      border: '1px solid rgba(139, 92, 246, 0.25)',
-                      padding: '0.15rem 0.45rem',
-                      borderRadius: '6px',
-                    }}
-                  >
-                    ✦ {mood}
-                  </span>
-                ))}
-              </div>
-            )}
-
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                paddingTop: '0.85rem',
+                borderTop: '1px solid var(--border-subtle)',
+                paddingTop: '0.75rem',
               }}
             >
-              <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 {book.pageCount} pages • {book.readingPace || 'Moderate'}
               </div>
 
-              {/* Shelf Action Dropdown Button */}
+              {/* Shelf Dropdown */}
               <div style={{ position: 'relative' }}>
                 <button
                   type="button"
@@ -363,33 +301,28 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.35rem',
-                    background: currentShelf
-                      ? 'rgba(139, 92, 246, 0.25)'
-                      : 'var(--gradient-purple)',
-                    border: currentShelf
-                      ? '1px solid #8B5CF6'
-                      : 'none',
-                    color: '#FFFFFF',
-                    padding: '0.45rem 0.85rem',
-                    borderRadius: 'var(--radius-pill)',
-                    fontSize: '0.78rem',
-                    fontWeight: 800,
+                    background: currentShelf ? 'var(--primary-light)' : '#FFFFFF',
+                    border: currentShelf ? '1px solid var(--primary-border)' : '1px solid var(--border-medium)',
+                    color: currentShelf ? 'var(--primary)' : 'var(--text-heading)',
+                    padding: '0.35rem 0.65rem',
+                    borderRadius: '6px',
+                    fontSize: '0.76rem',
+                    fontWeight: 600,
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 15px rgba(139, 92, 246, 0.4)',
+                    transition: 'all 0.15s ease',
                   }}
                 >
-                  <Bookmark size={13} fill={currentShelf ? '#FFFFFF' : 'none'} />
+                  <Bookmark size={12} fill={currentShelf ? 'currentColor' : 'none'} />
                   <span>
                     {currentShelf === 'WANT_TO_READ'
                       ? 'On Shelf'
                       : currentShelf === 'CURRENTLY_READING'
                       ? 'Reading'
                       : currentShelf === 'COMPLETED'
-                      ? 'Finished'
-                      : 'Add to Shelf'}
+                      ? 'Read'
+                      : 'Shelf'}
                   </span>
-                  <ChevronDown size={12} />
+                  <ChevronDown size={11} />
                 </button>
 
                 {/* Dropdown Menu */}
@@ -397,17 +330,17 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                   <div
                     style={{
                       position: 'absolute',
-                      bottom: 'calc(100% + 8px)',
+                      bottom: 'calc(100% + 6px)',
                       right: 0,
-                      background: '#151324',
-                      border: '1px solid rgba(139, 92, 246, 0.4)',
-                      borderRadius: '14px',
-                      padding: '0.4rem',
+                      background: '#FFFFFF',
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: '8px',
+                      padding: '0.35rem',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '0.2rem',
-                      minWidth: '160px',
-                      boxShadow: '0 15px 35px rgba(0, 0, 0, 0.7)',
+                      minWidth: '155px',
+                      boxShadow: 'var(--shadow-dropdown)',
                       zIndex: 100,
                     }}
                     onClick={(e) => e.stopPropagation()}
@@ -416,13 +349,13 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                       type="button"
                       onClick={(e) => handleShelfClick(e, 'WANT_TO_READ')}
                       style={{
-                        padding: '0.55rem 0.75rem',
-                        background: currentShelf === 'WANT_TO_READ' ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
+                        padding: '0.45rem 0.65rem',
+                        background: currentShelf === 'WANT_TO_READ' ? 'var(--bg-subtle)' : 'transparent',
                         border: 'none',
-                        color: currentShelf === 'WANT_TO_READ' ? '#A78BFA' : '#FFFFFF',
-                        borderRadius: '8px',
-                        fontSize: '0.8rem',
-                        fontWeight: 700,
+                        color: 'var(--text-heading)',
+                        borderRadius: '4px',
+                        fontSize: '0.78rem',
+                        fontWeight: currentShelf === 'WANT_TO_READ' ? 700 : 500,
                         cursor: 'pointer',
                         textAlign: 'left',
                         display: 'flex',
@@ -431,20 +364,20 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                       }}
                     >
                       <span>Want to Read</span>
-                      {currentShelf === 'WANT_TO_READ' && <Check size={14} />}
+                      {currentShelf === 'WANT_TO_READ' && <Check size={13} color="var(--primary)" />}
                     </button>
 
                     <button
                       type="button"
                       onClick={(e) => handleShelfClick(e, 'CURRENTLY_READING')}
                       style={{
-                        padding: '0.55rem 0.75rem',
-                        background: currentShelf === 'CURRENTLY_READING' ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
+                        padding: '0.45rem 0.65rem',
+                        background: currentShelf === 'CURRENTLY_READING' ? 'var(--bg-subtle)' : 'transparent',
                         border: 'none',
-                        color: currentShelf === 'CURRENTLY_READING' ? '#A78BFA' : '#FFFFFF',
-                        borderRadius: '8px',
-                        fontSize: '0.8rem',
-                        fontWeight: 700,
+                        color: 'var(--text-heading)',
+                        borderRadius: '4px',
+                        fontSize: '0.78rem',
+                        fontWeight: currentShelf === 'CURRENTLY_READING' ? 700 : 500,
                         cursor: 'pointer',
                         textAlign: 'left',
                         display: 'flex',
@@ -453,20 +386,20 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                       }}
                     >
                       <span>Currently Reading</span>
-                      {currentShelf === 'CURRENTLY_READING' && <Check size={14} />}
+                      {currentShelf === 'CURRENTLY_READING' && <Check size={13} color="var(--primary)" />}
                     </button>
 
                     <button
                       type="button"
                       onClick={(e) => handleShelfClick(e, 'COMPLETED')}
                       style={{
-                        padding: '0.55rem 0.75rem',
-                        background: currentShelf === 'COMPLETED' ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
+                        padding: '0.45rem 0.65rem',
+                        background: currentShelf === 'COMPLETED' ? 'var(--bg-subtle)' : 'transparent',
                         border: 'none',
-                        color: currentShelf === 'COMPLETED' ? '#A78BFA' : '#FFFFFF',
-                        borderRadius: '8px',
-                        fontSize: '0.8rem',
-                        fontWeight: 700,
+                        color: 'var(--text-heading)',
+                        borderRadius: '4px',
+                        fontSize: '0.78rem',
+                        fontWeight: currentShelf === 'COMPLETED' ? 700 : 500,
                         cursor: 'pointer',
                         textAlign: 'left',
                         display: 'flex',
@@ -475,7 +408,7 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                       }}
                     >
                       <span>Completed / Read</span>
-                      {currentShelf === 'COMPLETED' && <Check size={14} />}
+                      {currentShelf === 'COMPLETED' && <Check size={13} color="var(--primary)" />}
                     </button>
                   </div>
                 )}

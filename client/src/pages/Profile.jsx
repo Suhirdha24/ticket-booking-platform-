@@ -8,9 +8,6 @@ import {
   BookOpen,
   Check,
   Save,
-  Shield,
-  Heart,
-  Compass,
 } from 'lucide-react';
 
 const ALL_GENRES = [
@@ -80,192 +77,265 @@ export default function Profile() {
         preferredGenres,
         preferredMoods,
       });
-      showSuccessToast('Profile Updated! 🎉', 'Your reading preferences and challenge goal have been saved.');
+      showSuccessToast('Profile Updated!', 'Your reading preferences and challenge goal have been saved.');
     } catch (err) {
       showErrorToast('Failed to update profile', err.message);
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', paddingBottom: '6rem' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)', paddingBottom: '5rem' }}>
       <section
         style={{
-          padding: '3rem 0 2rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundImage: 'radial-gradient(circle at 80% 30%, rgba(139, 92, 246, 0.2) 0%, transparent 60%)',
+          padding: '2.5rem 0 2rem',
+          backgroundColor: '#FFFFFF',
+          borderBottom: '1px solid var(--border-subtle)',
         }}
       >
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-            <User size={17} />
-            <span>Reader Account & Preferences</span>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              color: 'var(--primary)',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              marginBottom: '0.4rem',
+            }}
+          >
+            <User size={16} />
+            <span>Account Settings</span>
           </div>
-          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.5rem' }}>
-            Customize Your Reading DNA
+          <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.4rem' }}>
+            Reader Profile & Preferences
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.95rem' }}>
-            Tailor your preferred genres and emotional moods to train the recommendation engine for your exact tastes.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem' }}>
+            Customize your recommendation preferences, genres, and annual reading goal.
           </p>
         </div>
       </section>
 
-      <div className="container" style={{ paddingTop: '2.5rem', maxWidth: '780px' }}>
-        <form
-          onSubmit={handleSubmit}
-          className="glass-widget-card"
-          style={{
-            padding: '2.5rem',
-            borderRadius: '24px',
-            backgroundColor: 'rgba(20, 18, 34, 0.9)',
-            border: '1px solid rgba(139, 92, 246, 0.35)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '2rem',
-          }}
-        >
-          {/* User Basic Info */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-            <img
-              src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'}
-              alt={user?.name}
-              style={{ width: '70px', height: '70px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #8B5CF6' }}
-            />
-            <div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF' }}>{user?.name}</div>
-              <div style={{ fontSize: '0.85rem', color: '#94A3B8' }}>{user?.email}</div>
+      <div className="container" style={{ paddingTop: '2rem' }}>
+        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+            {/* 1. Basic Info Card */}
+            <div
+              className="card-clean"
+              style={{
+                padding: '2rem',
+                borderRadius: '14px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '1.25rem' }}>
+                Personal Information
+              </h3>
+
+              <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <img
+                  src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'}
+                  alt={name}
+                  style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover' }}
+                />
+                <div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-heading)' }}>
+                    {name || 'Reader'}
+                  </div>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                    {user?.email}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <label className="form-label" htmlFor="profile-name">
+                    Display Name
+                  </label>
+                  <input
+                    id="profile-name"
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="form-label" htmlFor="profile-bio">
+                    Reader Bio
+                  </label>
+                  <textarea
+                    id="profile-bio"
+                    rows={3}
+                    placeholder="Tell other readers about your favorite tropes, authors, and reading habits..."
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    className="form-input"
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
-              Display Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="form-input"
-              required
-            />
-          </div>
+            {/* 2. Annual Goal Card */}
+            <div
+              className="card-clean"
+              style={{
+                padding: '2rem',
+                borderRadius: '14px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <Target size={18} color="var(--primary)" />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-heading)' }}>
+                  2026 Annual Reading Challenge
+                </h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+                Set the number of books you aspire to read and complete this year.
+              </p>
 
-          <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
-              Reader Bio
-            </label>
-            <textarea
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              className="form-input"
-              rows="3"
-              placeholder="Tell other readers what stories and themes captivate you..."
-              style={{ resize: 'none' }}
-            />
-          </div>
-
-          {/* Annual Goal */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <Target size={16} color="#FBBF24" />
-                <span>Annual Reading Goal (2026)</span>
-              </label>
-              <span style={{ fontSize: '1rem', fontWeight: 900, color: '#A78BFA' }}>
-                {annualGoal} Books
-              </span>
+              <div>
+                <label className="form-label" htmlFor="annual-goal-input">
+                  Goal Target (Books)
+                </label>
+                <input
+                  id="annual-goal-input"
+                  type="number"
+                  min="1"
+                  max="365"
+                  value={annualGoal}
+                  onChange={(e) => setAnnualGoal(e.target.value)}
+                  className="form-input"
+                  style={{ maxWidth: '180px' }}
+                />
+              </div>
             </div>
-            <input
-              type="range"
-              min="1"
-              max="100"
-              value={annualGoal}
-              onChange={(e) => setAnnualGoal(Number(e.target.value))}
-              style={{ width: '100%', accentColor: '#8B5CF6', cursor: 'pointer' }}
-            />
-          </div>
 
-          {/* Preferred Genres Selection */}
-          <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.75rem' }}>
-              Your Favorite Genres (Influences Recommendations)
-            </label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {ALL_GENRES.map((g) => {
-                const isSelected = preferredGenres.includes(g);
-                return (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => toggleGenre(g)}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      borderRadius: 'var(--radius-pill)',
-                      background: isSelected ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.04)',
-                      border: isSelected ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.08)',
-                      color: isSelected ? '#FFFFFF' : '#CBD5E1',
-                      fontSize: '0.82rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    <span>{g}</span>
-                    {isSelected && <Check size={14} />}
-                  </button>
-                );
-              })}
+            {/* 3. Favorite Genres Card */}
+            <div
+              className="card-clean"
+              style={{
+                padding: '2rem',
+                borderRadius: '14px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <BookOpen size={18} color="var(--primary)" />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-heading)' }}>
+                  Favorite Genres
+                </h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+                Selected genres heavily influence your "For You" personalized recommendation feed.
+              </p>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {ALL_GENRES.map((genre) => {
+                  const isSelected = preferredGenres.includes(genre);
+                  return (
+                    <button
+                      key={genre}
+                      type="button"
+                      onClick={() => toggleGenre(genre)}
+                      style={{
+                        padding: '0.45rem 0.85rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        border: isSelected ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)',
+                        backgroundColor: isSelected ? 'var(--primary-light)' : '#FFFFFF',
+                        color: isSelected ? 'var(--primary)' : 'var(--text-body)',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {isSelected && <Check size={12} />}
+                      <span>{genre}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          {/* Preferred Moods Selection */}
-          <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.75rem' }}>
-              Preferred Emotional Moods & Vibes
-            </label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {ALL_MOODS.map((m) => {
-                const isSelected = preferredMoods.includes(m);
-                return (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => toggleMood(m)}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      borderRadius: 'var(--radius-pill)',
-                      background: isSelected ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255, 255, 255, 0.04)',
-                      border: isSelected ? '1.5px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
-                      color: isSelected ? '#FFFFFF' : '#CBD5E1',
-                      fontSize: '0.82rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    <span>✦ {m}</span>
-                    {isSelected && <Check size={14} />}
-                  </button>
-                );
-              })}
+            {/* 4. Mood Preferences Card */}
+            <div
+              className="card-clean"
+              style={{
+                padding: '2rem',
+                borderRadius: '14px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <Sparkles size={18} color="var(--primary)" />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-heading)' }}>
+                  Preferred Moods & Vibes
+                </h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+                Select what emotions you gravitate toward most when choosing books.
+              </p>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {ALL_MOODS.map((mood) => {
+                  const isSelected = preferredMoods.includes(mood);
+                  return (
+                    <button
+                      key={mood}
+                      type="button"
+                      onClick={() => toggleMood(mood)}
+                      style={{
+                        padding: '0.45rem 0.85rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        border: isSelected ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)',
+                        backgroundColor: isSelected ? 'var(--primary-light)' : '#FFFFFF',
+                        color: isSelected ? 'var(--primary)' : 'var(--text-body)',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {isSelected && <Check size={12} />}
+                      <span>{mood}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="btn-purple-glow"
-            style={{ padding: '1rem', fontSize: '1rem', justifyContent: 'center' }}
-          >
-            <Save size={18} />
-            <span>Save Reading Preferences</span>
-          </button>
-        </form>
+            {/* Save Button */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="btn btn-primary"
+                style={{ padding: '0.75rem 2rem', fontSize: '0.95rem' }}
+              >
+                <Save size={16} />
+                <span>{isLoading ? 'Saving...' : 'Save Preferences'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

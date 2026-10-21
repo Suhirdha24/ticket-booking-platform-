@@ -1,25 +1,25 @@
 import React from 'react';
-import { BookOpen, Sparkles, Heart, Bookmark, ShieldCheck, Compass } from 'lucide-react';
+import { BookOpen, Sparkles, Bookmark, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
     <footer
       style={{
-        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-        background: '#08070D',
-        padding: '3.5rem 0 2.5rem 0',
+        borderTop: '1px solid var(--border-subtle)',
+        background: '#FFFFFF',
+        padding: '3rem 0 2rem 0',
         marginTop: 'auto',
-        color: '#94A3B8',
+        color: 'var(--text-muted)',
       }}
     >
       <div className="container">
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
             gap: '2.5rem',
-            marginBottom: '3rem',
+            marginBottom: '2.5rem',
           }}
         >
           {/* Brand Col */}
@@ -28,169 +28,132 @@ export default function Footer() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.65rem',
-                marginBottom: '1rem',
+                gap: '0.6rem',
+                marginBottom: '0.85rem',
               }}
             >
               <div
                 style={{
-                  width: '34px',
-                  height: '34px',
-                  borderRadius: '10px',
-                  background: 'var(--gradient-purple)',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  background: 'var(--primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 0 15px rgba(139, 92, 246, 0.4)',
+                  color: '#FFFFFF',
                 }}
               >
-                <BookOpen size={18} color="#FFFFFF" />
+                <BookOpen size={18} />
               </div>
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.25rem',
-                  fontWeight: 900,
-                  color: '#ffffff',
+                  fontSize: '1.2rem',
+                  fontWeight: 800,
+                  color: 'var(--text-heading)',
                   letterSpacing: '-0.02em',
                 }}
               >
-                Book<span style={{ color: '#A78BFA' }}>Verse</span>
+                BookVerse
               </span>
             </div>
-            <p
-              style={{
-                fontSize: '0.86rem',
-                color: '#94A3B8',
-                lineHeight: 1.6,
-                marginBottom: '1.25rem',
-              }}
-            >
-              Discover stories you will never forget. Intelligent content-based book recommendations, real-time mood vibe matching, personal reading goals, and community reviews.
+            <p style={{ fontSize: '0.86rem', lineHeight: '1.5', color: 'var(--text-muted)' }}>
+              Intelligent reading recommendations, mood matching quizzes, and virtual reading tracker for readers everywhere.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4
-              style={{
-                fontSize: '0.85rem',
-                fontWeight: 800,
-                color: '#A78BFA',
-                marginBottom: '1rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}
-            >
-              Explore
+            <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.85rem' }}>
+              Discovery
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.86rem' }}>
               <li>
-                <Link to="/books" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
-                  All Curated Books
+                <Link to="/books" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Browse All Books
                 </Link>
               </li>
               <li>
-                <Link to="/books?genre=Sci-Fi" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
-                  Sci-Fi & Speculative
+                <Link to="/recommendations" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Vibe & Mood Matcher
                 </Link>
               </li>
               <li>
-                <Link to="/books?genre=Mystery" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
+                <Link to="/books?genre=Sci-Fi" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Science Fiction & Fantasy
+                </Link>
+              </li>
+              <li>
+                <Link to="/books?genre=Mystery" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
                   Mystery & Thrillers
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Reading Tools */}
+          <div>
+            <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.85rem' }}>
+              Reading Tools
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.86rem' }}>
               <li>
-                <Link to="/books?genre=Self-Help" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
-                  Personal Growth & Habits
+                <Link to="/my-bookshelf" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  My Bookshelf
+                </Link>
+              </li>
+              <li>
+                <Link to="/my-bookshelf" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Reading Page Tracker
+                </Link>
+              </li>
+              <li>
+                <Link to="/profile" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Annual Reading Goals
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Smart Features */}
+          {/* Community & Legal */}
           <div>
-            <h4
-              style={{
-                fontSize: '0.85rem',
-                fontWeight: 800,
-                color: '#A78BFA',
-                marginBottom: '1rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}
-            >
-              Recommendation AI
+            <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.85rem' }}>
+              BookVerse
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.86rem' }}>
               <li>
-                <Link to="/recommendations" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
-                  Interactive Vibe Matcher
+                <Link to="/login" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Reader Sign In
                 </Link>
               </li>
               <li>
-                <Link to="/my-bookshelf" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
-                  Annual Reading Challenge
+                <Link to="/register" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Create Free Account
                 </Link>
               </li>
-              <li>
-                <Link to="/my-bookshelf" style={{ color: '#CBD5E1', fontSize: '0.88rem', textDecoration: 'none' }}>
-                  Personalized Reading Shelves
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Reader Community */}
-          <div>
-            <h4
-              style={{
-                fontSize: '0.85rem',
-                fontWeight: 800,
-                color: '#A78BFA',
-                marginBottom: '1rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}
-            >
-              Reader Guarantee
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0 }}>
-              <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                ✨ 98% Match Accuracy
-              </li>
-              <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                🎯 Zero Filler, High-Signal Reads
-              </li>
-              <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                📖 Verified Community Ratings
-              </li>
-              <li style={{ fontSize: '0.86rem', color: '#94A3B8' }}>
-                ⚡ Instant Progress Tracking
+              <li style={{ color: 'var(--text-subtle)', fontSize: '0.82rem' }}>
+                Open recommendation platform
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* Bottom copyright */}
         <div
           style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             paddingTop: '1.5rem',
+            borderTop: '1px solid var(--border-subtle)',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '1rem',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             fontSize: '0.82rem',
+            color: 'var(--text-subtle)',
           }}
         >
-          <div>
-            &copy; {new Date().getFullYear()} BookVerse AI. Inspiring reader journeys everywhere.
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#A78BFA' }}>
-            <span>Curated with passion for avid readers</span>
-          </div>
+          <p>© {new Date().getFullYear()} BookVerse. All rights reserved.</p>
+          <p>Clean, accessible book discovery for everyone.</p>
         </div>
       </div>
     </footer>

@@ -8,13 +8,8 @@ import {
   Mail,
   Eye,
   EyeOff,
-  Sparkles,
   Zap,
-  ShieldCheck,
   ArrowRight,
-  Star,
-  Bookmark,
-  Quote,
 } from 'lucide-react';
 
 export default function Login() {
@@ -38,10 +33,10 @@ export default function Login() {
     e.preventDefault();
     try {
       const user = await login(email, password);
-      showSuccessToast('Welcome Back! 📚', `Logged in as ${user.name}`);
+      showSuccessToast('Welcome Back!', `Signed in as ${user.name}`);
       navigate(redirect);
     } catch (err) {
-      showErrorToast('Login Failed', err.message);
+      showErrorToast('Sign In Failed', err.message);
     }
   };
 
@@ -53,228 +48,200 @@ export default function Login() {
   return (
     <div
       style={{
-        minHeight: 'calc(100vh - 160px)',
+        minHeight: 'calc(100vh - 140px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '3rem 1.5rem',
-        position: 'relative',
-        backgroundColor: '#08070D',
+        padding: '2.5rem 1rem',
+        backgroundColor: 'var(--bg-main)',
       }}
     >
-      {/* Background ambient purple aura */}
       <div
         style={{
-          position: 'absolute',
-          top: '20%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '750px',
-          height: '450px',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div
-        className="container"
-        style={{
-          maxWidth: '1040px',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '2.5rem',
-          alignItems: 'stretch',
-          position: 'relative',
-          zIndex: 2,
+          width: '100%',
+          maxWidth: '440px',
         }}
       >
-        {/* LEFT COLUMN: BRANDING & LITERARY QUOTE */}
-        <div
-          className="glass-widget-card"
-          style={{
-            padding: '3rem 2.5rem',
-            backgroundColor: 'rgba(20, 18, 34, 0.9)',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
-            borderRadius: '28px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.5rem' }}>
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'var(--gradient-purple)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
-                }}
-              >
-                <BookOpen size={20} color="#FFFFFF" />
-              </div>
-              <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FFFFFF' }}>
-                Book<span style={{ color: '#A78BFA' }}>Verse</span>
-              </span>
-            </div>
-
-            <div style={{ fontSize: '0.78rem', color: '#A78BFA', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-              Welcome Back Reader
-            </div>
-
-            <h2 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.25, marginBottom: '1.25rem' }}>
-              Step Into Your Next Great Story
-            </h2>
-
-            {/* Literary Quote */}
-            <div
-              style={{
-                padding: '1.25rem 1.4rem',
-                background: 'rgba(139, 92, 246, 0.1)',
-                borderLeft: '4px solid #8B5CF6',
-                borderRadius: '0 16px 16px 0',
-                marginBottom: '2rem',
-              }}
-            >
-              <Quote size={20} color="#A78BFA" style={{ transform: 'rotate(180deg)', marginBottom: '0.4rem' }} />
-              <div style={{ fontSize: '0.92rem', fontStyle: 'italic', color: '#DDD6FE', lineHeight: 1.6 }}>
-                &ldquo;A reader lives a thousand lives before he dies. The man who never reads lives only one.&rdquo;
-              </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94A3B8', marginTop: '0.5rem' }}>
-                — George R.R. Martin
-              </div>
-            </div>
-          </div>
-
-          {/* Features list */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#CBD5E1', fontSize: '0.85rem' }}>
-              <Sparkles size={16} color="#A78BFA" />
-              <span>Smart Vibe & Mood Matcher</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#CBD5E1', fontSize: '0.85rem' }}>
-              <Bookmark size={16} color="#38BDF8" />
-              <span>Virtual Reading Shelves & Page Tracker</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#CBD5E1', fontSize: '0.85rem' }}>
-              <Star size={16} color="#F59E0B" />
-              <span>Verified Community Reader Reviews</span>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: LOGIN FORM */}
-        <div
-          className="glass-widget-card"
-          style={{
-            padding: '2.8rem 2.2rem',
-            backgroundColor: 'rgba(20, 18, 34, 0.95)',
-            border: '1px solid rgba(139, 92, 246, 0.35)',
-            borderRadius: '28px',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <div style={{ marginBottom: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.35rem' }}>
-              Sign In to Your Bookshelf
-            </h3>
-            <p style={{ color: '#94A3B8', fontSize: '0.88rem' }}>
-              Enter your credentials or click demo account to sign in immediately.
-            </p>
-          </div>
-
-          {/* Quick Demo Credentials Button */}
-          <button
-            type="button"
-            onClick={handleFillDemo}
+        {/* Brand Header */}
+        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+          <div
             style={{
-              padding: '0.75rem',
+              width: '44px',
+              height: '44px',
               borderRadius: '12px',
-              background: 'rgba(139, 92, 246, 0.15)',
-              border: '1px dashed #8B5CF6',
-              color: '#DDD6FE',
-              fontSize: '0.82rem',
-              fontWeight: 800,
-              cursor: 'pointer',
-              marginBottom: '1.5rem',
-              display: 'flex',
+              background: 'var(--primary)',
+              display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.45rem',
+              color: '#FFFFFF',
+              marginBottom: '0.85rem',
             }}
           >
-            <Zap size={15} color="#A78BFA" />
-            <span>Use Demo Account: reader@example.com</span>
-          </button>
+            <BookOpen size={24} />
+          </div>
+          <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.35rem' }}>
+            Welcome back to BookVerse
+          </h1>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+            Enter your credentials to access your reading shelf.
+          </p>
+        </div>
+
+        {/* Card */}
+        <div
+          className="card-clean"
+          style={{
+            padding: '2rem',
+            borderRadius: '16px',
+            backgroundColor: '#FFFFFF',
+            border: '1px solid var(--border-medium)',
+            boxShadow: 'var(--shadow-card)',
+          }}
+        >
+          {/* Quick Demo Pill */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0.75rem 1rem',
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '10px',
+              marginBottom: '1.5rem',
+              fontSize: '0.85rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Zap size={15} color="var(--primary)" />
+              <span style={{ color: 'var(--text-heading)', fontWeight: 600 }}>Demo Account</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleFillDemo}
+              style={{
+                background: '#FFFFFF',
+                border: '1px solid var(--border-medium)',
+                color: 'var(--primary)',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                padding: '0.3rem 0.65rem',
+                borderRadius: '6px',
+                cursor: 'pointer',
+              }}
+            >
+              Fill Credentials
+            </button>
+          </div>
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {/* Email Address */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
+              <label className="form-label" htmlFor="email-input">
                 Email Address
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <Mail
+                  size={16}
+                  color="var(--text-subtle)"
+                  style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)' }}
+                />
                 <input
+                  id="email-input"
                   type="email"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@example.com"
+                  placeholder="name@example.com"
                   className="form-input"
-                  style={{ paddingLeft: '2.6rem' }}
-                  required
+                  style={{ paddingLeft: '2.5rem' }}
                 />
               </div>
             </div>
 
+            {/* Password */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
-                Password
-              </label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <label className="form-label" htmlFor="password-input" style={{ marginBottom: 0 }}>
+                  Password
+                </label>
+              </div>
               <div style={{ position: 'relative' }}>
-                <Lock size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <Lock
+                  size={16}
+                  color="var(--text-subtle)"
+                  style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)' }}
+                />
                 <input
+                  id="password-input"
                   type={showPassword ? 'text' : 'password'}
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="form-input"
-                  style={{ paddingLeft: '2.6rem', paddingRight: '2.6rem' }}
-                  required
+                  style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer' }}
+                  style={{
+                    position: 'absolute',
+                    right: '0.9rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-subtle)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-purple-glow"
-              style={{ width: '100%', padding: '1rem', fontSize: '1rem', marginTop: '0.5rem', justifyContent: 'center' }}
+              className="btn btn-primary"
+              style={{
+                width: '100%',
+                padding: '0.8rem',
+                fontSize: '0.95rem',
+                marginTop: '0.5rem',
+              }}
             >
-              <span>{isLoading ? 'Signing In...' : 'Sign In'}</span>
-              <ArrowRight size={16} />
+              {isLoading ? 'Signing In...' : 'Sign In'}
+              {!isLoading && <ArrowRight size={16} />}
             </button>
           </form>
 
-          <div style={{ marginTop: '1.75rem', textAlign: 'center', fontSize: '0.85rem', color: '#94A3B8' }}>
-            New to BookVerse?{' '}
-            <Link to="/register" style={{ color: '#A78BFA', fontWeight: 800, textDecoration: 'none' }}>
-              Create a free account
+          {/* Switch to Register */}
+          <div
+            style={{
+              marginTop: '1.5rem',
+              paddingTop: '1.25rem',
+              borderTop: '1px solid var(--border-subtle)',
+              textAlign: 'center',
+              fontSize: '0.86rem',
+              color: 'var(--text-muted)',
+            }}
+          >
+            Don't have an account?{' '}
+            <Link
+              to="/register"
+              style={{
+                color: 'var(--primary)',
+                fontWeight: 600,
+                textDecoration: 'none',
+              }}
+            >
+              Create an account
             </Link>
           </div>
         </div>

@@ -7,17 +7,9 @@ import ReadingProgressModal from '../components/books/ReadingProgressModal.jsx';
 import {
   Bookmark,
   BookOpen,
-  CheckCircle2,
-  Heart,
   Target,
-  Sparkles,
-  Compass,
-  TrendingUp,
   Edit3,
   Trash2,
-  Star,
-  Clock,
-  Layers,
 } from 'lucide-react';
 
 export default function MyBookshelf() {
@@ -47,40 +39,51 @@ export default function MyBookshelf() {
   });
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', paddingBottom: '6rem' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)', paddingBottom: '5rem' }}>
       {/* Header Banner */}
       <section
         style={{
-          padding: '3rem 0 2rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundImage: 'radial-gradient(circle at 80% 30%, rgba(139, 92, 246, 0.2) 0%, transparent 60%)',
+          padding: '2.5rem 0 2rem',
+          backgroundColor: '#FFFFFF',
+          borderBottom: '1px solid var(--border-subtle)',
         }}
       >
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-            <Bookmark size={17} />
-            <span>Personal Library & Tracking</span>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              color: 'var(--primary)',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              marginBottom: '0.4rem',
+            }}
+          >
+            <Bookmark size={16} />
+            <span>Personal Library</span>
           </div>
-          <h1 style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.2rem)', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.5rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.4rem' }}>
             My Reading Bookshelf
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.98rem' }}>
-            Track current reads, log daily page progress, and celebrate your annual reading milestones.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem' }}>
+            Track current reads, log page progress, and celebrate your reading milestones.
           </p>
         </div>
       </section>
 
-      <div className="container" style={{ paddingTop: '2.5rem' }}>
+      <div className="container" style={{ paddingTop: '2rem' }}>
         {/* Annual Reading Challenge & Stats Card */}
         <div
-          className="glass-widget-card"
+          className="card-clean"
           style={{
-            padding: '2rem',
-            borderRadius: '24px',
-            backgroundColor: 'rgba(20, 18, 34, 0.9)',
-            border: '1px solid rgba(139, 92, 246, 0.35)',
-            boxShadow: '0 20px 45px rgba(0, 0, 0, 0.7)',
-            marginBottom: '2.5rem',
+            padding: '1.75rem',
+            borderRadius: '14px',
+            backgroundColor: '#FFFFFF',
+            border: '1px solid var(--border-medium)',
+            marginBottom: '2rem',
           }}
         >
           <div
@@ -93,13 +96,13 @@ export default function MyBookshelf() {
           >
             {/* Goal Progress Column */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#FBBF24', fontSize: '0.82rem', fontWeight: 800 }}>
-                  <Target size={18} />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--accent-amber)', fontSize: '0.85rem', fontWeight: 700 }}>
+                  <Target size={16} />
                   <span>2026 Reading Challenge</span>
                 </div>
-                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#A78BFA' }}>
-                  {completedCount} of {annualGoal} Books Completed
+                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--primary)' }}>
+                  {completedCount} of {annualGoal} Books
                 </span>
               </div>
 
@@ -107,27 +110,27 @@ export default function MyBookshelf() {
               <div
                 style={{
                   width: '100%',
-                  height: '10px',
-                  background: 'rgba(255, 255, 255, 0.08)',
+                  height: '8px',
+                  background: 'var(--bg-subtle)',
                   borderRadius: '9999px',
                   overflow: 'hidden',
-                  marginBottom: '0.75rem',
+                  marginBottom: '0.65rem',
                 }}
               >
                 <div
                   style={{
                     height: '100%',
                     width: `${goalPercent}%`,
-                    background: 'var(--gradient-purple)',
+                    background: 'var(--primary)',
                     borderRadius: '9999px',
-                    transition: 'width 0.8s ease',
+                    transition: 'width 0.6s ease',
                   }}
                 />
               </div>
 
-              <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                 {goalPercent >= 100
-                  ? '🎉 Challenge completed! You are on fire.'
+                  ? '🎉 Challenge completed! Outstanding reading achievement.'
                   : `${annualGoal - completedCount} more books to reach your annual goal.`}
               </div>
             </div>
@@ -137,32 +140,32 @@ export default function MyBookshelf() {
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '1rem',
+                gap: '0.75rem',
               }}
             >
-              <div style={{ padding: '1rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '14px', textAlign: 'center' }}>
-                <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#38BDF8' }}>
+              <div style={{ padding: '0.85rem', background: 'var(--bg-subtle)', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)' }}>
                   {stats.currentlyReading}
                 </div>
-                <div style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>
-                  Reading Now
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                  Reading
                 </div>
               </div>
 
-              <div style={{ padding: '1rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '14px', textAlign: 'center' }}>
-                <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#34D399' }}>
+              <div style={{ padding: '0.85rem', background: 'var(--bg-subtle)', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent-emerald)' }}>
                   {stats.completed}
                 </div>
-                <div style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
                   Finished
                 </div>
               </div>
 
-              <div style={{ padding: '1rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '14px', textAlign: 'center' }}>
-                <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#C084FC' }}>
+              <div style={{ padding: '0.85rem', background: 'var(--bg-subtle)', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-heading)' }}>
                   {stats.totalPagesRead.toLocaleString()}
                 </div>
-                <div style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
                   Pages Read
                 </div>
               </div>
@@ -174,75 +177,77 @@ export default function MyBookshelf() {
         <div
           style={{
             display: 'flex',
-            gap: '0.65rem',
+            gap: '0.5rem',
             overflowX: 'auto',
-            paddingBottom: '0.5rem',
-            marginBottom: '2rem',
+            paddingBottom: '0.75rem',
+            marginBottom: '1.75rem',
           }}
-          className="no-scrollbar"
         >
           <button
             onClick={() => setActiveTab('ALL')}
-            className={`sonora-filter-chip ${activeTab === 'ALL' ? 'active' : ''}`}
+            className={`genre-chip ${activeTab === 'ALL' ? 'active' : ''}`}
           >
-            <span>📚 All Shelved ({shelfItems.length})</span>
+            All Shelved ({shelfItems.length})
           </button>
 
           <button
             onClick={() => setActiveTab('CURRENTLY_READING')}
-            className={`sonora-filter-chip ${activeTab === 'CURRENTLY_READING' ? 'active' : ''}`}
+            className={`genre-chip ${activeTab === 'CURRENTLY_READING' ? 'active' : ''}`}
           >
-            <span>📖 Currently Reading ({stats.currentlyReading})</span>
+            Currently Reading ({stats.currentlyReading})
           </button>
 
           <button
             onClick={() => setActiveTab('WANT_TO_READ')}
-            className={`sonora-filter-chip ${activeTab === 'WANT_TO_READ' ? 'active' : ''}`}
+            className={`genre-chip ${activeTab === 'WANT_TO_READ' ? 'active' : ''}`}
           >
-            <span>🔖 Want to Read ({stats.wantToRead})</span>
+            Want to Read ({stats.wantToRead})
           </button>
 
           <button
             onClick={() => setActiveTab('COMPLETED')}
-            className={`sonora-filter-chip ${activeTab === 'COMPLETED' ? 'active' : ''}`}
+            className={`genre-chip ${activeTab === 'COMPLETED' ? 'active' : ''}`}
           >
-            <span>✅ Finished / Read ({stats.completed})</span>
+            Finished ({stats.completed})
           </button>
 
           <button
             onClick={() => setActiveTab('FAVORITES')}
-            className={`sonora-filter-chip ${activeTab === 'FAVORITES' ? 'active' : ''}`}
+            className={`genre-chip ${activeTab === 'FAVORITES' ? 'active' : ''}`}
           >
-            <span>💖 Favorites ({stats.favorites})</span>
+            Favorites ({stats.favorites})
           </button>
         </div>
 
-        {/* Shelf Items List / Grid */}
+        {/* Shelf Items Grid */}
         {filteredItems.length === 0 ? (
           <div
-            className="glass-widget-card"
+            className="card-clean"
             style={{
-              padding: '4rem 2rem',
+              padding: '4rem 1.5rem',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '1rem',
+              gap: '0.75rem',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '12px',
+              border: '1px solid var(--border-medium)',
             }}
           >
-            <BookOpen size={48} color="#8B5CF6" />
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FFFFFF' }}>
+            <BookOpen size={40} color="var(--text-subtle)" />
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-heading)' }}>
               No books on this shelf yet
             </h3>
-            <p style={{ color: '#94A3B8', maxWidth: '400px' }}>
-              Explore our curated library catalog or try the interactive Vibe Matcher to find books you will love.
+            <p style={{ color: 'var(--text-muted)', maxWidth: '400px', fontSize: '0.9rem' }}>
+              Explore our library catalog or launch the Vibe Matcher to find books you will love.
             </p>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-              <Link to="/books">
-                <button className="btn-purple-glow">Browse All Books</button>
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <Link to="/books" className="btn btn-primary">
+                Browse Catalog
               </Link>
-              <Link to="/recommendations">
-                <button className="btn-secondary">Launch Vibe Matcher</button>
+              <Link to="/recommendations" className="btn btn-secondary">
+                Vibe Matcher
               </Link>
             </div>
           </div>
@@ -250,8 +255,8 @@ export default function MyBookshelf() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1.75rem',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+              gap: '1.5rem',
             }}
           >
             {filteredItems.map((item) => {
@@ -266,46 +271,46 @@ export default function MyBookshelf() {
                     <BookCard book={book} />
                   </div>
 
-                  {/* Shelf Item Custom Progress / Actions Bar */}
+                  {/* Shelf Item Custom Progress / Actions Footer */}
                   <div
                     style={{
-                      background: 'rgba(20, 18, 34, 0.95)',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      background: '#FFFFFF',
+                      border: '1px solid var(--border-medium)',
                       borderTop: 'none',
-                      borderRadius: '0 0 20px 20px',
-                      padding: '0.85rem 1rem',
+                      borderRadius: '0 0 14px 14px',
+                      padding: '0.75rem 0.9rem',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.5rem',
+                      gap: '0.45rem',
                     }}
                   >
                     {isReading && (
                       <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: '#CBD5E1', marginBottom: '0.35rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: '0.3rem' }}>
                           <span>Page {item.progressPages || 0} of {book.pageCount}</span>
-                          <span style={{ color: '#A78BFA', fontWeight: 800 }}>{progressPct}%</span>
+                          <span style={{ color: 'var(--primary)', fontWeight: 700 }}>{progressPct}%</span>
                         </div>
-                        <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '9999px', overflow: 'hidden' }}>
-                          <div style={{ height: '100%', width: `${progressPct}%`, background: 'var(--gradient-purple)', borderRadius: '9999px' }} />
+                        <div style={{ width: '100%', height: '5px', background: 'var(--bg-subtle)', borderRadius: '9999px', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: `${progressPct}%`, background: 'var(--primary)', borderRadius: '9999px' }} />
                         </div>
                       </div>
                     )}
 
                     {item.personalNotes && (
-                      <div style={{ fontSize: '0.74rem', color: '#DDD6FE', fontStyle: 'italic', background: 'rgba(139, 92, 246, 0.1)', padding: '0.4rem 0.6rem', borderRadius: '6px' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-body)', fontStyle: 'italic', background: 'var(--bg-subtle)', padding: '0.35rem 0.55rem', borderRadius: '4px' }}>
                         &ldquo;{item.personalNotes}&rdquo;
                       </div>
                     )}
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.3rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.25rem' }}>
                       <button
                         onClick={() => setEditingItem(item)}
                         style={{
-                          background: 'transparent',
+                          background: 'none',
                           border: 'none',
-                          color: '#A78BFA',
+                          color: 'var(--primary)',
                           fontSize: '0.78rem',
-                          fontWeight: 800,
+                          fontWeight: 600,
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
@@ -319,11 +324,11 @@ export default function MyBookshelf() {
                       <button
                         onClick={() => removeFromShelf(book._id)}
                         style={{
-                          background: 'transparent',
+                          background: 'none',
                           border: 'none',
-                          color: '#EF4444',
+                          color: 'var(--accent-rose)',
                           fontSize: '0.78rem',
-                          fontWeight: 700,
+                          fontWeight: 600,
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',

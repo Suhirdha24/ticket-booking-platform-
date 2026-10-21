@@ -9,22 +9,20 @@ import {
   User,
   Eye,
   EyeOff,
-  Sparkles,
   ArrowRight,
   Check,
-  Quote,
 } from 'lucide-react';
 
 const SUGGESTED_GENRES = [
+  'Fiction',
   'Sci-Fi',
   'Fantasy',
   'Mystery',
   'Thriller',
   'Self-Help',
   'Non-Fiction',
-  'Fiction',
-  'Romance',
   'Philosophy',
+  'Romance',
 ];
 
 export default function Register() {
@@ -53,12 +51,12 @@ export default function Register() {
         email,
         password,
         preferredGenres: selectedGenres,
-        preferredMoods: ['Mind-Bending', 'Emotional'],
+        preferredMoods: ['Mind-Bending', 'Inspirational'],
         annualReadingGoal: 15,
       });
 
-      showSuccessToast('Account Created! 📚', `Welcome to BookVerse, ${user.name}!`);
-      navigate('/recommendations');
+      showSuccessToast('Account Created!', `Welcome to BookVerse, ${user.name}!`);
+      navigate('/');
     } catch (err) {
       showErrorToast('Registration Failed', err.message);
     }
@@ -67,232 +65,218 @@ export default function Register() {
   return (
     <div
       style={{
-        minHeight: 'calc(100vh - 160px)',
+        minHeight: 'calc(100vh - 140px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '3rem 1.5rem',
-        position: 'relative',
-        backgroundColor: '#08070D',
+        padding: '2.5rem 1rem',
+        backgroundColor: 'var(--bg-main)',
       }}
     >
-      <div
-        className="container"
-        style={{
-          maxWidth: '1040px',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '2.5rem',
-          alignItems: 'stretch',
-          position: 'relative',
-          zIndex: 2,
-        }}
-      >
-        {/* LEFT SHOWCASE COLUMN */}
-        <div
-          className="glass-widget-card"
-          style={{
-            padding: '3rem 2.5rem',
-            backgroundColor: 'rgba(20, 18, 34, 0.9)',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
-            borderRadius: '28px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.5rem' }}>
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'var(--gradient-purple)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
-                }}
-              >
-                <BookOpen size={20} color="#FFFFFF" />
-              </div>
-              <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FFFFFF' }}>
-                Book<span style={{ color: '#A78BFA' }}>Verse</span>
-              </span>
-            </div>
-
-            <div style={{ fontSize: '0.78rem', color: '#A78BFA', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-              Join Free Today
-            </div>
-
-            <h2 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.25, marginBottom: '1.25rem' }}>
-              Start Your Personalized Reading Odyssey
-            </h2>
-
-            {/* Literary Quote */}
-            <div
-              style={{
-                padding: '1.25rem 1.4rem',
-                background: 'rgba(139, 92, 246, 0.1)',
-                borderLeft: '4px solid #8B5CF6',
-                borderRadius: '0 16px 16px 0',
-                marginBottom: '2rem',
-              }}
-            >
-              <Quote size={20} color="#A78BFA" style={{ transform: 'rotate(180deg)', marginBottom: '0.4rem' }} />
-              <div style={{ fontSize: '0.92rem', fontStyle: 'italic', color: '#DDD6FE', lineHeight: 1.6 }}>
-                &ldquo;There is no friend as loyal as a book.&rdquo;
-              </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94A3B8', marginTop: '0.5rem' }}>
-                — Ernest Hemingway
-              </div>
-            </div>
+      <div style={{ width: '100%', maxWidth: '480px' }}>
+        {/* Brand Header */}
+        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+          <div
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '12px',
+              background: 'var(--primary)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              marginBottom: '0.85rem',
+            }}
+          >
+            <BookOpen size={24} />
           </div>
-
-          <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.5rem' }}>
-            <div style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.6 }}>
-              ✨ Over 10,000+ avid readers discovering stories through AI and mood matching every day.
-            </div>
-          </div>
+          <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.35rem' }}>
+            Create Your Reader Account
+          </h1>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+            Join thousands of readers discovering their next favorite books.
+          </p>
         </div>
 
-        {/* RIGHT COLUMN: REGISTRATION FORM */}
+        {/* Card */}
         <div
-          className="glass-widget-card"
+          className="card-clean"
           style={{
-            padding: '2.8rem 2.2rem',
-            backgroundColor: 'rgba(20, 18, 34, 0.95)',
-            border: '1px solid rgba(139, 92, 246, 0.35)',
-            borderRadius: '28px',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            padding: '2rem',
+            borderRadius: '16px',
+            backgroundColor: '#FFFFFF',
+            border: '1px solid var(--border-medium)',
+            boxShadow: 'var(--shadow-card)',
           }}
         >
-          <div style={{ marginBottom: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.35rem' }}>
-              Create Reader Account
-            </h3>
-            <p style={{ color: '#94A3B8', fontSize: '0.88rem' }}>
-              Select your favorite genres for instant personalized recommendations.
-            </p>
-          </div>
-
-          <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+          <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {/* Full Name */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.45rem' }}>
-                Your Name
+              <label className="form-label" htmlFor="register-name">
+                Your Full Name
               </label>
               <div style={{ position: 'relative' }}>
-                <User size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <User
+                  size={16}
+                  color="var(--text-subtle)"
+                  style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)' }}
+                />
                 <input
+                  id="register-name"
                   type="text"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Maya Lin"
+                  placeholder="e.g. Jane Doe"
                   className="form-input"
-                  style={{ paddingLeft: '2.6rem' }}
-                  required
+                  style={{ paddingLeft: '2.5rem' }}
                 />
               </div>
             </div>
 
+            {/* Email Address */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.45rem' }}>
+              <label className="form-label" htmlFor="register-email">
                 Email Address
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <Mail
+                  size={16}
+                  color="var(--text-subtle)"
+                  style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)' }}
+                />
                 <input
+                  id="register-email"
                   type="email"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@example.com"
+                  placeholder="name@example.com"
                   className="form-input"
-                  style={{ paddingLeft: '2.6rem' }}
-                  required
+                  style={{ paddingLeft: '2.5rem' }}
                 />
               </div>
             </div>
 
+            {/* Password */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.45rem' }}>
-                Password (min. 6 characters)
+              <label className="form-label" htmlFor="register-password">
+                Password
               </label>
               <div style={{ position: 'relative' }}>
-                <Lock size={16} color="#94A3B8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <Lock
+                  size={16}
+                  color="var(--text-subtle)"
+                  style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)' }}
+                />
                 <input
+                  id="register-password"
                   type={showPassword ? 'text' : 'password'}
+                  required
+                  minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="At least 6 characters"
                   className="form-input"
-                  style={{ paddingLeft: '2.6rem', paddingRight: '2.6rem' }}
-                  minLength={6}
-                  required
+                  style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer' }}
+                  style={{
+                    position: 'absolute',
+                    right: '0.9rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-subtle)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            {/* Favorite Genres Selection */}
+            {/* Preferred Genres Selection */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                Pick 2+ Favorite Genres:
+              <label className="form-label" style={{ marginBottom: '0.5rem' }}>
+                Pick 2+ Genres You Love
               </label>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                {SUGGESTED_GENRES.map((g) => {
-                  const isSel = selectedGenres.includes(g);
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+                {SUGGESTED_GENRES.map((genre) => {
+                  const isSelected = selectedGenres.includes(genre);
                   return (
                     <button
-                      key={g}
+                      key={genre}
                       type="button"
-                      onClick={() => toggleGenre(g)}
+                      onClick={() => toggleGenre(genre)}
                       style={{
                         padding: '0.35rem 0.75rem',
-                        borderRadius: 'var(--radius-pill)',
-                        background: isSel ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.04)',
-                        border: isSel ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.08)',
-                        color: isSel ? '#FFFFFF' : '#CBD5E1',
-                        fontSize: '0.78rem',
-                        fontWeight: 700,
+                        borderRadius: '9999px',
+                        fontSize: '0.8rem',
+                        fontWeight: 500,
+                        border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border-medium)',
+                        backgroundColor: isSelected ? 'var(--primary-light)' : '#FFFFFF',
+                        color: isSelected ? 'var(--primary)' : 'var(--text-body)',
                         cursor: 'pointer',
-                        display: 'flex',
+                        display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.3rem',
+                        transition: 'all 0.15s ease',
                       }}
                     >
-                      <span>{g}</span>
-                      {isSel && <Check size={12} />}
+                      {isSelected && <Check size={12} />}
+                      <span>{genre}</span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-purple-glow"
-              style={{ width: '100%', padding: '1rem', fontSize: '1rem', marginTop: '0.5rem', justifyContent: 'center' }}
+              className="btn btn-primary"
+              style={{
+                width: '100%',
+                padding: '0.8rem',
+                fontSize: '0.95rem',
+                marginTop: '0.5rem',
+              }}
             >
-              <span>{isLoading ? 'Creating Account...' : 'Join BookVerse'}</span>
-              <ArrowRight size={16} />
+              {isLoading ? 'Creating Account...' : 'Get Started Free'}
+              {!isLoading && <ArrowRight size={16} />}
             </button>
           </form>
 
-          <div style={{ marginTop: '1.75rem', textAlign: 'center', fontSize: '0.85rem', color: '#94A3B8' }}>
+          {/* Switch to Login */}
+          <div
+            style={{
+              marginTop: '1.5rem',
+              paddingTop: '1.25rem',
+              borderTop: '1px solid var(--border-subtle)',
+              textAlign: 'center',
+              fontSize: '0.86rem',
+              color: 'var(--text-muted)',
+            }}
+          >
             Already have an account?{' '}
-            <Link to="/login" style={{ color: '#A78BFA', fontWeight: 800, textDecoration: 'none' }}>
-              Sign in here
+            <Link
+              to="/login"
+              style={{
+                color: 'var(--primary)',
+                fontWeight: 600,
+                textDecoration: 'none',
+              }}
+            >
+              Sign in
             </Link>
           </div>
         </div>

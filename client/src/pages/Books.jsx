@@ -4,14 +4,10 @@ import api from '../api/client.js';
 import BookCard from '../components/books/BookCard.jsx';
 import {
   Search,
-  Filter,
   X,
-  Star,
   BookOpen,
   ArrowUpDown,
-  Sparkles,
-  Layers,
-  Clock,
+  RotateCcw,
 } from 'lucide-react';
 
 const GENRES = [
@@ -112,30 +108,42 @@ export default function Books() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', paddingBottom: '5rem' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)', paddingBottom: '4rem' }}>
       {/* Header Banner */}
       <section
         style={{
-          padding: '3rem 0 2rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.18) 0%, transparent 60%)',
+          padding: '2.5rem 0 2rem',
+          backgroundColor: '#FFFFFF',
+          borderBottom: '1px solid var(--border-subtle)',
         }}
       >
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-            <BookOpen size={17} />
-            <span>Curated Library Catalog</span>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              color: 'var(--primary)',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              marginBottom: '0.4rem',
+            }}
+          >
+            <BookOpen size={16} />
+            <span>Library Catalog</span>
           </div>
-          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.5rem' }}>
-            Explore Masterpiece Reads
+          <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.4rem' }}>
+            Explore All Masterpieces
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.95rem', maxWidth: '600px' }}>
-            Filter by genre, emotional mood, pacing, and length to find the exact book tailored for your next reading journey.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: '600px' }}>
+            Filter by genre, mood, reading pace, and length to find the exact book tailored for your reading journey.
           </p>
         </div>
       </section>
 
-      <div className="container" style={{ paddingTop: '2.5rem' }}>
+      <div className="container" style={{ paddingTop: '2rem' }}>
         {/* Search & Sort Controls Bar */}
         <div
           style={{
@@ -144,15 +152,15 @@ export default function Books() {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '1rem',
-            marginBottom: '1.5rem',
+            marginBottom: '1.25rem',
           }}
         >
           {/* Search Input */}
-          <div style={{ position: 'relative', width: '100%', maxWidth: '380px' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '360px' }}>
             <Search
-              size={17}
-              color="#94A3B8"
-              style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }}
+              size={16}
+              color="var(--text-subtle)"
+              style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)' }}
             />
             <input
               type="text"
@@ -163,20 +171,23 @@ export default function Books() {
                 setPage(1);
               }}
               className="form-input"
-              style={{ paddingLeft: '2.75rem', borderRadius: 'var(--radius-pill)' }}
+              style={{ paddingLeft: '2.5rem', paddingRight: '2rem' }}
             />
             {search && (
               <button
+                type="button"
                 onClick={() => setSearch('')}
                 style={{
                   position: 'absolute',
-                  right: '1rem',
+                  right: '0.8rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: 'var(--text-subtle)',
                   cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
                 <X size={15} />
@@ -184,211 +195,281 @@ export default function Books() {
             )}
           </div>
 
-          {/* Sort Dropdown & Results Counter */}
+          {/* Sort Dropdown & Counter */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 800 }}>
-              {total} {total === 1 ? 'Book' : 'Books'} Found
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+              {total} {total === 1 ? 'Book' : 'Books'}
             </span>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <ArrowUpDown size={15} color="#A78BFA" />
+              <ArrowUpDown size={14} color="var(--primary)" />
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#FFFFFF',
-                  padding: '0.55rem 0.85rem',
-                  borderRadius: '12px',
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
+                  background: '#FFFFFF',
+                  border: '1px solid var(--border-medium)',
+                  color: 'var(--text-heading)',
+                  padding: '0.45rem 0.75rem',
+                  borderRadius: '6px',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
                   outline: 'none',
                   cursor: 'pointer',
                 }}
               >
-                <option value="rating" style={{ background: '#151324' }}>Highest Rated</option>
-                <option value="popular" style={{ background: '#151324' }}>Most Popular</option>
-                <option value="newest" style={{ background: '#151324' }}>Newest Published</option>
-                <option value="title" style={{ background: '#151324' }}>Title (A-Z)</option>
-                <option value="pages_asc" style={{ background: '#151324' }}>Shortest First</option>
-                <option value="pages_desc" style={{ background: '#151324' }}>Longest (Epic)</option>
+                <option value="rating">Highest Rated</option>
+                <option value="popular">Most Popular</option>
+                <option value="newest">Newest Published</option>
+                <option value="title">Title (A-Z)</option>
+                <option value="pages_asc">Shortest First</option>
+                <option value="pages_desc">Longest (Epic)</option>
               </select>
             </div>
           </div>
         </div>
 
-        {/* Filters Row: Genre Chips */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.6rem' }}>
-            Filter by Genre
-          </div>
-          <div
-            className="no-scrollbar"
-            style={{
-              display: 'flex',
-              gap: '0.5rem',
-              overflowX: 'auto',
-              paddingBottom: '0.5rem',
-            }}
-          >
-            {GENRES.map((g) => (
-              <button
-                key={g}
-                onClick={() => {
-                  setSelectedGenre(g);
-                  setPage(1);
-                }}
-                className={`sonora-filter-chip ${selectedGenre === g ? 'active' : ''}`}
-                style={{ padding: '0.45rem 1rem', fontSize: '0.82rem' }}
-              >
-                {g}
-              </button>
-            ))}
-          </div>
+        {/* Genre Chips */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.45rem',
+            overflowX: 'auto',
+            paddingBottom: '0.75rem',
+            marginBottom: '1rem',
+          }}
+        >
+          {GENRES.map((g) => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => {
+                setSelectedGenre(g);
+                setPage(1);
+              }}
+              className={`genre-chip ${selectedGenre === g ? 'active' : ''}`}
+            >
+              {g}
+            </button>
+          ))}
         </div>
 
-        {/* Filters Row: Mood Vibes */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.6rem' }}>
-            Filter by Mood & Vibe
+        {/* Secondary Filters Bar */}
+        <div
+          className="card-clean"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            flexWrap: 'wrap',
+            padding: '0.85rem 1.15rem',
+            marginBottom: '2rem',
+            backgroundColor: '#FFFFFF',
+            borderRadius: '10px',
+            border: '1px solid var(--border-subtle)',
+          }}
+        >
+          {/* Mood filter */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Mood:</span>
+            <select
+              value={selectedMood}
+              onChange={(e) => {
+                setSelectedMood(e.target.value);
+                setPage(1);
+              }}
+              style={{
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                border: '1px solid var(--border-medium)',
+                background: '#FFFFFF',
+                color: 'var(--text-heading)',
+                fontSize: '0.8rem',
+              }}
+            >
+              {MOODS.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
           </div>
-          <div
-            className="no-scrollbar"
+
+          {/* Pace filter */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Pace:</span>
+            <select
+              value={selectedPace}
+              onChange={(e) => {
+                setSelectedPace(e.target.value);
+                setPage(1);
+              }}
+              style={{
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                border: '1px solid var(--border-medium)',
+                background: '#FFFFFF',
+                color: 'var(--text-heading)',
+                fontSize: '0.8rem',
+              }}
+            >
+              <option value="All">All Paces</option>
+              <option value="Fast">Fast Paced</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Slow Burn">Slow Burn</option>
+            </select>
+          </div>
+
+          {/* Length filter */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Length:</span>
+            <select
+              value={selectedLength}
+              onChange={(e) => {
+                setSelectedLength(e.target.value);
+                setPage(1);
+              }}
+              style={{
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                border: '1px solid var(--border-medium)',
+                background: '#FFFFFF',
+                color: 'var(--text-heading)',
+                fontSize: '0.8rem',
+              }}
+            >
+              <option value="">Any Length</option>
+              <option value="short">Short (&lt; 280 p)</option>
+              <option value="medium">Medium (280–450 p)</option>
+              <option value="epic">Epic (&gt; 450 p)</option>
+            </select>
+          </div>
+
+          {/* Min rating */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Rating:</span>
+            <select
+              value={minRating}
+              onChange={(e) => {
+                setMinRating(e.target.value);
+                setPage(1);
+              }}
+              style={{
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                border: '1px solid var(--border-medium)',
+                background: '#FFFFFF',
+                color: 'var(--text-heading)',
+                fontSize: '0.8rem',
+              }}
+            >
+              <option value="">Any Rating</option>
+              <option value="4.5">4.5+ Stars</option>
+              <option value="4.7">4.7+ Stars</option>
+              <option value="4.8">4.8+ Stars</option>
+            </select>
+          </div>
+
+          {/* Reset Filters */}
+          <button
+            type="button"
+            onClick={handleResetFilters}
             style={{
+              marginLeft: 'auto',
               display: 'flex',
-              gap: '0.5rem',
-              overflowX: 'auto',
-              paddingBottom: '0.5rem',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.35rem 0.65rem',
+              borderRadius: '6px',
+              border: '1px solid var(--border-medium)',
+              background: '#FFFFFF',
+              color: 'var(--text-muted)',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              cursor: 'pointer',
             }}
           >
-            {MOODS.map((m) => (
-              <button
-                key={m}
-                onClick={() => {
-                  setSelectedMood(m);
-                  setPage(1);
-                }}
-                style={{
-                  padding: '0.45rem 0.95rem',
-                  borderRadius: 'var(--radius-pill)',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  background: selectedMood === m ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255, 255, 255, 0.04)',
-                  border: selectedMood === m ? '1.5px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
-                  color: selectedMood === m ? '#FFFFFF' : '#CBD5E1',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.2s ease',
-                  boxShadow: selectedMood === m ? '0 0 15px rgba(56, 189, 248, 0.4)' : 'none',
-                }}
-              >
-                {m !== 'All' && <span>✦ </span>}
-                {m}
-              </button>
-            ))}
-          </div>
+            <RotateCcw size={12} />
+            <span>Reset</span>
+          </button>
         </div>
 
         {/* Books Grid */}
-        {isLoading ? (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1.75rem',
-            }}
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gap: '1.5rem',
+            marginBottom: '2.5rem',
+          }}
+        >
+          {isLoading ? (
+            [1, 2, 3, 4, 5, 6].map((n) => (
               <div
                 key={n}
-                className="glass-widget-card"
-                style={{ height: '440px', opacity: 0.5, animation: 'pulse 1.5s infinite' }}
+                style={{
+                  height: '380px',
+                  borderRadius: '14px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid var(--border-subtle)',
+                }}
               />
-            ))}
-          </div>
-        ) : books.length === 0 ? (
-          <div
-            className="glass-widget-card"
-            style={{
-              padding: '4rem 2rem',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '1rem',
-            }}
-          >
-            <BookOpen size={48} color="#8B5CF6" />
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#FFFFFF' }}>
-              No books match your criteria
-            </h3>
-            <p style={{ color: '#94A3B8', maxWidth: '420px', lineHeight: 1.5 }}>
-              Try adjusting your search query, or clear your genre and mood filters to see all available books.
-            </p>
-            <button onClick={handleResetFilters} className="btn-purple-glow">
-              Reset All Filters
-            </button>
-          </div>
-        ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1.75rem',
-            }}
-          >
-            {books.map((book) => (
-              <BookCard key={book._id} book={book} />
-            ))}
-          </div>
-        )}
+            ))
+          ) : books.length > 0 ? (
+            books.map((book) => <BookCard key={book._id} book={book} />)
+          ) : (
+            <div
+              style={{
+                gridColumn: '1 / -1',
+                textAlign: 'center',
+                padding: '4rem 1rem',
+                backgroundColor: '#FFFFFF',
+                borderRadius: '14px',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <BookOpen size={40} color="var(--text-subtle)" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.4rem' }}>
+                No books match your filters
+              </h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+                Try loosening your filters or resetting your search.
+              </p>
+              <button onClick={handleResetFilters} className="btn btn-secondary">
+                Reset All Filters
+              </button>
+            </div>
+          )}
+        </div>
 
-        {/* Pagination Controls */}
+        {/* Pagination */}
         {totalPages > 1 && (
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.65rem',
-              marginTop: '3.5rem',
+              gap: '0.5rem',
             }}
           >
             <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="btn-secondary"
-              style={{ padding: '0.55rem 1rem', fontSize: '0.85rem', opacity: page === 1 ? 0.4 : 1 }}
+              disabled={page <= 1}
+              onClick={() => setPage(page - 1)}
+              className="btn btn-secondary"
+              style={{ padding: '0.45rem 0.85rem', fontSize: '0.85rem' }}
             >
               Previous
             </button>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-              <button
-                key={num}
-                onClick={() => setPage(num)}
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: page === num ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
-                  border: page === num ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#FFFFFF',
-                  fontWeight: 800,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                }}
-              >
-                {num}
-              </button>
-            ))}
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', padding: '0 0.5rem' }}>
+              Page {page} of {totalPages}
+            </span>
 
             <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="btn-secondary"
-              style={{ padding: '0.55rem 1rem', fontSize: '0.85rem', opacity: page === totalPages ? 0.4 : 1 }}
+              disabled={page >= totalPages}
+              onClick={() => setPage(page + 1)}
+              className="btn btn-secondary"
+              style={{ padding: '0.45rem 0.85rem', fontSize: '0.85rem' }}
             >
               Next
             </button>

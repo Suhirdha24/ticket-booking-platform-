@@ -12,18 +12,16 @@ import {
   Moon,
   Coffee,
   Flame,
-  CheckCircle2,
   BookOpen,
-  Filter,
 } from 'lucide-react';
 
 const MOODS = [
-  { id: 'Mind-Bending', label: 'Mind-Bending', icon: Brain, color: '#38BDF8' },
-  { id: 'Emotional', label: 'Emotional & Moving', icon: Heart, color: '#F472B6' },
-  { id: 'Fast-Paced', label: 'Fast & Gripping', icon: Zap, color: '#F59E0B' },
-  { id: 'Dark & Gripping', label: 'Dark & Psychological', icon: Moon, color: '#A78BFA' },
-  { id: 'Cozy & Relaxing', label: 'Cozy & Relaxing', icon: Coffee, color: '#34D399' },
-  { id: 'Inspirational', label: 'Inspirational & Habits', icon: Flame, color: '#FBBF24' },
+  { id: 'Mind-Bending', label: 'Mind-Bending', icon: Brain },
+  { id: 'Emotional', label: 'Emotional & Moving', icon: Heart },
+  { id: 'Fast-Paced', label: 'Fast-Paced', icon: Zap },
+  { id: 'Dark & Gripping', label: 'Dark & Gripping', icon: Moon },
+  { id: 'Cozy & Relaxing', label: 'Cozy & Relaxing', icon: Coffee },
+  { id: 'Inspirational', label: 'Inspirational', icon: Flame },
 ];
 
 export default function Recommendations() {
@@ -85,34 +83,45 @@ export default function Recommendations() {
   }, [activeTab, selectedMood, selectedGenre, selectedPace, selectedLength]);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', paddingBottom: '6rem' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)', paddingBottom: '5rem' }}>
       {/* Header Banner */}
       <section
         style={{
-          padding: '3rem 0 2rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundImage:
-            'radial-gradient(circle at 75% 25%, rgba(139, 92, 246, 0.22) 0%, transparent 60%), radial-gradient(circle at 20% 80%, rgba(56, 189, 248, 0.15) 0%, transparent 50%)',
+          padding: '2.5rem 0 2rem',
+          backgroundColor: '#FFFFFF',
+          borderBottom: '1px solid var(--border-subtle)',
         }}
       >
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-            <Sparkles size={17} />
-            <span>AI & Content-Based Recommendation Engine</span>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              color: 'var(--primary)',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              marginBottom: '0.4rem',
+            }}
+          >
+            <Sparkles size={16} />
+            <span>Recommendation Engine</span>
           </div>
-          <h1 style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.2rem)', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.5rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.4rem' }}>
             Find Your Next Perfect Read
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.98rem', maxWidth: '640px' }}>
-            Our recommendation algorithm matches your exact emotional appetite, preferred pacing, and favorite genres to deliver high-affinity book suggestions.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: '640px' }}>
+            Match your exact emotional appetite, preferred pacing, and favorite genres to receive high-affinity book suggestions.
           </p>
 
           {/* Dual Recommendation Mode Tabs */}
           <div
             style={{
               display: 'flex',
-              gap: '0.75rem',
-              marginTop: '2rem',
+              gap: '0.5rem',
+              marginTop: '1.5rem',
             }}
           >
             <button
@@ -120,19 +129,18 @@ export default function Recommendations() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.75rem 1.4rem',
-                borderRadius: 'var(--radius-pill)',
-                background: activeTab === 'vibe' ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
-                border: activeTab === 'vibe' ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#FFFFFF',
-                fontWeight: 800,
-                fontSize: '0.9rem',
+                gap: '0.45rem',
+                padding: '0.55rem 1.15rem',
+                borderRadius: '8px',
+                background: activeTab === 'vibe' ? 'var(--primary)' : '#FFFFFF',
+                border: activeTab === 'vibe' ? '1px solid var(--primary)' : '1px solid var(--border-medium)',
+                color: activeTab === 'vibe' ? '#FFFFFF' : 'var(--text-heading)',
+                fontWeight: 600,
+                fontSize: '0.86rem',
                 cursor: 'pointer',
-                boxShadow: activeTab === 'vibe' ? '0 4px 20px rgba(139, 92, 246, 0.5)' : 'none',
               }}
             >
-              <Sparkles size={16} />
+              <Sparkles size={15} />
               <span>Interactive Vibe Matcher</span>
             </button>
 
@@ -141,46 +149,43 @@ export default function Recommendations() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.75rem 1.4rem',
-                borderRadius: 'var(--radius-pill)',
-                background: activeTab === 'for-you' ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
-                border: activeTab === 'for-you' ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#FFFFFF',
-                fontWeight: 800,
-                fontSize: '0.9rem',
+                gap: '0.45rem',
+                padding: '0.55rem 1.15rem',
+                borderRadius: '8px',
+                background: activeTab === 'for-you' ? 'var(--primary)' : '#FFFFFF',
+                border: activeTab === 'for-you' ? '1px solid var(--primary)' : '1px solid var(--border-medium)',
+                color: activeTab === 'for-you' ? '#FFFFFF' : 'var(--text-heading)',
+                fontWeight: 600,
+                fontSize: '0.86rem',
                 cursor: 'pointer',
-                boxShadow: activeTab === 'for-you' ? '0 4px 20px rgba(139, 92, 246, 0.5)' : 'none',
               }}
             >
-              <Compass size={16} />
+              <Compass size={15} />
               <span>Personalized For You {isAuthenticated && `(${user?.name?.split(' ')[0]})`}</span>
             </button>
           </div>
         </div>
       </section>
 
-      <div className="container" style={{ paddingTop: '2.5rem' }}>
-        {/* ========================================================================= */}
-        {/* TAB 1: VIBE MATCHER CRITERIA BAR */}
-        {/* ========================================================================= */}
+      <div className="container" style={{ paddingTop: '2rem' }}>
+        {/* TAB 1: VIBE MATCHER FILTERS */}
         {activeTab === 'vibe' && (
           <div
-            className="glass-widget-card"
+            className="card-clean"
             style={{
-              padding: '1.75rem',
-              borderRadius: '24px',
-              backgroundColor: 'rgba(20, 18, 34, 0.85)',
-              border: '1px solid rgba(139, 92, 246, 0.35)',
-              marginBottom: '2.5rem',
+              padding: '1.5rem',
+              borderRadius: '12px',
+              backgroundColor: '#FFFFFF',
+              border: '1px solid var(--border-medium)',
+              marginBottom: '2rem',
             }}
           >
             {/* Step 1: Mood Choice */}
             <div style={{ marginBottom: '1.25rem' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.65rem' }}>
-                1. Select Reading Mood
+              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.5rem' }}>
+                1. Select Desired Mood
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '0.65rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 {MOODS.map((m) => {
                   const Icon = m.icon;
                   const isSelected = selectedMood === m.id;
@@ -190,21 +195,20 @@ export default function Recommendations() {
                       type="button"
                       onClick={() => setSelectedMood(m.id)}
                       style={{
-                        padding: '0.75rem 1rem',
-                        borderRadius: '14px',
-                        background: isSelected ? 'rgba(139, 92, 246, 0.25)' : 'rgba(255, 255, 255, 0.04)',
-                        border: isSelected ? `1.5px solid ${m.color}` : '1px solid rgba(255, 255, 255, 0.08)',
-                        color: isSelected ? '#FFFFFF' : '#CBD5E1',
-                        cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.6rem',
-                        fontSize: '0.85rem',
-                        fontWeight: 800,
-                        transition: 'all 0.2s ease',
+                        gap: '0.45rem',
+                        padding: '0.45rem 0.85rem',
+                        borderRadius: '6px',
+                        background: isSelected ? 'var(--primary-light)' : '#FFFFFF',
+                        border: isSelected ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)',
+                        color: isSelected ? 'var(--primary)' : 'var(--text-body)',
+                        fontSize: '0.82rem',
+                        fontWeight: isSelected ? 700 : 500,
+                        cursor: 'pointer',
                       }}
                     >
-                      <Icon size={16} color={m.color} />
+                      <Icon size={14} />
                       <span>{m.label}</span>
                     </button>
                   );
@@ -212,143 +216,153 @@ export default function Recommendations() {
               </div>
             </div>
 
-            {/* Step 2 & 3: Genre & Pace & Length */}
+            {/* Step 2: Genre, Pace, Length */}
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                gap: '1.25rem',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                paddingTop: '1.25rem',
+                display: 'flex',
+                gap: '1rem',
+                flexWrap: 'wrap',
+                paddingTop: '1rem',
+                borderTop: '1px solid var(--border-subtle)',
               }}
             >
-              <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#94A3B8', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
-                  Genre
-                </label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Genre:</span>
                 <select
                   value={selectedGenre}
                   onChange={(e) => setSelectedGenre(e.target.value)}
                   style={{
-                    width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#FFFFFF',
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
-                    outline: 'none',
+                    padding: '0.4rem 0.75rem',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-medium)',
+                    background: '#FFFFFF',
+                    color: 'var(--text-heading)',
+                    fontSize: '0.82rem',
                   }}
                 >
-                  {['All', 'Sci-Fi', 'Mystery', 'Thriller', 'Fantasy', 'Self-Help', 'Non-Fiction', 'Romance', 'Classics', 'Philosophy'].map((g) => (
-                    <option key={g} value={g} style={{ background: '#151324' }}>{g}</option>
-                  ))}
+                  <option value="All">All Genres</option>
+                  <option value="Sci-Fi">Sci-Fi</option>
+                  <option value="Fantasy">Fantasy</option>
+                  <option value="Mystery">Mystery</option>
+                  <option value="Thriller">Thriller</option>
+                  <option value="Self-Help">Self-Help</option>
+                  <option value="Non-Fiction">Non-Fiction</option>
+                  <option value="Romance">Romance</option>
+                  <option value="Philosophy">Philosophy</option>
+                  <option value="Classics">Classics</option>
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#94A3B8', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
-                  Reading Pace
-                </label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Pacing:</span>
                 <select
                   value={selectedPace}
                   onChange={(e) => setSelectedPace(e.target.value)}
                   style={{
-                    width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#FFFFFF',
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
-                    outline: 'none',
+                    padding: '0.4rem 0.75rem',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-medium)',
+                    background: '#FFFFFF',
+                    color: 'var(--text-heading)',
+                    fontSize: '0.82rem',
                   }}
                 >
-                  <option value="Any" style={{ background: '#151324' }}>Any Pace</option>
-                  <option value="Fast" style={{ background: '#151324' }}>Fast & Gripping</option>
-                  <option value="Moderate" style={{ background: '#151324' }}>Moderate</option>
-                  <option value="Slow Burn" style={{ background: '#151324' }}>Slow Burn & Rich</option>
+                  <option value="Any">Any Pacing</option>
+                  <option value="Fast">Fast Paced</option>
+                  <option value="Moderate">Moderate</option>
+                  <option value="Slow Burn">Slow Burn & Epic</option>
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#94A3B8', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
-                  Book Length
-                </label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Length:</span>
                 <select
                   value={selectedLength}
                   onChange={(e) => setSelectedLength(e.target.value)}
                   style={{
-                    width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#FFFFFF',
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
-                    outline: 'none',
+                    padding: '0.4rem 0.75rem',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-medium)',
+                    background: '#FFFFFF',
+                    color: 'var(--text-heading)',
+                    fontSize: '0.82rem',
                   }}
                 >
-                  <option value="all" style={{ background: '#151324' }}>Any Length</option>
-                  <option value="short" style={{ background: '#151324' }}>Quick Read (&lt; 280 pages)</option>
-                  <option value="medium" style={{ background: '#151324' }}>Standard Novel (280 - 450 pages)</option>
-                  <option value="epic" style={{ background: '#151324' }}>Epic Doorstopper (&gt; 450 pages)</option>
+                  <option value="all">Any Length</option>
+                  <option value="short">Short (&lt; 280 p)</option>
+                  <option value="medium">Medium (280–450 p)</option>
+                  <option value="epic">Epic (&gt; 450 p)</option>
                 </select>
               </div>
             </div>
           </div>
         )}
 
-        {/* Results Heading */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.75rem' }}>
-          <div>
-            <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#FFFFFF' }}>
-              {activeTab === 'vibe' ? `Matches for "${selectedMood}" Vibe` : 'Curated Just for You'}
-            </h3>
-            <div style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
-              Ranked by algorithm compatibility and reader reception
-            </div>
+        {/* RESULTS GRID */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-heading)' }}>
+              {activeTab === 'vibe' ? `Recommended for "${selectedMood}"` : 'Curated Just For You'}
+            </h2>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+              {(activeTab === 'vibe' ? vibeResults : forYouResults).length} Recommendations
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {isLoading ? (
+              [1, 2, 3, 4].map((n) => (
+                <div
+                  key={n}
+                  style={{
+                    height: '380px',
+                    borderRadius: '14px',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid var(--border-subtle)',
+                  }}
+                />
+              ))
+            ) : (activeTab === 'vibe' ? vibeResults : forYouResults).length > 0 ? (
+              (activeTab === 'vibe' ? vibeResults : forYouResults).map((item) => {
+                const bookData = item.book || item;
+                const matchPct = item.matchPercentage || item.recommendationScore;
+                return (
+                  <BookCard
+                    key={bookData._id}
+                    book={bookData}
+                    matchPercentage={matchPct}
+                    matchReasons={item.matchReasons}
+                  />
+                );
+              })
+            ) : (
+              <div
+                style={{
+                  gridColumn: '1 / -1',
+                  textAlign: 'center',
+                  padding: '4rem 1rem',
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border-medium)',
+                }}
+              >
+                <BookOpen size={40} color="var(--text-subtle)" style={{ marginBottom: '1rem' }} />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.4rem' }}>
+                  No matches found for this specific combo
+                </h3>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                  Try adjusting your pacing or choosing "All Genres".
+                </p>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Results Grid */}
-        {isLoading ? (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1.75rem',
-            }}
-          >
-            {[1, 2, 3, 4, 5, 6].map((n) => (
-              <div
-                key={n}
-                className="glass-widget-card"
-                style={{ height: '420px', opacity: 0.5, animation: 'pulse 1.5s infinite' }}
-              />
-            ))}
-          </div>
-        ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1.75rem',
-            }}
-          >
-            {(activeTab === 'vibe' ? vibeResults : forYouResults).map((book) => (
-              <BookCard
-                key={book._id}
-                book={book}
-                matchPercentage={book.matchPercentage}
-                matchReasons={book.matchReasons}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

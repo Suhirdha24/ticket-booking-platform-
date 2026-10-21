@@ -65,7 +65,7 @@ export default function MobileBottomNav() {
                     width: '7px',
                     height: '7px',
                     borderRadius: '50%',
-                    background: '#8B5CF6',
+                    background: 'var(--primary)',
                   }}
                 />
               )}

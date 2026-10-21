@@ -11,24 +11,21 @@ import {
   Star,
   Compass,
   Bookmark,
-  Target,
-  Flame,
-  CheckCircle2,
-  Heart,
-  Quote,
+  TrendingUp,
+  Award,
 } from 'lucide-react';
 
 const GENRES = [
-  { name: 'All', icon: '📚' },
-  { name: 'Sci-Fi', icon: '🚀' },
-  { name: 'Mystery', icon: '🕵️' },
-  { name: 'Thriller', icon: '⚡' },
-  { name: 'Fantasy', icon: '🧙' },
-  { name: 'Self-Help', icon: '🌱' },
-  { name: 'Non-Fiction', icon: '💡' },
-  { name: 'Romance', icon: '💖' },
-  { name: 'Philosophy', icon: '🏛️' },
-  { name: 'Classics', icon: '📜' },
+  'All',
+  'Sci-Fi',
+  'Mystery',
+  'Thriller',
+  'Fantasy',
+  'Self-Help',
+  'Non-Fiction',
+  'Romance',
+  'Philosophy',
+  'Classics',
 ];
 
 export default function Home() {
@@ -73,101 +70,104 @@ export default function Home() {
   const spotlightBook = featuredBooks[0] || trendingBooks[0] || null;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)' }}>
       {/* ========================================================================= */}
-      {/* 🚀 1. HERO SECTION WITH 3D BOOK SHOWCASE */}
+      {/* 1. CLEAN MODERN HERO */}
       {/* ========================================================================= */}
       <section
         style={{
-          position: 'relative',
-          padding: '3rem 0 4rem',
-          overflow: 'hidden',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundImage:
-            'radial-gradient(circle at 75% 30%, rgba(139, 92, 246, 0.25) 0%, transparent 60%), radial-gradient(circle at 15% 70%, rgba(56, 189, 248, 0.15) 0%, transparent 50%)',
+          padding: '3.5rem 0 3rem',
+          borderBottom: '1px solid var(--border-subtle)',
+          backgroundColor: '#FFFFFF',
         }}
       >
-        <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+        <div className="container">
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
               gap: '3rem',
               alignItems: 'center',
-              minHeight: '480px',
             }}
           >
-            {/* Left Column: Headline & Search */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <div className="hero-ticker-bar">
-                <span className="live-pulse-dot" />
-                <span>Smart AI & Vibe Recommendation Engine Active • 98% Match Accuracy</span>
+            {/* Left Column: Headline, Search & CTAs */}
+            <div>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  padding: '0.3rem 0.75rem',
+                  borderRadius: '9999px',
+                  backgroundColor: 'var(--primary-light)',
+                  color: 'var(--primary)',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  marginBottom: '1rem',
+                }}
+              >
+                <Sparkles size={13} />
+                <span>Smart Reading & Vibe Matcher</span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
-                <div className="hero-tag-pill">
-                  <span className="tag-icon">✦</span>
-                  <span>Personalized Reads</span>
-                </div>
-                <div className="hero-tag-pill">
-                  <span className="tag-icon">★</span>
-                  <span>Curated Bestsellers</span>
-                </div>
-              </div>
-
-              <h1 className="hero-huge-title" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)' }}>
-                Discover Books<br />You'll Never Forget
+              <h1
+                style={{
+                  fontSize: 'clamp(2.4rem, 4.5vw, 3.4rem)',
+                  fontWeight: 800,
+                  color: 'var(--text-heading)',
+                  lineHeight: 1.15,
+                  marginBottom: '1rem',
+                  letterSpacing: '-0.03em',
+                }}
+              >
+                Find books that fit your mood and pacing.
               </h1>
-
-              <span className="hero-script-subtitle" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)' }}>
-                Tailored to your current vibe
-              </span>
 
               <p
                 style={{
                   fontSize: '1.05rem',
-                  color: '#94A3B8',
-                  maxWidth: '480px',
+                  color: 'var(--text-muted)',
                   lineHeight: 1.6,
-                  marginBottom: '2rem',
+                  maxWidth: '520px',
+                  marginBottom: '1.75rem',
                 }}
               >
-                Stop wandering endless bestseller lists. Get hyper-personalized recommendations based on your favorite genres, emotional mood, and reading pace.
+                Discover personalized reads based on your current vibe, genres you love, and reading pace — without endless scrolling or decision fatigue.
               </p>
 
               {/* Instant Search Bar */}
-              <form onSubmit={handleSearchSubmit} style={{ width: '100%', maxWidth: '440px', marginBottom: '1.5rem' }}>
-                <div style={{ position: 'relative', width: '100%' }}>
+              <form onSubmit={handleSearchSubmit} style={{ maxWidth: '460px', marginBottom: '1.5rem' }}>
+                <div style={{ position: 'relative' }}>
                   <Search
-                    size={18}
-                    color="#94A3B8"
-                    style={{ position: 'absolute', left: '1.1rem', top: '50%', transform: 'translateY(-50%)' }}
+                    size={17}
+                    color="var(--text-subtle)"
+                    style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }}
                   />
                   <input
                     type="text"
-                    placeholder="Search by title, author, or keyword (e.g. Andy Weir, Sci-Fi)..."
+                    placeholder="Search by title, author, or keyword..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="form-input"
                     style={{
-                      paddingLeft: '3rem',
+                      paddingLeft: '2.7rem',
                       paddingRight: '6.5rem',
-                      height: '52px',
-                      borderRadius: 'var(--radius-pill)',
-                      fontSize: '0.92rem',
+                      height: '48px',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
                     }}
                   />
                   <button
                     type="submit"
-                    className="btn-purple-glow"
+                    className="btn btn-primary"
                     style={{
                       position: 'absolute',
-                      right: '6px',
-                      top: '6px',
-                      bottom: '6px',
-                      padding: '0 1.25rem',
+                      right: '5px',
+                      top: '5px',
+                      bottom: '5px',
+                      padding: '0 1rem',
                       fontSize: '0.84rem',
-                      borderRadius: 'var(--radius-pill)',
+                      borderRadius: '6px',
                     }}
                   >
                     Search
@@ -176,52 +176,56 @@ export default function Home() {
               </form>
 
               {/* Action Buttons */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                <Link to="/recommendations">
-                  <button className="btn-purple-glow">
-                    <Sparkles size={16} />
-                    <span>Launch Vibe Matcher</span>
-                  </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <Link to="/recommendations" className="btn btn-primary">
+                  <Sparkles size={16} />
+                  <span>Launch Vibe Matcher</span>
                 </Link>
 
-                <Link to="/books">
-                  <button className="btn-secondary" style={{ padding: '0.85rem 1.6rem', borderRadius: 'var(--radius-pill)', fontWeight: 800 }}>
-                    <Compass size={16} />
-                    <span>Browse All 20+ Masterpieces</span>
-                  </button>
+                <Link to="/books" className="btn btn-secondary">
+                  <Compass size={16} />
+                  <span>Browse Full Library</span>
                 </Link>
               </div>
             </div>
 
-            {/* Right Column: 3D Spotlight Book & Statistics Card */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-              }}
-            >
-              {spotlightBook && (
+            {/* Right Column: Clean Book Spotlight Card */}
+            {spotlightBook && (
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div
-                  className="glass-widget-card"
+                  className="card-clean"
                   style={{
-                    position: 'relative',
                     width: '100%',
                     maxWidth: '420px',
-                    padding: '2rem',
-                    borderRadius: '30px',
-                    background: 'linear-gradient(135deg, rgba(20, 18, 34, 0.95) 0%, rgba(13, 12, 21, 0.95) 100%)',
-                    border: '1.5px solid rgba(139, 92, 246, 0.4)',
-                    boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.25)',
+                    padding: '1.75rem',
+                    borderRadius: '16px',
+                    border: '1px solid var(--border-medium)',
+                    backgroundColor: '#FFFFFF',
+                    boxShadow: 'var(--shadow-card)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#F59E0B', fontSize: '0.78rem', fontWeight: 800 }}>
-                      <Star size={15} fill="#F59E0B" />
-                      <span>Book of the Week</span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '1rem',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-amber)', fontSize: '0.8rem', fontWeight: 700 }}>
+                      <Award size={15} />
+                      <span>Featured Spotlight</span>
                     </div>
-                    <span style={{ fontSize: '0.72rem', color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-pill)', fontWeight: 800 }}>
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--primary)',
+                        background: 'var(--primary-light)',
+                        padding: '0.2rem 0.55rem',
+                        borderRadius: '4px',
+                        fontWeight: 600,
+                      }}
+                    >
                       {spotlightBook.genres?.[0]}
                     </span>
                   </div>
@@ -229,12 +233,13 @@ export default function Home() {
                   <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', marginBottom: '1.25rem' }}>
                     <div
                       style={{
-                        width: '110px',
-                        height: '160px',
-                        borderRadius: '6px 10px 10px 6px',
+                        width: '100px',
+                        height: '145px',
+                        borderRadius: '4px 8px 8px 4px',
                         overflow: 'hidden',
-                        boxShadow: '8px 12px 25px rgba(0, 0, 0, 0.7)',
+                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.12)',
                         flexShrink: 0,
+                        backgroundColor: '#F1F5F9',
                       }}
                     >
                       <img
@@ -244,16 +249,26 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.3, marginBottom: '0.3rem' }}>
+                      <h3
+                        style={{
+                          fontSize: '1.15rem',
+                          fontWeight: 700,
+                          color: 'var(--text-heading)',
+                          lineHeight: 1.3,
+                          marginBottom: '0.25rem',
+                        }}
+                      >
                         {spotlightBook.title}
                       </h3>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#A78BFA', marginBottom: '0.5rem' }}>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.45rem' }}>
                         by {spotlightBook.author}
                       </div>
-                      <div style={{ fontSize: '0.78rem', color: '#CBD5E1', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <Star size={13} fill="#F59E0B" color="#F59E0B" />
-                        <span style={{ fontWeight: 800 }}>{spotlightBook.averageRating}</span>
-                        <span style={{ color: '#64748B' }}>({spotlightBook.ratingsCount} reviews)</span>
+                      <div style={{ fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <Star size={14} fill="#F59E0B" color="#F59E0B" />
+                        <span style={{ fontWeight: 700, color: 'var(--text-heading)' }}>
+                          {spotlightBook.averageRating}
+                        </span>
+                        <span style={{ color: 'var(--text-muted)' }}>({spotlightBook.ratingsCount} reviews)</span>
                       </div>
                     </div>
                   </div>
@@ -261,13 +276,13 @@ export default function Home() {
                   {spotlightBook.quotes?.[0] && (
                     <div
                       style={{
-                        padding: '0.85rem 1rem',
-                        background: 'rgba(255, 255, 255, 0.04)',
-                        borderLeft: '3px solid #8B5CF6',
-                        borderRadius: '0 10px 10px 0',
+                        padding: '0.75rem 0.85rem',
+                        background: 'var(--bg-subtle)',
+                        borderLeft: '3px solid var(--primary)',
+                        borderRadius: '0 6px 6px 0',
                         fontSize: '0.82rem',
                         fontStyle: 'italic',
-                        color: '#DDD6FE',
+                        color: 'var(--text-body)',
                         marginBottom: '1.25rem',
                       }}
                     >
@@ -275,190 +290,266 @@ export default function Home() {
                     </div>
                   )}
 
-                  <Link to={`/books/${spotlightBook._id}`} style={{ textDecoration: 'none' }}>
-                    <button
-                      className="btn-purple-glow"
-                      style={{ width: '100%', padding: '0.85rem', fontSize: '0.9rem', justifyContent: 'center' }}
-                    >
-                      <span>Explore Synopsis & Reviews</span>
-                      <ArrowRight size={15} />
-                    </button>
+                  <Link
+                    to={`/books/${spotlightBook._id}`}
+                    className="btn btn-secondary"
+                    style={{ width: '100%', padding: '0.65rem' }}
+                  >
+                    <span>View Synopsis & Reviews</span>
+                    <ArrowRight size={15} />
                   </Link>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 🔮 2. INTERACTIVE MOOD & VIBE MATCHER WIDGET */}
+      {/* 2. INTERACTIVE VIBE MATCHER SECTION */}
       {/* ========================================================================= */}
-      <section style={{ padding: '3.5rem 0', position: 'relative' }}>
+      <section style={{ padding: '3rem 0', backgroundColor: 'var(--bg-main)' }}>
         <div className="container">
           <MoodMatcherWidget />
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 📚 3. TRENDING MASTERPIECES WITH GENRE FILTERS */}
+      {/* 3. TRENDING BOOKS WITH CLEAN GENRE CHIPS */}
       {/* ========================================================================= */}
-      <section style={{ padding: '2rem 0 4rem' }}>
+      <section style={{ padding: '2rem 0 4rem', backgroundColor: 'var(--bg-main)' }}>
         <div className="container">
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
               gap: '1rem',
-              marginBottom: '2rem',
+              marginBottom: '1.75rem',
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                <Flame size={16} />
-                <span>Community Favorites</span>
-              </div>
-              <h2 style={{ fontSize: '2.1rem', fontWeight: 900, color: '#FFFFFF', marginTop: '0.2rem' }}>
-                Trending & Highly Rated Books
-              </h2>
-            </div>
-
-            <Link to="/books" style={{ textDecoration: 'none' }}>
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  color: '#A78BFA',
-                  fontSize: '0.9rem',
-                  fontWeight: 800,
+                  color: 'var(--primary)',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  marginBottom: '0.25rem',
                 }}
               >
-                <span>View Full Catalog</span>
-                <ArrowRight size={15} />
+                <TrendingUp size={14} />
+                <span>Reader Favorites</span>
               </div>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-heading)' }}>
+                Popular & Highly Rated
+              </h2>
+            </div>
+
+            <Link
+              to="/books"
+              style={{
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                color: 'var(--primary)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+              }}
+            >
+              <span>View all books</span>
+              <ArrowRight size={15} />
             </Link>
           </div>
 
-          {/* Genre Chips */}
+          {/* Clean Genre Chips */}
           <div
-            className="no-scrollbar"
             style={{
               display: 'flex',
-              gap: '0.6rem',
+              gap: '0.5rem',
               overflowX: 'auto',
-              paddingBottom: '1rem',
-              marginBottom: '2.5rem',
+              paddingBottom: '0.75rem',
+              marginBottom: '2rem',
             }}
           >
             {GENRES.map((g) => (
               <button
-                key={g.name}
-                onClick={() => setSelectedGenre(g.name)}
-                className={`sonora-filter-chip ${selectedGenre === g.name ? 'active' : ''}`}
+                key={g}
+                type="button"
+                onClick={() => setSelectedGenre(g)}
+                className={`genre-chip ${selectedGenre === g ? 'active' : ''}`}
               >
-                <span>{g.icon}</span>
-                <span>{g.name}</span>
+                {g}
               </button>
             ))}
           </div>
 
-          {/* Books Grid */}
-          {isLoading ? (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '1.75rem',
-              }}
-            >
-              {[1, 2, 3, 4, 5, 6].map((n) => (
+          {/* Book Cards Grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {isLoading ? (
+              [1, 2, 3, 4].map((n) => (
                 <div
                   key={n}
-                  className="glass-widget-card"
-                  style={{ height: '420px', opacity: 0.5, animation: 'pulse 1.5s infinite' }}
+                  style={{
+                    height: '380px',
+                    borderRadius: '14px',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid var(--border-subtle)',
+                  }}
                 />
-              ))}
-            </div>
-          ) : filteredTrending.length === 0 ? (
-            <div
-              className="glass-widget-card"
-              style={{
-                padding: '4rem 2rem',
-                textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '1rem',
-              }}
-            >
-              <BookOpen size={48} color="#8B5CF6" />
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF' }}>
-                No books in this category yet
-              </h3>
-              <p style={{ color: '#94A3B8', maxWidth: '400px' }}>
-                Check out all books or try another genre filter.
-              </p>
-              <button onClick={() => setSelectedGenre('All')} className="btn-purple-glow">
-                View All Books
-              </button>
-            </div>
-          ) : (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '1.75rem',
-              }}
-            >
-              {filteredTrending.slice(0, 8).map((book) => (
+              ))
+            ) : filteredTrending.length > 0 ? (
+              filteredTrending.slice(0, 8).map((book) => (
                 <BookCard key={book._id} book={book} />
-              ))}
-            </div>
-          )}
+              ))
+            ) : (
+              <div
+                style={{
+                  gridColumn: '1 / -1',
+                  textAlign: 'center',
+                  padding: '3rem 1rem',
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
+                <p style={{ color: 'var(--text-muted)' }}>No books found in this genre.</p>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 🎯 4. ANNUAL READING CHALLENGE & COMMUNITY TEASER */}
+      {/* 4. VALUE PROPOSITION: CLEAN MINIMALIST FEATURE GRID */}
       {/* ========================================================================= */}
-      <section style={{ padding: '3rem 0 5rem' }}>
+      <section
+        style={{
+          padding: '3.5rem 0',
+          backgroundColor: '#FFFFFF',
+          borderTop: '1px solid var(--border-subtle)',
+        }}
+      >
         <div className="container">
+          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 2.5rem auto' }}>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.5rem' }}>
+              Built for how you actually read.
+            </h2>
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+              Everything you need to find your next favorite story and build a consistent reading habit.
+            </p>
+          </div>
+
           <div
-            className="glass-widget-card"
             style={{
-              padding: '3rem 2rem',
-              borderRadius: '28px',
-              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(56, 189, 248, 0.08) 100%)',
-              border: '1px solid rgba(139, 92, 246, 0.4)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '2rem',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1.5rem',
             }}
           >
-            <div style={{ maxWidth: '600px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#FBBF24', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                <Target size={16} />
-                <span>Build a Consistent Reading Habit</span>
+            <div
+              className="card-clean"
+              style={{
+                padding: '1.75rem',
+                borderRadius: '12px',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--primary-light)',
+                  color: 'var(--primary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1rem',
+                }}
+              >
+                <Sparkles size={20} />
               </div>
-              <h3 style={{ fontSize: '2rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.75rem' }}>
-                Track Your Reading Goal & Build Your Virtual Library
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.35rem' }}>
+                Mood & Vibe Matcher
               </h3>
-              <p style={{ color: '#CBD5E1', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                Set an annual book goal, track live progress with page-by-page milestones, organize books across customizable shelves, and see your reading habits transform.
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Filter books by how you want to feel — from mind-bending sci-fi to wholesome cozy reads, with custom pacing filters.
               </p>
             </div>
 
-            <Link to="/my-bookshelf" style={{ textDecoration: 'none' }}>
-              <button className="btn-purple-glow" style={{ padding: '1rem 2rem', fontSize: '1rem' }}>
-                <span>Open My Bookshelf</span>
-                <ArrowRight size={18} />
-              </button>
-            </Link>
+            <div
+              className="card-clean"
+              style={{
+                padding: '1.75rem',
+                borderRadius: '12px',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--accent-emerald-light)',
+                  color: 'var(--accent-emerald)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1rem',
+                }}
+              >
+                <Bookmark size={20} />
+              </div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.35rem' }}>
+                Shelves & Page Tracker
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Organize books into Want to Read, Currently Reading, and Completed with an easy page progress slider.
+              </p>
+            </div>
+
+            <div
+              className="card-clean"
+              style={{
+                padding: '1.75rem',
+                borderRadius: '12px',
+                border: '1px solid var(--border-medium)',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--accent-sky-light)',
+                  color: 'var(--accent-sky)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1rem',
+                }}
+              >
+                <BookOpen size={20} />
+              </div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.35rem' }}>
+                Annual Challenge Goals
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Set your reading goal for the year and watch your percentage climb as you complete books and record pages.
+              </p>
+            </div>
           </div>
         </div>
       </section>

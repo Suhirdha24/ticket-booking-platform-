@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Compass, ArrowRight, Zap, Coffee, Moon, Heart, Brain, Flame } from 'lucide-react';
+import { Sparkles, ArrowRight, Zap, Coffee, Moon, Heart, Brain, Flame } from 'lucide-react';
 
 const MOODS = [
-  { id: 'Mind-Bending', label: 'Mind-Bending', icon: Brain, desc: 'Twists & thought experiments', color: '#38BDF8' },
-  { id: 'Emotional', label: 'Emotional & Moving', icon: Heart, desc: 'Tears, joy & heartstrings', color: '#F472B6' },
-  { id: 'Fast-Paced', label: 'Fast & Unputdownable', icon: Zap, desc: 'Adrenaline from page one', color: '#F59E0B' },
-  { id: 'Dark & Gripping', label: 'Dark & Gripping', icon: Moon, desc: 'Psychological & suspenseful', color: '#A78BFA' },
-  { id: 'Cozy & Relaxing', label: 'Cozy & Comforting', icon: Coffee, desc: 'Warm blankets & gentle stories', color: '#34D399' },
-  { id: 'Inspirational', label: 'Inspirational & Deep', icon: Flame, desc: 'Life shifts & big ideas', color: '#FBBF24' },
+  { id: 'Mind-Bending', label: 'Mind-Bending', icon: Brain, desc: 'Twists & deep questions' },
+  { id: 'Emotional', label: 'Emotional & Moving', icon: Heart, desc: 'Heartstrings & character depth' },
+  { id: 'Fast-Paced', label: 'Fast-Paced', icon: Zap, desc: 'Unputdownable page-turner' },
+  { id: 'Dark & Gripping', label: 'Dark & Gripping', icon: Moon, desc: 'Suspense & psychological thrill' },
+  { id: 'Cozy & Relaxing', label: 'Cozy & Comforting', icon: Coffee, desc: 'Gentle, warm, and uplifting' },
+  { id: 'Inspirational', label: 'Inspirational', icon: Flame, desc: 'Perspective shifts & big ideas' },
 ];
 
 export default function MoodMatcherWidget() {
@@ -27,41 +27,62 @@ export default function MoodMatcherWidget() {
 
   return (
     <div
-      className="glass-widget-card"
+      className="card-clean"
       style={{
         padding: '2rem',
-        borderRadius: '24px',
-        backgroundColor: 'rgba(20, 18, 34, 0.9)',
-        border: '1px solid rgba(139, 92, 246, 0.4)',
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(139, 92, 246, 0.2)',
+        borderRadius: '16px',
+        backgroundColor: '#FFFFFF',
+        border: '1px solid var(--border-medium)',
+        boxShadow: 'var(--shadow-card)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '1.5rem',
+          flexWrap: 'wrap',
+          gap: '1rem',
+        }}
+      >
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            <Sparkles size={16} />
-            <span>AI & Vibe Recommendation Engine</span>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              color: 'var(--primary)',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              marginBottom: '0.25rem',
+            }}
+          >
+            <Sparkles size={14} />
+            <span>Vibe Matcher</span>
           </div>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#FFFFFF', marginTop: '0.2rem' }}>
-            What kind of story do you need right now?
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-heading)' }}>
+            What kind of story do you feel like reading?
           </h3>
         </div>
 
         <button
           onClick={handleMatch}
-          className="btn-purple-glow"
-          style={{ padding: '0.7rem 1.4rem', fontSize: '0.88rem' }}
+          className="btn btn-primary"
+          style={{ padding: '0.65rem 1.25rem', fontSize: '0.88rem' }}
         >
           <span>Find My Matches</span>
           <ArrowRight size={15} />
         </button>
       </div>
 
-      {/* Mood Cards Selector */}
+      {/* Mood Tiles Selector */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
           gap: '0.75rem',
           marginBottom: '1.5rem',
         }}
@@ -78,36 +99,43 @@ export default function MoodMatcherWidget() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',
-                padding: '1rem',
-                borderRadius: '16px',
-                background: isSelected
-                  ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.28) 0%, rgba(99, 102, 241, 0.15) 100%)'
-                  : 'rgba(255, 255, 255, 0.03)',
-                border: isSelected ? `1.5px solid ${m.color}` : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '0.9rem',
+                borderRadius: '10px',
+                background: isSelected ? 'var(--primary-light)' : '#FFFFFF',
+                border: isSelected ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)',
                 cursor: 'pointer',
                 textAlign: 'left',
-                transition: 'all 0.2s ease',
-                boxShadow: isSelected ? `0 0 20px ${m.color}40` : 'none',
+                transition: 'all 0.15s ease',
               }}
             >
               <div
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '10px',
-                  background: `${m.color}20`,
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '6px',
+                  background: isSelected ? '#FFFFFF' : 'var(--bg-subtle)',
+                  color: isSelected ? 'var(--primary)' : 'var(--text-body)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: '0.6rem',
                 }}
               >
-                <Icon size={18} color={m.color} />
+                <Icon size={16} />
               </div>
-              <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.2rem' }}>
+
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  color: isSelected ? 'var(--primary)' : 'var(--text-heading)',
+                  marginBottom: '0.2rem',
+                }}
+              >
                 {m.label}
               </div>
-              <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
+
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.3 }}>
                 {m.desc}
               </div>
             </button>
@@ -115,62 +143,71 @@ export default function MoodMatcherWidget() {
         })}
       </div>
 
-      {/* Quick Filters: Genre & Pace */}
+      {/* Filter Tweaks: Genre & Reading Pace */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
           gap: '1rem',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          flexWrap: 'wrap',
           paddingTop: '1.25rem',
+          borderTop: '1px solid var(--border-subtle)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 800 }}>Genre Preference:</span>
-          {['All', 'Sci-Fi', 'Mystery', 'Fantasy', 'Self-Help', 'Romance', 'Non-Fiction'].map((g) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => setSelectedGenre(g)}
-              style={{
-                padding: '0.35rem 0.8rem',
-                borderRadius: 'var(--radius-pill)',
-                background: selectedGenre === g ? 'var(--gradient-purple)' : 'rgba(255, 255, 255, 0.05)',
-                border: selectedGenre === g ? '1px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.08)',
-                color: selectedGenre === g ? '#FFFFFF' : '#CBD5E1',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
-            >
-              {g}
-            </button>
-          ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+            Filter Genre:
+          </span>
+          <select
+            value={selectedGenre}
+            onChange={(e) => setSelectedGenre(e.target.value)}
+            style={{
+              padding: '0.45rem 0.85rem',
+              borderRadius: '6px',
+              border: '1px solid var(--border-medium)',
+              background: '#FFFFFF',
+              color: 'var(--text-heading)',
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            <option value="All">All Genres</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Thriller">Thriller</option>
+            <option value="Self-Help">Self-Help</option>
+            <option value="Non-Fiction">Non-Fiction</option>
+            <option value="Romance">Romance</option>
+            <option value="Philosophy">Philosophy</option>
+            <option value="Classics">Classics</option>
+          </select>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 800 }}>Pace:</span>
-          {['Any', 'Fast', 'Moderate', 'Slow Burn'].map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => setSelectedPace(p)}
-              style={{
-                padding: '0.35rem 0.75rem',
-                borderRadius: 'var(--radius-pill)',
-                background: selectedPace === p ? 'rgba(139, 92, 246, 0.25)' : 'transparent',
-                border: selectedPace === p ? '1px solid #8B5CF6' : '1px solid rgba(255, 255, 255, 0.08)',
-                color: selectedPace === p ? '#A78BFA' : '#94A3B8',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
-            >
-              {p}
-            </button>
-          ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+            Reading Pace:
+          </span>
+          <select
+            value={selectedPace}
+            onChange={(e) => setSelectedPace(e.target.value)}
+            style={{
+              padding: '0.45rem 0.85rem',
+              borderRadius: '6px',
+              border: '1px solid var(--border-medium)',
+              background: '#FFFFFF',
+              color: 'var(--text-heading)',
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            <option value="Any">Any Pacing</option>
+            <option value="Fast">Fast Paced</option>
+            <option value="Moderate">Moderate</option>
+            <option value="Slow Burn">Slow Burn & Epic</option>
+          </select>
         </div>
       </div>
     </div>

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { X, BookOpen, CheckCircle2, Bookmark } from 'lucide-react';
+import { X, BookOpen } from 'lucide-react';
 import { useBookshelfStore } from '../../store/bookshelfStore.js';
 
-export default function ReadingProgressModal({ item, onClose }) {
+export default function ReadingProgressModal({ item, book: propBook, currentPages = 0, onClose }) {
   const { updateShelfItem } = useBookshelfStore();
-  const book = item?.book;
+  const book = item?.book || propBook;
   const totalPages = book?.pageCount || 300;
 
-  const [pages, setPages] = useState(item?.progressPages || 0);
+  const [pages, setPages] = useState(item?.progressPages || currentPages || 0);
   const [notes, setNotes] = useState(item?.personalNotes || '');
   const [isSaving, setIsSaving] = useState(false);
 
-  if (!item || !book) return null;
+  if (!book) return null;
 
   const percent = Math.min(100, Math.round((pages / totalPages) * 100));
 
@@ -19,7 +19,7 @@ export default function ReadingProgressModal({ item, onClose }) {
     e.preventDefault();
     setIsSaving(true);
     try {
-      const isComplete = pages >= totalPages;
+      const isComplete = Number(pages) >= totalPages;
       await updateShelfItem(book._id, {
         progressPages: Number(pages),
         personalNotes: notes,
@@ -36,8 +36,8 @@ export default function ReadingProgressModal({ item, onClose }) {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.85)',
-        backdropFilter: 'blur(12px)',
+        backgroundColor: 'rgba(15, 23, 42, 0.4)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -47,75 +47,77 @@ export default function ReadingProgressModal({ item, onClose }) {
       onClick={onClose}
     >
       <div
-        className="glass-widget-card"
+        className="card-clean"
         style={{
           width: '100%',
-          maxWidth: '480px',
+          maxWidth: '460px',
           padding: '2rem',
-          backgroundColor: '#151324',
-          border: '1px solid rgba(139, 92, 246, 0.4)',
-          borderRadius: '24px',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.25)',
+          backgroundColor: '#FFFFFF',
+          border: '1px solid var(--border-medium)',
+          borderRadius: '16px',
+          boxShadow: 'var(--shadow-dropdown)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <BookOpen size={20} color="#8B5CF6" />
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <BookOpen size={18} color="var(--primary)" />
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-heading)' }}>
               Update Reading Progress
             </h3>
           </div>
           <button
             onClick={onClose}
             style={{
-              background: 'rgba(255, 255, 255, 0.08)',
+              background: 'none',
               border: 'none',
-              color: '#FFFFFF',
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
+              color: 'var(--text-subtle)',
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
             }}
           >
-            <X size={16} />
+            <X size={18} />
           </button>
         </div>
 
-        {/* Book Title & Mini Banner */}
+        {/* Book Title Banner */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1rem',
-            padding: '0.85rem 1rem',
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '14px',
+            gap: '0.85rem',
+            padding: '0.75rem 1rem',
+            background: 'var(--bg-subtle)',
+            borderRadius: '8px',
             marginBottom: '1.5rem',
           }}
         >
           <img
             src={book.coverImage}
             alt={book.title}
-            style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }}
+            style={{ width: '38px', height: '54px', objectFit: 'cover', borderRadius: '4px' }}
           />
           <div>
-            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#FFFFFF' }}>{book.title}</div>
-            <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>by {book.author}</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-heading)', lineHeight: 1.25 }}>
+              {book.title}
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              by {book.author} • {totalPages} total pages
+            </div>
           </div>
         </div>
 
         <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {/* Progress Slider & Input */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', fontWeight: 800 }}>
-              <span style={{ color: '#E2E8F0' }}>Current Page</span>
-              <span style={{ color: '#A78BFA' }}>
-                {pages} of {totalPages} ({percent}%)
-              </span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <label className="form-label" style={{ marginBottom: 0 }}>
+                Pages Read
+              </label>
+              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>
+                {pages} / {totalPages} pages ({percent}%)
+              </div>
             </div>
 
             <input
@@ -126,9 +128,9 @@ export default function ReadingProgressModal({ item, onClose }) {
               onChange={(e) => setPages(Number(e.target.value))}
               style={{
                 width: '100%',
-                accentColor: '#8B5CF6',
+                accentColor: 'var(--primary)',
+                marginBottom: '0.75rem',
                 cursor: 'pointer',
-                marginBottom: '0.6rem',
               }}
             />
 
@@ -137,41 +139,44 @@ export default function ReadingProgressModal({ item, onClose }) {
               min="0"
               max={totalPages}
               value={pages}
-              onChange={(e) => setPages(Math.min(totalPages, Math.max(0, Number(e.target.value))))}
+              onChange={(e) => setPages(Math.max(0, Math.min(totalPages, Number(e.target.value))))}
               className="form-input"
-              style={{ textAlign: 'center', fontWeight: 800, fontSize: '1.1rem' }}
+              style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}
             />
           </div>
 
+          {/* Personal Notes */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#E2E8F0', marginBottom: '0.5rem' }}>
-              Personal Reading Notes & Thoughts (Optional)
-            </label>
+            <label className="form-label">Reading Notes or Thoughts (Optional)</label>
             <textarea
-              className="form-input"
-              rows="3"
+              rows={3}
+              placeholder="Record a favorite quote, note, or chapter reflection..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Record favorite quotes, thoughts on the latest chapter..."
-              style={{ resize: 'none' }}
+              className="form-input"
+              style={{ resize: 'vertical' }}
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="btn-purple-glow"
-            style={{ width: '100%', padding: '0.9rem', fontSize: '0.95rem' }}
-          >
-            {pages >= totalPages ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                <CheckCircle2 size={16} />
-                <span>Mark Book as Completed! 🎉</span>
-              </div>
-            ) : (
-              <span>Save Progress</span>
-            )}
-          </button>
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+            <button
+              type="button"
+              onClick={onClose}
+              className="btn btn-secondary"
+              style={{ flex: 1, padding: '0.65rem' }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="btn btn-primary"
+              style={{ flex: 1, padding: '0.65rem' }}
+            >
+              {isSaving ? 'Saving...' : 'Save Progress'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

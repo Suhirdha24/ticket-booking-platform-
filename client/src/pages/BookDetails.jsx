@@ -9,13 +9,10 @@ import ReadingProgressModal from '../components/books/ReadingProgressModal.jsx';
 import {
   Star,
   Bookmark,
-  Check,
   BookOpen,
   Calendar,
   Layers,
-  Sparkles,
   ArrowLeft,
-  Quote,
   Clock,
   Heart,
   MessageSquare,
@@ -26,7 +23,7 @@ import {
 export default function BookDetails() {
   const { id } = useParams();
   const { user, isAuthenticated } = useAuthStore();
-  const { getBookShelfItem, updateShelfItem, removeFromShelf } = useBookshelfStore();
+  const { getBookShelfItem, updateShelfItem } = useBookshelfStore();
 
   const [book, setBook] = useState(null);
   const [similarBooks, setSimilarBooks] = useState([]);
@@ -98,7 +95,7 @@ export default function BookDetails() {
       setReviews([res.data.data, ...reviews]);
       setReviewTitle('');
       setReviewContent('');
-      showSuccessToast('Review Published! 🎉', 'Thank you for sharing your thoughts with the reader community.');
+      showSuccessToast('Review Published!', 'Thank you for sharing your review.');
 
       // Refresh book to get updated rating
       const bookRes = await api.get(`/books/${id}`);
@@ -113,8 +110,7 @@ export default function BookDetails() {
   if (isLoading) {
     return (
       <div className="container" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
-        <div className="soundwave-bar" style={{ height: '32px', margin: '0 auto 1.5rem auto' }} />
-        <p style={{ color: '#94A3B8', fontSize: '1rem', fontWeight: 700 }}>Curating book showcase & recommendations...</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Loading book details...</p>
       </div>
     );
   }
@@ -122,15 +118,15 @@ export default function BookDetails() {
   if (!book) {
     return (
       <div className="container" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
-        <BookOpen size={48} color="#8B5CF6" style={{ margin: '0 auto 1rem auto' }} />
-        <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.75rem' }}>
+        <BookOpen size={44} color="var(--primary)" style={{ margin: '0 auto 1rem auto' }} />
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '0.5rem' }}>
           Book Not Found
         </h2>
-        <p style={{ color: '#94A3B8', marginBottom: '1.5rem' }}>
-          This book could not be found in our recommendation catalog.
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+          This book could not be found in our catalog.
         </p>
-        <Link to="/books">
-          <button className="btn-purple-glow">Browse All Books</button>
+        <Link to="/books" className="btn btn-primary">
+          Browse All Books
         </Link>
       </div>
     );
@@ -141,68 +137,56 @@ export default function BookDetails() {
     : 0;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#08070D', color: '#FFFFFF', paddingBottom: '6rem' }}>
-      {/* Back Button & Breadcrumbs */}
-      <div className="container" style={{ paddingTop: '2rem', marginBottom: '1.5rem' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)', paddingBottom: '5rem' }}>
+      {/* Back Button */}
+      <div className="container" style={{ paddingTop: '1.5rem', marginBottom: '1.25rem' }}>
         <Link
           to="/books"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.45rem',
-            color: '#94A3B8',
-            fontSize: '0.88rem',
-            fontWeight: 800,
+            gap: '0.4rem',
+            color: 'var(--text-muted)',
+            fontSize: '0.85rem',
+            fontWeight: 600,
             textDecoration: 'none',
           }}
         >
-          <ArrowLeft size={16} color="#A78BFA" />
+          <ArrowLeft size={15} />
           <span>Back to Library Catalog</span>
         </Link>
       </div>
 
-      {/* Main Book Hero Showcase */}
+      {/* Main Book Showcase Card */}
       <div className="container">
         <div
-          className="glass-widget-card"
+          className="card-clean"
           style={{
             padding: '2.5rem',
-            borderRadius: '28px',
-            backgroundColor: 'rgba(20, 18, 34, 0.9)',
-            border: '1.5px solid rgba(139, 92, 246, 0.35)',
-            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(139, 92, 246, 0.2)',
+            borderRadius: '16px',
+            backgroundColor: '#FFFFFF',
+            border: '1px solid var(--border-medium)',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '3rem',
             alignItems: 'start',
-            marginBottom: '3.5rem',
+            marginBottom: '3rem',
           }}
         >
-          {/* Left Column: 3D Book Cover & Shelf Action */}
+          {/* Left Column: Book Cover & Shelf Action */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div
               style={{
                 position: 'relative',
-                width: '240px',
-                height: '350px',
-                borderRadius: '8px 16px 16px 8px',
-                boxShadow: '18px 25px 50px rgba(0, 0, 0, 0.9), 2px 0 15px rgba(139, 92, 246, 0.3)',
+                width: '220px',
+                height: '320px',
+                borderRadius: '6px 12px 12px 6px',
+                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08)',
                 overflow: 'hidden',
-                marginBottom: '2rem',
+                marginBottom: '1.75rem',
+                backgroundColor: 'var(--bg-subtle)',
               }}
             >
-              {/* Spine highlight */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  width: '8px',
-                  background: 'linear-gradient(90deg, rgba(255,255,255,0.45) 0%, rgba(0,0,0,0.4) 100%)',
-                  zIndex: 2,
-                }}
-              />
               <img
                 src={book.coverImage}
                 alt={book.title}
@@ -211,35 +195,35 @@ export default function BookDetails() {
             </div>
 
             {/* Reading Status Buttons */}
-            <div style={{ width: '100%', maxWidth: '280px', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div style={{ width: '100%', maxWidth: '260px', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               <button
                 type="button"
                 onClick={() => handleShelfChange('WANT_TO_READ')}
-                className={currentShelf === 'WANT_TO_READ' ? 'btn-purple-glow' : 'btn-secondary'}
-                style={{ width: '100%', padding: '0.85rem', borderRadius: '14px', justifyContent: 'center' }}
+                className={currentShelf === 'WANT_TO_READ' ? 'btn btn-primary' : 'btn btn-secondary'}
+                style={{ width: '100%', padding: '0.75rem', justifyContent: 'center' }}
               >
-                <Bookmark size={16} fill={currentShelf === 'WANT_TO_READ' ? '#FFFFFF' : 'none'} />
-                <span>{currentShelf === 'WANT_TO_READ' ? 'On Want to Read Shelf' : 'Want to Read'}</span>
+                <Bookmark size={15} fill={currentShelf === 'WANT_TO_READ' ? 'currentColor' : 'none'} />
+                <span>{currentShelf === 'WANT_TO_READ' ? 'On Want to Read' : 'Want to Read'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleShelfChange('CURRENTLY_READING')}
-                className={currentShelf === 'CURRENTLY_READING' ? 'btn-purple-glow' : 'btn-secondary'}
-                style={{ width: '100%', padding: '0.85rem', borderRadius: '14px', justifyContent: 'center' }}
+                className={currentShelf === 'CURRENTLY_READING' ? 'btn btn-primary' : 'btn btn-secondary'}
+                style={{ width: '100%', padding: '0.75rem', justifyContent: 'center' }}
               >
-                <BookOpen size={16} />
+                <BookOpen size={15} />
                 <span>{currentShelf === 'CURRENTLY_READING' ? 'Currently Reading' : 'Mark Currently Reading'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleShelfChange('COMPLETED')}
-                className={currentShelf === 'COMPLETED' ? 'btn-purple-glow' : 'btn-secondary'}
-                style={{ width: '100%', padding: '0.85rem', borderRadius: '14px', justifyContent: 'center' }}
+                className={currentShelf === 'COMPLETED' ? 'btn btn-primary' : 'btn btn-secondary'}
+                style={{ width: '100%', padding: '0.75rem', justifyContent: 'center' }}
               >
-                <CheckCircle2 size={16} />
-                <span>{currentShelf === 'COMPLETED' ? 'Read / Finished' : 'Mark as Read'}</span>
+                <CheckCircle2 size={15} />
+                <span>{currentShelf === 'COMPLETED' ? 'Completed' : 'Mark as Read'}</span>
               </button>
 
               <button
@@ -250,19 +234,19 @@ export default function BookDetails() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.45rem',
-                  padding: '0.7rem',
-                  background: 'transparent',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '12px',
-                  color: shelfItem?.isFavorite ? '#F43F5E' : '#94A3B8',
+                  padding: '0.65rem',
+                  background: 'none',
+                  border: '1px solid var(--border-medium)',
+                  borderRadius: '8px',
+                  color: shelfItem?.isFavorite ? 'var(--accent-rose)' : 'var(--text-muted)',
                   fontSize: '0.82rem',
-                  fontWeight: 800,
+                  fontWeight: 600,
                   cursor: 'pointer',
-                  marginTop: '0.4rem',
+                  marginTop: '0.25rem',
                 }}
               >
-                <Heart size={15} fill={shelfItem?.isFavorite ? '#F43F5E' : 'none'} />
-                <span>{shelfItem?.isFavorite ? 'Saved to Favorites' : 'Add to Favorites'}</span>
+                <Heart size={14} fill={shelfItem?.isFavorite ? 'currentColor' : 'none'} />
+                <span>{shelfItem?.isFavorite ? 'In Favorites' : 'Add to Favorites'}</span>
               </button>
             </div>
           </div>
@@ -270,18 +254,17 @@ export default function BookDetails() {
           {/* Right Column: Title, Author, Specs, Synopsis */}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {/* Genre & Mood Chips */}
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', marginBottom: '0.85rem' }}>
               {(book.genres || []).map((genre) => (
                 <span
                   key={genre}
                   style={{
-                    background: 'rgba(139, 92, 246, 0.2)',
-                    border: '1px solid #8B5CF6',
-                    color: '#C4B5FD',
+                    background: 'var(--primary-light)',
+                    color: 'var(--primary)',
                     fontSize: '0.75rem',
-                    fontWeight: 800,
-                    padding: '0.25rem 0.65rem',
-                    borderRadius: 'var(--radius-pill)',
+                    fontWeight: 600,
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '4px',
                   }}
                 >
                   {genre}
@@ -291,13 +274,13 @@ export default function BookDetails() {
                 <span
                   key={mood}
                   style={{
-                    background: 'rgba(56, 189, 248, 0.15)',
-                    border: '1px solid rgba(56, 189, 248, 0.35)',
-                    color: '#7DD3FC',
+                    background: 'var(--bg-subtle)',
+                    color: 'var(--text-body)',
+                    border: '1px solid var(--border-subtle)',
                     fontSize: '0.75rem',
-                    fontWeight: 800,
-                    padding: '0.25rem 0.65rem',
-                    borderRadius: 'var(--radius-pill)',
+                    fontWeight: 500,
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '4px',
                   }}
                 >
                   ✦ {mood}
@@ -306,333 +289,334 @@ export default function BookDetails() {
             </div>
 
             {/* Title & Author */}
-            <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.2, marginBottom: '0.4rem' }}>
+            <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 800, color: 'var(--text-heading)', lineHeight: 1.25, marginBottom: '0.35rem' }}>
               {book.title}
             </h1>
-            <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#A78BFA', marginBottom: '1.25rem' }}>
-              by {book.author}
+            <div style={{ fontSize: '1.05rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+              by <strong style={{ color: 'var(--text-heading)' }}>{book.author}</strong>
             </div>
 
-            {/* Rating Star Bar */}
+            {/* Rating Bar */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.85rem',
-                padding: '0.85rem 1.25rem',
-                background: 'rgba(255, 255, 255, 0.04)',
-                borderRadius: '16px',
+                gap: '0.75rem',
+                padding: '0.65rem 1rem',
+                background: 'var(--bg-subtle)',
+                borderRadius: '8px',
                 width: 'fit-content',
-                marginBottom: '1.75rem',
+                marginBottom: '1.5rem',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                 {[1, 2, 3, 4, 5].map((s) => (
                   <Star
                     key={s}
-                    size={18}
+                    size={16}
                     fill={s <= Math.round(book.averageRating || 4.5) ? '#F59E0B' : 'none'}
                     color="#F59E0B"
                   />
                 ))}
               </div>
-              <span style={{ fontSize: '1.15rem', fontWeight: 900, color: '#FFFFFF' }}>
+              <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-heading)' }}>
                 {book.averageRating?.toFixed(1) || '4.5'}
               </span>
-              <span style={{ color: '#94A3B8', fontSize: '0.82rem' }}>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                 ({book.ratingsCount || 0} reviews)
               </span>
             </div>
 
-            {/* Active Reading Progress (if currently reading) */}
+            {/* Reading Progress tracker bar (if reading) */}
             {currentShelf === 'CURRENTLY_READING' && (
               <div
                 style={{
-                  padding: '1.25rem',
-                  borderRadius: '16px',
-                  background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(99, 102, 241, 0.08) 100%)',
-                  border: '1px solid rgba(139, 92, 246, 0.4)',
-                  marginBottom: '1.75rem',
+                  padding: '1rem',
+                  borderRadius: '10px',
+                  backgroundColor: 'var(--primary-light)',
+                  border: '1px solid var(--primary-border)',
+                  marginBottom: '1.5rem',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FFFFFF' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>
                     Your Reading Progress
-                  </div>
+                  </span>
                   <button
                     onClick={() => setShowProgressModal(true)}
-                    style={{
-                      background: 'var(--gradient-purple)',
-                      border: 'none',
-                      color: '#FFFFFF',
-                      fontSize: '0.78rem',
-                      fontWeight: 800,
-                      padding: '0.3rem 0.75rem',
-                      borderRadius: 'var(--radius-pill)',
-                      cursor: 'pointer',
-                    }}
+                    className="btn btn-primary"
+                    style={{ padding: '0.3rem 0.65rem', fontSize: '0.76rem' }}
                   >
                     Update Page
                   </button>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#CBD5E1', marginBottom: '0.4rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
                   <span>Page {shelfItem?.progressPages || 0} of {book.pageCount}</span>
-                  <span style={{ fontWeight: 800, color: '#A78BFA' }}>{progressPercent}% Complete</span>
+                  <span style={{ fontWeight: 700, color: 'var(--primary)' }}>{progressPercent}%</span>
                 </div>
 
-                <div style={{ width: '100%', height: '6px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '9999px', overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: `${progressPercent}%`, background: 'var(--gradient-purple)', borderRadius: '9999px' }} />
+                <div style={{ width: '100%', height: '7px', background: '#FFFFFF', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ width: `${progressPercent}%`, height: '100%', background: 'var(--primary)', borderRadius: '4px' }} />
                 </div>
               </div>
             )}
 
-            {/* Metadata Badges Grid */}
+            {/* Quote Snippet */}
+            {book.quotes?.[0] && (
+              <div
+                style={{
+                  padding: '0.85rem 1rem',
+                  background: 'var(--bg-subtle)',
+                  borderLeft: '3px solid var(--primary)',
+                  borderRadius: '0 8px 8px 0',
+                  fontSize: '0.88rem',
+                  fontStyle: 'italic',
+                  color: 'var(--text-body)',
+                  marginBottom: '1.5rem',
+                }}
+              >
+                &ldquo;{book.quotes[0]}&rdquo;
+              </div>
+            )}
+
+            {/* Synopsis */}
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.45rem' }}>
+              About this Book
+            </h3>
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-body)', lineHeight: 1.6, marginBottom: '1.75rem' }}>
+              {book.description}
+            </p>
+
+            {/* Metadata Specs Grid */}
             <div
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-                gap: '0.85rem',
-                marginBottom: '1.75rem',
+                gap: '0.75rem',
+                borderTop: '1px solid var(--border-subtle)',
+                paddingTop: '1.25rem',
               }}
             >
-              <div style={{ padding: '0.75rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px' }}>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>Pages</div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#FFFFFF' }}>{book.pageCount}</div>
+              <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Page Count</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-heading)' }}>{book.pageCount} pages</div>
               </div>
-              <div style={{ padding: '0.75rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px' }}>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>Published</div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#FFFFFF' }}>{book.publishedYear}</div>
+              <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Pacing</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-heading)' }}>{book.readingPace}</div>
               </div>
-              <div style={{ padding: '0.75rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px' }}>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>Pace</div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#FFFFFF' }}>{book.readingPace || 'Moderate'}</div>
+              <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Published Year</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-heading)' }}>{book.publishedYear}</div>
               </div>
-              <div style={{ padding: '0.75rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px' }}>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>ISBN</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FFFFFF' }}>{book.isbn || 'N/A'}</div>
+              <div style={{ padding: '0.65rem', background: 'var(--bg-subtle)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>ISBN</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-heading)' }}>{book.isbn}</div>
               </div>
             </div>
-
-            {/* Synopsis */}
-            <div style={{ marginBottom: '1.75rem' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.65rem' }}>
-                Synopsis
-              </h3>
-              <p style={{ color: '#CBD5E1', fontSize: '0.95rem', lineHeight: 1.7 }}>
-                {book.description}
-              </p>
-            </div>
-
-            {/* Quotes Callout */}
-            {book.quotes && book.quotes.length > 0 && (
-              <div
-                style={{
-                  padding: '1.15rem 1.4rem',
-                  background: 'rgba(139, 92, 246, 0.08)',
-                  borderLeft: '4px solid #8B5CF6',
-                  borderRadius: '0 16px 16px 0',
-                }}
-              >
-                <div style={{ display: 'flex', gap: '0.65rem' }}>
-                  <Quote size={20} color="#A78BFA" style={{ flexShrink: 0, transform: 'rotate(180deg)' }} />
-                  <div style={{ fontStyle: 'italic', color: '#DDD6FE', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                    &ldquo;{book.quotes[0]}&rdquo;
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Similar Recommended Books Section */}
+        {/* Similar Books Section */}
         {similarBooks.length > 0 && (
-          <div style={{ marginBottom: '4rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
-              <Sparkles size={16} />
-              <span>Recommendation Engine</span>
-            </div>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '1.5rem' }}>
-              Readers Who Loved This Also Enjoyed
+          <div style={{ marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-heading)', marginBottom: '1.25rem' }}>
+              Readers Also Loved
             </h2>
-
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '1.75rem',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+                gap: '1.5rem',
               }}
             >
               {similarBooks.map((simBook) => (
-                <BookCard key={simBook._id} book={simBook} matchPercentage={simBook.matchPercentage} />
+                <BookCard key={simBook._id} book={simBook} />
               ))}
             </div>
           </div>
         )}
 
-        {/* Reviews & Discussion Section */}
-        <div
-          className="glass-widget-card"
-          style={{
-            padding: '2.5rem',
-            borderRadius: '24px',
-            backgroundColor: 'rgba(20, 18, 34, 0.85)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#38BDF8', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
-            <MessageSquare size={16} />
-            <span>Community Discussion</span>
-          </div>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '2rem' }}>
-            Reader Reviews ({reviews.length})
-          </h2>
-
-          {/* Write a Review Box */}
-          <form
-            onSubmit={handleReviewSubmit}
+        {/* Community Reviews Section */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+          {/* Write a Review */}
+          <div
+            className="card-clean"
             style={{
-              padding: '1.5rem',
-              borderRadius: '18px',
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              marginBottom: '2.5rem',
+              padding: '1.75rem',
+              borderRadius: '14px',
+              backgroundColor: '#FFFFFF',
+              border: '1px solid var(--border-medium)',
+              height: 'fit-content',
             }}
           >
-            <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '1rem' }}>
-              Leave Your Rating & Review
-            </h4>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.35rem' }}>
+              Share Your Thoughts
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+              Rate and review this book for fellow BookVerse readers.
+            </p>
 
-            {/* Star Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '1.25rem' }}>
-              <span style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 700, marginRight: '0.5rem' }}>
-                Your Star Rating:
-              </span>
-              {[1, 2, 3, 4, 5].map((num) => (
-                <button
-                  key={num}
-                  type="button"
-                  onClick={() => setNewRating(num)}
-                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '2px' }}
-                >
-                  <Star
-                    size={22}
-                    fill={num <= newRating ? '#F59E0B' : 'none'}
-                    color={num <= newRating ? '#F59E0B' : '#64748B'}
-                  />
-                </button>
-              ))}
-              <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#F59E0B', marginLeft: '0.5rem' }}>
-                {newRating} / 5 Stars
-              </span>
-            </div>
-
-            <div style={{ marginBottom: '1rem' }}>
-              <input
-                type="text"
-                placeholder="Review headline (e.g. A gripping masterpiece that kept me awake all night)..."
-                value={reviewTitle}
-                onChange={(e) => setReviewTitle(e.target.value)}
-                className="form-input"
-                required
-              />
-            </div>
-
-            <div style={{ marginBottom: '1rem' }}>
-              <textarea
-                placeholder="Share your thoughts on the plot, character arcs, pacing, and who should read it..."
-                value={reviewContent}
-                onChange={(e) => setReviewContent(e.target.value)}
-                className="form-input"
-                rows="4"
-                style={{ resize: 'none' }}
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmittingReview}
-              className="btn-purple-glow"
-              style={{ padding: '0.75rem 1.5rem', fontSize: '0.88rem' }}
-            >
-              <span>{isSubmittingReview ? 'Posting...' : 'Post Reader Review'}</span>
-            </button>
-          </form>
-
-          {/* Existing Reviews List */}
-          {reviews.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2rem', color: '#94A3B8' }}>
-              No reviews yet. Be the first to share your review for this book!
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {reviews.map((rev) => (
-                <div
-                  key={rev._id}
-                  style={{
-                    padding: '1.25rem',
-                    borderRadius: '16px',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.06)',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      <div
-                        style={{
-                          width: '34px',
-                          height: '34px',
-                          borderRadius: '50%',
-                          background: 'var(--gradient-purple)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontWeight: 800,
-                          fontSize: '0.85rem',
-                          color: '#FFFFFF',
-                        }}
-                      >
-                        {rev.userName?.[0] || 'R'}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF' }}>{rev.userName}</div>
-                        <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
-                          {new Date(rev.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '2px' }}>
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star
-                          key={s}
-                          size={14}
-                          fill={s <= rev.rating ? '#F59E0B' : 'none'}
-                          color="#F59E0B"
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <h5 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.4rem' }}>
-                    {rev.title}
-                  </h5>
-
-                  <p style={{ fontSize: '0.88rem', color: '#CBD5E1', lineHeight: 1.6 }}>
-                    {rev.content}
-                  </p>
+            <form onSubmit={handleReviewSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Star Rating Picker */}
+              <div>
+                <label className="form-label">Your Rating</label>
+                <div style={{ display: 'flex', gap: '0.35rem' }}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setNewRating(star)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '0.2rem',
+                      }}
+                    >
+                      <Star
+                        size={22}
+                        fill={star <= newRating ? '#F59E0B' : 'none'}
+                        color="#F59E0B"
+                      />
+                    </button>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              <div>
+                <label className="form-label" htmlFor="review-title">
+                  Review Headline
+                </label>
+                <input
+                  id="review-title"
+                  type="text"
+                  required
+                  placeholder="e.g. Masterpiece of modern storytelling"
+                  value={reviewTitle}
+                  onChange={(e) => setReviewTitle(e.target.value)}
+                  className="form-input"
+                />
+              </div>
+
+              <div>
+                <label className="form-label" htmlFor="review-content">
+                  Detailed Review
+                </label>
+                <textarea
+                  id="review-content"
+                  rows={4}
+                  required
+                  placeholder="What did you love? How was the pacing and character depth?"
+                  value={reviewContent}
+                  onChange={(e) => setReviewContent(e.target.value)}
+                  className="form-input"
+                  style={{ resize: 'vertical' }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmittingReview}
+                className="btn btn-primary"
+                style={{ width: '100%', padding: '0.75rem' }}
+              >
+                {isSubmittingReview ? 'Submitting...' : 'Post Reader Review'}
+              </button>
+            </form>
+          </div>
+
+          {/* Reader Reviews List */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-heading)' }}>
+                Community Reviews ({reviews.length})
+              </h3>
             </div>
-          )}
+
+            {reviews.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {reviews.map((rev) => (
+                  <div
+                    key={rev._id}
+                    className="card-clean"
+                    style={{
+                      padding: '1.25rem',
+                      borderRadius: '12px',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid var(--border-subtle)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <div
+                          style={{
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '50%',
+                            background: 'var(--primary-light)',
+                            color: 'var(--primary)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.8rem',
+                            fontWeight: 700,
+                          }}
+                        >
+                          {rev.userName?.[0] || 'R'}
+                        </div>
+                        <span style={{ fontSize: '0.86rem', fontWeight: 700, color: 'var(--text-heading)' }}>
+                          {rev.userName}
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star
+                            key={s}
+                            size={13}
+                            fill={s <= rev.rating ? '#F59E0B' : 'none'}
+                            color="#F59E0B"
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '0.25rem' }}>
+                      {rev.title}
+                    </h4>
+                    <p style={{ fontSize: '0.86rem', color: 'var(--text-body)', lineHeight: 1.5 }}>
+                      {rev.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div
+                style={{
+                  padding: '2.5rem 1rem',
+                  textAlign: 'center',
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
+                <MessageSquare size={32} color="var(--text-subtle)" style={{ marginBottom: '0.65rem' }} />
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                  Be the first reader to write a review for this book!
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Reading Progress Modal */}
-      {showProgressModal && shelfItem && (
+      {showProgressModal && (
         <ReadingProgressModal
-          item={shelfItem}
+          book={book}
+          currentPages={shelfItem?.progressPages || 0}
           onClose={() => setShowProgressModal(false)}
         />
       )}
