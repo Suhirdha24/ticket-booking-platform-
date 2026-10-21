@@ -90,16 +90,17 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
             borderBottom: '1px solid var(--border-subtle)',
           }}
         >
-          {/* Book Graphic */}
+          {/* 3D Book Graphic */}
           <div
+            className="book-3d-item"
             style={{
               position: 'relative',
-              width: '130px',
-              height: '190px',
-              borderRadius: '4px 8px 8px 4px',
-              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)',
+              width: '132px',
+              height: '194px',
+              borderRadius: '4px 9px 9px 4px',
+              boxShadow: 'var(--book-shadow)',
               overflow: 'hidden',
-              backgroundColor: '#E2E8F0',
+              backgroundColor: '#1E293B',
             }}
           >
             <img
@@ -115,6 +116,7 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                 e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80';
               }}
             />
+            <div className="book-3d-spine-crease" />
           </div>
 
           {/* Recommendation Match Score Badge */}

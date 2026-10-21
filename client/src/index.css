@@ -6,60 +6,68 @@
    ========================================================================== */
 
 :root {
-  /* ☀️ Clean Surfaces */
-  --bg-main: #F8FAFC;
+  /* ☀️ Canvas & Atmospheric Surfaces */
+  --bg-main: #FBFBFE;
   --bg-surface: #FFFFFF;
-  --bg-subtle: #F1F5F9;
-  --bg-muted: #E2E8F0;
-  --bg-card: #FFFFFF;
-  --bg-card-hover: #F8FAFC;
+  --bg-subtle: #F5F7FA;
+  --bg-muted: #EAEFF5;
+  --bg-card: rgba(255, 255, 255, 0.88);
+  --bg-card-hover: rgba(255, 255, 255, 0.98);
 
-  /* 🎯 Primary & Accent Colors (Modern Indigo / Sapphire) */
-  --primary: #4F46E5;
-  --primary-hover: #4338CA;
+  /* 💎 Fluid Glassmorphism Tokens */
+  --bg-glass: rgba(255, 255, 255, 0.72);
+  --bg-glass-card: rgba(255, 255, 255, 0.86);
+  --glass-blur: blur(24px) saturate(190%);
+  --border-glass: rgba(255, 255, 255, 0.8);
+  --border-glass-card: rgba(226, 232, 240, 0.75);
+
+  /* 🎯 Artisanal Palette (Deep Indigo, Amber Ochre & Warm Pearl) */
+  --primary: #4338CA;
+  --primary-hover: #3730A3;
   --primary-light: #EEF2FF;
   --primary-border: #C7D2FE;
-  
+  --accent-gold: #D97706;
+  --accent-gold-light: #FEF3C7;
   --accent-emerald: #059669;
-  --accent-emerald-light: #ECFDF5;
-  --accent-amber: #D97706;
-  --accent-amber-light: #FFFBEB;
   --accent-rose: #E11D48;
-  --accent-rose-light: #FFF1F2;
-  --accent-sky: #0284C7;
-  --accent-sky-light: #F0F9FF;
 
-  /* 🖋️ High-Contrast Typography */
-  --text-heading: #0F172A; /* Deep dark slate */
-  --text-body: #334155;    /* Very readable neutral slate */
-  --text-muted: #64748B;   /* Medium slate */
-  --text-subtle: #94A3B8;  /* Light slate for placeholders/disabled */
+  /* 🖋️ Artisanal Typography Colors */
+  --text-heading: #0B1120;
+  --text-body: #334155;
+  --text-muted: #64748B;
+  --text-subtle: #94A3B8;
   --text-inverse: #FFFFFF;
 
-  /* 🔲 Crisp Minimalist Borders */
+  /* 🔲 Refined Apple Hairline Borders */
   --border-subtle: #E2E8F0;
   --border-medium: #CBD5E1;
   --border-strong: #94A3B8;
-  --border-focus: #4F46E5;
+  --border-focus: #4338CA;
 
-  /* 🔘 Clean Radii */
+  /* 🔘 Smooth Curves */
   --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
   --radius-pill: 9999px;
 
-  /* 🌫️ Subtle Natural Shadows (No heavy neon glows) */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 2px 8px -1px rgba(0, 0, 0, 0.06), 0 1px 4px -1px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 10px 25px -4px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
-  --shadow-dropdown: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+  /* 🌫️ Multi-Layer Natural Shadows (Realistic Tactile Depth) */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 10px 30px -8px rgba(15, 23, 42, 0.07), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --shadow-card-hover: 0 20px 40px -10px rgba(15, 23, 42, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+  --shadow-glass: 0 25px 50px -12px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
 
-  /* 🔤 Clean Modern Typography */
-  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  /* 📚 3D Apple Books Physical Spine & Elevation Shadows */
+  --book-shadow: -3px 0 6px rgba(0, 0, 0, 0.07), 10px 18px 30px -5px rgba(15, 23, 42, 0.22), 0 2px 5px rgba(0,0,0,0.06);
+  --book-shadow-hover: -5px 0 10px rgba(0, 0, 0, 0.1), 16px 28px 45px -6px rgba(15, 23, 42, 0.32), 0 4px 8px rgba(0,0,0,0.08);
+
+  /* 🔤 Artisanal Typography: Editorial Serif + Clean Geometric UI */
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
 /* Base Reset & Setup */
@@ -512,4 +520,137 @@ button, input, select, textarea {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
 }
+
+/* ==========================================================================
+   APPLE BOOKS / FLUID GLASS ATMOSPHERIC SUITE
+   ========================================================================== */
+.fluid-stage {
+  position: relative;
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 1.5rem;
+  overflow: hidden;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99, 102, 241, 0.12), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 90%, rgba(245, 158, 11, 0.08), transparent 70%),
+    radial-gradient(ellipse 50% 50% at 10% 50%, rgba(59, 130, 246, 0.06), transparent 70%),
+    #FBFBFE;
+}
+
+/* Atmospheric Glow Orbs */
+.ambient-glow-1 {
+  position: absolute;
+  width: 550px;
+  height: 550px;
+  top: -15%;
+  left: 10%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.14) 0%, rgba(168, 85, 247, 0.05) 50%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow-2 {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  bottom: -10%;
+  right: 5%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(251, 146, 60, 0.05) 50%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Fluid Glass Card */
+.fluid-glass-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    0 4px 6px -1px rgba(15, 23, 42, 0.03),
+    0 24px 48px -12px rgba(15, 23, 42, 0.09),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  border-radius: 28px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+/* 3D Physical Book Item (Apple Books Style) */
+.book-3d-container {
+  position: relative;
+  perspective: 1200px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.book-3d-item {
+  position: relative;
+  border-radius: 4px 10px 10px 4px;
+  overflow: hidden;
+  box-shadow: var(--book-shadow);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  background-color: #1e293b;
+}
+
+.book-3d-container:hover .book-3d-item {
+  transform: perspective(1000px) rotateY(-8deg) translateY(-8px) scale(1.03);
+  box-shadow: var(--book-shadow-hover);
+}
+
+/* Spine Hinge & Depth Overlay */
+.book-3d-spine-crease {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.32) 0%,
+    rgba(255, 255, 255, 0.28) 3%,
+    rgba(0, 0, 0, 0.12) 6%,
+    transparent 14%,
+    transparent 96%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  box-shadow: inset -2px 0 3px rgba(0, 0, 0, 0.15);
+  border-radius: inherit;
+}
+
+/* Page Edge Simulation */
+.book-3d-item::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 0;
+  bottom: 3px;
+  width: 5px;
+  background: linear-gradient(to right, #CBD5E1, #F8FAFC);
+  border-radius: 0 4px 4px 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Editorial Serif Heading */
+.editorial-title {
+  font-family: var(--font-serif);
+  font-feature-settings: "liga" 1, "dlig" 1;
+  letter-spacing: -0.015em;
+}
+
+.editorial-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
 

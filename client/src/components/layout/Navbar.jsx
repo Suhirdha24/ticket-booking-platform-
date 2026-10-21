@@ -59,8 +59,11 @@ export default function Navbar() {
         position: 'sticky',
         top: 0,
         zIndex: 1000,
-        backgroundColor: '#FFFFFF',
-        borderBottom: '1px solid var(--border-subtle)',
+        backgroundColor: 'rgba(255, 255, 255, 0.82)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        borderBottom: '1px solid rgba(226, 232, 240, 0.75)',
+        boxShadow: '0 2px 10px rgba(15, 23, 42, 0.03)',
       }}
     >
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '68px' }}>
