@@ -160,13 +160,13 @@ export default function Login() {
               <p
                 style={{
                   fontSize: '1.05rem',
-                  lineHeight: 1.6,
+                  lineHeight: 1.5,
                   color: 'var(--text-body)',
-                  maxWidth: '540px',
+                  maxWidth: '520px',
                   margin: 0,
                 }}
               >
-                Experience intelligent vibe-matching, track your reading journey page by page, and curate personal shelves with tactile physical book depth.
+                Step into curated stories, track your reading progress, and manage your library.
               </p>
             </div>
 
@@ -492,14 +492,15 @@ export default function Login() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="reader@example.com"
+                      placeholder="e.g. reader@example.com"
+                      autoComplete="email"
                       className="form-input"
                       style={{
                         paddingLeft: '2.85rem',
                         height: '48px',
                         borderRadius: '12px',
                         fontSize: '0.94rem',
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backgroundColor: '#FFFFFF',
                         border: '1px solid rgba(203, 213, 225, 0.85)',
                         boxShadow: 'inset 0 1px 2px rgba(15, 23, 42, 0.03)',
                       }}
@@ -549,14 +550,15 @@ export default function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
+                      autoComplete="current-password"
                       className="form-input"
                       style={{
                         paddingLeft: '2.85rem',
-                        paddingRight: '2.85rem',
+                        paddingRight: '3.1rem',
                         height: '48px',
                         borderRadius: '12px',
                         fontSize: '0.94rem',
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backgroundColor: '#FFFFFF',
                         border: '1px solid rgba(203, 213, 225, 0.85)',
                         boxShadow: 'inset 0 1px 2px rgba(15, 23, 42, 0.03)',
                       }}
@@ -566,20 +568,33 @@ export default function Login() {
                       onClick={() => setShowPassword(!showPassword)}
                       style={{
                         position: 'absolute',
-                        right: '0.95rem',
+                        right: '0.65rem',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        background: 'none',
+                        background: 'transparent',
                         border: 'none',
-                        color: 'var(--text-subtle)',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '8px',
+                        color: showPassword ? 'var(--primary)' : 'var(--text-subtle)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        padding: '4px',
+                        justifyContent: 'center',
+                        transition: 'all 0.15s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(67, 56, 202, 0.08)';
+                        e.currentTarget.style.color = 'var(--primary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = showPassword ? 'var(--primary)' : 'var(--text-subtle)';
                       }}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      title={showPassword ? 'Hide password' : 'Show password'}
                     >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showPassword ? <EyeOff size={20} strokeWidth={2} /> : <Eye size={20} strokeWidth={2} />}
                     </button>
                   </div>
                 </div>

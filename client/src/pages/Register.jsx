@@ -172,13 +172,13 @@ export default function Register() {
               <p
                 style={{
                   fontSize: '1.05rem',
-                  lineHeight: 1.6,
+                  lineHeight: 1.5,
                   color: 'var(--text-body)',
-                  maxWidth: '540px',
+                  maxWidth: '520px',
                   margin: 0,
                 }}
               >
-                Join readers around the world. Track your reading challenge, get curated mood recommendations, and explore literature with tactile physical beauty.
+                Discover curated literature, track your reading goals, and curate your personal library.
               </p>
             </div>
 
@@ -288,35 +288,6 @@ export default function Register() {
                   </div>
                 </div>
               ))}
-            </div>
-
-            {/* Feature Perks Pill Card */}
-            <div
-              style={{
-                background: 'rgba(255, 255, 255, 0.75)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(226, 232, 240, 0.8)',
-                borderRadius: '18px',
-                padding: '1.25rem 1.6rem',
-                boxShadow: '0 8px 24px rgba(15, 23, 42, 0.04)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: 'var(--text-heading)', fontWeight: 600 }}>
-                <Check size={18} color="#4338CA" strokeWidth={3} />
-                <span>Smart Vibe Matcher calibrated to your reading tastes</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: 'var(--text-heading)', fontWeight: 600 }}>
-                <Check size={18} color="#4338CA" strokeWidth={3} />
-                <span>Page-by-page progress & 2024 reading challenge tracking</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: 'var(--text-heading)', fontWeight: 600 }}>
-                <Check size={18} color="#4338CA" strokeWidth={3} />
-                <span>Unlimited personal reading shelves with custom notes</span>
-              </div>
             </div>
           </div>
 
@@ -449,14 +420,15 @@ export default function Register() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="name@example.com"
+                      placeholder="e.g. reader@example.com"
+                      autoComplete="email"
                       className="form-input"
                       style={{
                         paddingLeft: '2.85rem',
                         height: '48px',
                         borderRadius: '12px',
                         fontSize: '0.94rem',
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backgroundColor: '#FFFFFF',
                         border: '1px solid rgba(203, 213, 225, 0.85)',
                         boxShadow: 'inset 0 1px 2px rgba(15, 23, 42, 0.03)',
                       }}
@@ -498,14 +470,15 @@ export default function Register() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="At least 6 characters"
+                      autoComplete="new-password"
                       className="form-input"
                       style={{
                         paddingLeft: '2.85rem',
-                        paddingRight: '2.85rem',
+                        paddingRight: '3.1rem',
                         height: '48px',
                         borderRadius: '12px',
                         fontSize: '0.94rem',
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backgroundColor: '#FFFFFF',
                         border: '1px solid rgba(203, 213, 225, 0.85)',
                         boxShadow: 'inset 0 1px 2px rgba(15, 23, 42, 0.03)',
                       }}
@@ -515,20 +488,33 @@ export default function Register() {
                       onClick={() => setShowPassword(!showPassword)}
                       style={{
                         position: 'absolute',
-                        right: '0.95rem',
+                        right: '0.65rem',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        background: 'none',
+                        background: 'transparent',
                         border: 'none',
-                        color: 'var(--text-subtle)',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '8px',
+                        color: showPassword ? 'var(--primary)' : 'var(--text-subtle)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        padding: '4px',
+                        justifyContent: 'center',
+                        transition: 'all 0.15s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(67, 56, 202, 0.08)';
+                        e.currentTarget.style.color = 'var(--primary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = showPassword ? 'var(--primary)' : 'var(--text-subtle)';
                       }}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      title={showPassword ? 'Hide password' : 'Show password'}
                     >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showPassword ? <EyeOff size={20} strokeWidth={2} /> : <Eye size={20} strokeWidth={2} />}
                     </button>
                   </div>
                 </div>

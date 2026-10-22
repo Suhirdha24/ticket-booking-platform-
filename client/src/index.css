@@ -256,11 +256,23 @@ button, input, select, textarea {
 
 .form-input::placeholder {
   color: var(--text-subtle);
+  opacity: 1;
 }
 
 .form-input:focus {
   border-color: var(--border-focus);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* Chrome/Safari Autofill Clean Styling to prevent harsh background tints */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  -webkit-text-fill-color: var(--text-heading) !important;
+  caret-color: var(--text-heading) !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .form-label {

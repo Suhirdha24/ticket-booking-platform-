@@ -77,7 +77,6 @@ export default function Home() {
       <section
         style={{
           padding: '3.5rem 0 3rem',
-          borderBottom: '1px solid var(--border-subtle)',
           backgroundColor: '#FFFFFF',
         }}
       >
@@ -127,12 +126,12 @@ export default function Home() {
                 style={{
                   fontSize: '1.05rem',
                   color: 'var(--text-muted)',
-                  lineHeight: 1.6,
+                  lineHeight: 1.5,
                   maxWidth: '520px',
                   marginBottom: '1.75rem',
                 }}
               >
-                Discover personalized reads based on your current vibe, genres you love, and reading pace — without endless scrolling or decision fatigue.
+                Personalized reads curated for your current vibe, favorite genres, and reading pace.
               </p>
 
               {/* Instant Search Bar */}
@@ -438,7 +437,6 @@ export default function Home() {
         style={{
           padding: '3.5rem 0',
           backgroundColor: '#FFFFFF',
-          borderTop: '1px solid var(--border-subtle)',
         }}
       >
         <div className="container">
