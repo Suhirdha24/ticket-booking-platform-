@@ -177,127 +177,20 @@ export default function Books() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)', paddingBottom: '4rem' }}>
       {/* Header Banner */}
-      <section
-        style={{
-          position: 'relative',
-          padding: '3rem 0 2.25rem',
-          background:
-            'radial-gradient(ellipse 90% 80% at 50% -20%, rgba(67, 56, 202, 0.08) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF',
-          borderBottom: '1px solid var(--border-subtle)',
-          overflow: 'hidden',
-        }}
-      >
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.45rem',
-              color: 'var(--primary)',
-              backgroundColor: 'var(--primary-light)',
-              border: '1px solid var(--primary-border)',
-              padding: '0.35rem 0.85rem',
-              borderRadius: '9999px',
-              fontSize: '0.76rem',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              marginBottom: '0.85rem',
-              boxShadow: 'var(--shadow-xs)',
-            }}
-          >
-            <Globe size={13} />
-            <span>30M+ Books Worldwide • Global Multi-Language Catalog</span>
-          </div>
-
+      {/* Clean Minimal Header */}
+      <section style={{ padding: '2rem 0 0.5rem' }}>
+        <div className="container">
           <h1
             style={{
-              fontSize: 'clamp(2.1rem, 4vw, 2.85rem)',
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)',
               fontWeight: 800,
               color: 'var(--text-heading)',
-              letterSpacing: '-0.03em',
-              lineHeight: 1.18,
-              marginBottom: '0.65rem',
+              letterSpacing: '-0.025em',
+              margin: 0,
             }}
           >
             Explore All Masterpieces
           </h1>
-
-          <p
-            style={{
-              color: 'var(--text-muted)',
-              fontSize: '1rem',
-              lineHeight: 1.6,
-              maxWidth: '700px',
-              marginBottom: '1.25rem',
-            }}
-          >
-            Browse millions of literary classics, global bestsellers, and timeless works in English, Tamil (தமிழ்), Hindi (हिन्दी), Spanish, French, German, Japanese, and 15+ world languages.
-          </p>
-
-          {/* Quick Catalog Meta Badges */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.65rem',
-              flexWrap: 'wrap',
-            }}
-          >
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                color: 'var(--text-body)',
-                backgroundColor: 'var(--bg-subtle)',
-                padding: '0.3rem 0.65rem',
-                borderRadius: '6px',
-                border: '1px solid var(--border-subtle)',
-              }}
-            >
-              <BookOpen size={13} color="var(--primary)" />
-              <span>30M+ Titles Worldwide</span>
-            </div>
-
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                color: 'var(--text-body)',
-                backgroundColor: 'var(--bg-subtle)',
-                padding: '0.3rem 0.65rem',
-                borderRadius: '6px',
-                border: '1px solid var(--border-subtle)',
-              }}
-            >
-              <Globe size={13} color="var(--accent-emerald)" />
-              <span>17+ Global Languages</span>
-            </div>
-
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                color: 'var(--text-body)',
-                backgroundColor: 'var(--bg-subtle)',
-                padding: '0.3rem 0.65rem',
-                borderRadius: '6px',
-                border: '1px solid var(--border-subtle)',
-              }}
-            >
-              <Sparkles size={13} color="var(--accent-gold)" />
-              <span>Instant Shelving & Reading Tracking</span>
-            </div>
-          </div>
         </div>
       </section>
 
