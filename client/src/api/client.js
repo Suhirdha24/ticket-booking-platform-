@@ -28,17 +28,27 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const serverError = error.response?.data?.error;
-    const message =
+    const data = error.response?.data;
+    const serverError = typeof data?.error === 'object' ? data.error : null;
+    let message =
       serverError?.message ||
-      error.message ||
-      'An unexpected error occurred. Please try again.';
+      (typeof data?.error === 'string' ? data.error : null) ||
+      data?.message;
 
-    // Attach human-readable message and error code to Error object
+    if (!message) {
+      if (!error.response || error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+        message = 'Unable to reach the server. Please check your internet connection.';
+      } else if (error.response?.status === 500) {
+        message = 'Server is currently reconnecting or busy. Please try again in a moment.';
+      } else {
+        message = error.message || 'An unexpected error occurred. Please try again.';
+      }
+    }
+
     const enhancedError = new Error(message);
     enhancedError.code = serverError?.code || 'UNKNOWN_ERROR';
     enhancedError.status = error.response?.status || 500;
-    enhancedError.raw = error.response?.data;
+    enhancedError.raw = data;
 
     return Promise.reject(enhancedError);
   }

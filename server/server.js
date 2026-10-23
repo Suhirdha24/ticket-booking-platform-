@@ -11,20 +11,19 @@ const PORT = process.env.PORT || 5000;
  */
 async function startLocalServer() {
   try {
+    app.listen(PORT, () => {
+      console.log(`🚀 Local dev server running on http://localhost:${PORT}`);
+      console.log(`📡 Health endpoint: http://localhost:${PORT}/api/health`);
+    });
+
     if (process.env.MONGODB_URI) {
       await connectDB();
       console.log('✅ MongoDB connection established successfully');
     } else {
       console.warn('⚠️ MONGODB_URI is not set. Run with MongoDB configured or in test mode.');
     }
-
-    app.listen(PORT, () => {
-      console.log(`🚀 Local dev server running on http://localhost:${PORT}`);
-      console.log(`📡 Health endpoint: http://localhost:${PORT}/api/health`);
-    });
   } catch (error) {
-    console.error('❌ Failed to start local development server:', error);
-    process.exit(1);
+    console.error('❌ Failed during local development startup:', error);
   }
 }
 
