@@ -69,7 +69,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedGenres, setSelectedGenres] = useState(['Fiction', 'Sci-Fi']);
+  const [selectedGenres, setSelectedGenres] = useState([]);
 
   const toggleGenre = (genre) => {
     if (selectedGenres.includes(genre)) {
@@ -87,7 +87,7 @@ export default function Register() {
         email,
         password,
         preferredGenres: selectedGenres,
-        preferredMoods: ['Mind-Bending', 'Inspirational'],
+        preferredMoods: [],
         annualReadingGoal: 15,
       });
 
