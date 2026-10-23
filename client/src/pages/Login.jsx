@@ -8,10 +8,8 @@ import {
   Mail,
   Eye,
   EyeOff,
-  Zap,
   ArrowRight,
   Star,
-  CheckCircle2,
   Bookmark,
   Sparkles,
 } from 'lucide-react';
@@ -59,7 +57,6 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [demoFilled, setDemoFilled] = useState(false);
 
   useEffect(() => {
     if (queryEmail) {
@@ -76,13 +73,6 @@ export default function Login() {
     } catch (err) {
       showErrorToast('Sign In Failed', err.message);
     }
-  };
-
-  const handleFillDemo = () => {
-    setEmail('reader@example.com');
-    setPassword('Password@123');
-    setDemoFilled(true);
-    setTimeout(() => setDemoFilled(false), 2500);
   };
 
   return (
@@ -384,81 +374,8 @@ export default function Login() {
                 </p>
               </div>
 
-              {/* iOS-Inspired Quick Demo Widget */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '0.85rem 1.15rem',
-                  backgroundColor: demoFilled ? 'rgba(236, 253, 245, 0.95)' : 'rgba(238, 242, 255, 0.85)',
-                  border: `1px solid ${demoFilled ? '#A7F3D0' : '#C7D2FE'}`,
-                  borderRadius: '14px',
-                  marginBottom: '1.75rem',
-                  backdropFilter: 'blur(8px)',
-                  transition: 'all 0.25s ease',
-                  boxShadow: '0 2px 8px rgba(67, 56, 202, 0.05)',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <div
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '9px',
-                      background: demoFilled ? '#059669' : '#4338CA',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#FFFFFF',
-                      flexShrink: 0,
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
-                    }}
-                  >
-                    {demoFilled ? <CheckCircle2 size={18} /> : <Zap size={18} />}
-                  </div>
-                  <div>
-                    <div
-                      style={{
-                        fontSize: '0.84rem',
-                        fontWeight: 700,
-                        color: demoFilled ? '#065F46' : 'var(--text-heading)',
-                      }}
-                    >
-                      {demoFilled ? 'Demo Reader Ready' : 'One-Tap Reader Demo'}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: '0.75rem',
-                        color: demoFilled ? '#047857' : 'var(--text-muted)',
-                      }}
-                    >
-                      reader@example.com
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleFillDemo}
-                  style={{
-                    background: '#FFFFFF',
-                    border: '1px solid rgba(203, 213, 225, 0.9)',
-                    color: demoFilled ? '#059669' : '#4338CA',
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    padding: '0.45rem 0.85rem',
-                    borderRadius: '9px',
-                    cursor: 'pointer',
-                    boxShadow: '0 2px 6px rgba(15, 23, 42, 0.06)',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  {demoFilled ? 'Filled ✓' : 'Auto-Fill'}
-                </button>
-              </div>
-
               {/* Form */}
-              <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <form onSubmit={handleLogin} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 {/* Email Input */}
                 <div>
                   <label
@@ -488,12 +405,13 @@ export default function Login() {
                     />
                     <input
                       id="login-email-input"
+                      name="email"
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. reader@example.com"
-                      autoComplete="email"
+                      placeholder="Enter your email address"
+                      autoComplete="off"
                       className="form-input"
                       style={{
                         paddingLeft: '2.85rem',
@@ -545,12 +463,13 @@ export default function Login() {
                     />
                     <input
                       id="login-password-input"
+                      name="password"
                       type={showPassword ? 'text' : 'password'}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      autoComplete="current-password"
+                      placeholder="Enter your password"
+                      autoComplete="new-password"
                       className="form-input"
                       style={{
                         paddingLeft: '2.85rem',

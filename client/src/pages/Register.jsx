@@ -338,7 +338,7 @@ export default function Register() {
                 </p>
               </div>
 
-              <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+              <form onSubmit={handleRegister} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
                 {/* Full Name */}
                 <div>
                   <label
@@ -368,18 +368,20 @@ export default function Register() {
                     />
                     <input
                       id="register-name-input"
+                      name="name"
                       type="text"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Maya Lin"
+                      autoComplete="off"
                       className="form-input"
                       style={{
                         paddingLeft: '2.85rem',
                         height: '48px',
                         borderRadius: '12px',
                         fontSize: '0.94rem',
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backgroundColor: '#FFFFFF',
                         border: '1px solid rgba(203, 213, 225, 0.85)',
                         boxShadow: 'inset 0 1px 2px rgba(15, 23, 42, 0.03)',
                       }}
@@ -416,12 +418,13 @@ export default function Register() {
                     />
                     <input
                       id="register-email-input"
+                      name="email"
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. reader@example.com"
-                      autoComplete="email"
+                      placeholder="Enter your email address"
+                      autoComplete="off"
                       className="form-input"
                       style={{
                         paddingLeft: '2.85rem',
@@ -465,11 +468,12 @@ export default function Register() {
                     />
                     <input
                       id="register-password-input"
+                      name="password"
                       type={showPassword ? 'text' : 'password'}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="At least 6 characters"
+                      placeholder="Enter your password"
                       autoComplete="new-password"
                       className="form-input"
                       style={{
