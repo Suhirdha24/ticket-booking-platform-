@@ -17,6 +17,15 @@ import {
   Layers,
   Lock,
   LogIn,
+  CheckCircle2,
+  Car,
+  Accessibility,
+  Utensils,
+  Wind,
+  CreditCard,
+  Info,
+  Award,
+  FileText,
 } from 'lucide-react';
 import api from '../api/client.js';
 import { useAuthStore } from '../store/authStore.js';
@@ -25,6 +34,7 @@ import { useToastStore } from '../store/toastStore.js';
 import CountdownWidget from '../components/home/CountdownWidget.jsx';
 import AuthPromptModal from '../components/common/AuthPromptModal.jsx';
 import { getEventImage, getCategoryTheme } from '../utils/categoryImages.js';
+import { getRichEventDetails, TIER_PERKS_MAP, VENUE_AMENITIES } from '../utils/eventDetailsHelper.js';
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -96,6 +106,7 @@ export default function EventDetails() {
 
   const theme = getCategoryTheme(event.category);
   const imageUrl = getEventImage(event);
+  const rich = getRichEventDetails(event);
   const eventDate = event.startDate ? new Date(event.startDate) : event.date ? new Date(event.date) : new Date();
   const fullDate = eventDate.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -296,11 +307,101 @@ export default function EventDetails() {
               label={`⏰ ${event.category || 'Event'} Doors Open In`}
             />
 
+            {/* Quick Key Happening Attributes Bar */}
+            {rich && (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                  gap: '0.75rem',
+                }}
+              >
+                <div
+                  className="glass-widget-card"
+                  style={{
+                    padding: '0.85rem 1rem',
+                    borderRadius: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
+                    borderLeft: `3px solid ${theme.color}`,
+                  }}
+                >
+                  <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
+                    Genre
+                  </span>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF' }}>
+                    {rich.subgenre}
+                  </span>
+                </div>
+
+                <div
+                  className="glass-widget-card"
+                  style={{
+                    padding: '0.85rem 1rem',
+                    borderRadius: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
+                    borderLeft: '3px solid #10B981',
+                  }}
+                >
+                  <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
+                    Duration
+                  </span>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF' }}>
+                    {rich.duration}
+                  </span>
+                </div>
+
+                <div
+                  className="glass-widget-card"
+                  style={{
+                    padding: '0.85rem 1rem',
+                    borderRadius: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
+                    borderLeft: '3px solid #38BDF8',
+                  }}
+                >
+                  <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
+                    Language
+                  </span>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF' }}>
+                    {rich.language}
+                  </span>
+                </div>
+
+                <div
+                  className="glass-widget-card"
+                  style={{
+                    padding: '0.85rem 1rem',
+                    borderRadius: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
+                    borderLeft: '3px solid #F59E0B',
+                  }}
+                >
+                  <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase' }}>
+                    Age Guide
+                  </span>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF' }}>
+                    {rich.ageLimit}
+                  </span>
+                </div>
+              </div>
+            )}
+
             {/* Event Description & Location Information */}
             <div className="glass-widget-card" style={{ padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '1rem' }}>
-                About the Event
-              </h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <Info size={18} color="#A78BFA" />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                  About the Event
+                </h3>
+              </div>
               <p style={{ color: '#CBD5E1', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '2rem' }}>
                 {event.description ||
                   `Join thousands of live event fans for an unforgettable experience in ${event.city}. Featuring state-of-the-art stadium sound, curated artist performances, and guaranteed atomic seat reservations.`}
@@ -363,6 +464,261 @@ export default function EventDetails() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Featured Performers / Artists Lineup */}
+            {rich?.artists && rich.artists.length > 0 && (
+              <div className="glass-widget-card" style={{ padding: '2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+                  <Users size={18} color="#A78BFA" />
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                    Featured Lineup & Performers
+                  </h3>
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                    gap: '1rem',
+                  }}
+                >
+                  {rich.artists.map((artist, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.85rem',
+                        padding: '0.75rem',
+                        borderRadius: '14px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                      }}
+                    >
+                      <img
+                        src={artist.image}
+                        alt={artist.name}
+                        style={{
+                          width: '46px',
+                          height: '46px',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                          border: '2px solid rgba(139, 92, 246, 0.4)',
+                        }}
+                      />
+                      <div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.2 }}>
+                          {artist.name}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#A78BFA', marginTop: '0.15rem' }}>
+                          {artist.role}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Experience Highlights & Inclusions */}
+            {rich?.highlights && (
+              <div className="glass-widget-card" style={{ padding: '2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+                  <Sparkles size={18} color="#A78BFA" />
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                    Event Experience Highlights
+                  </h3>
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                    gap: '0.85rem',
+                  }}
+                >
+                  {rich.highlights.map((item, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.65rem',
+                        padding: '0.85rem 1rem',
+                        borderRadius: '12px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid rgba(255, 255, 255, 0.06)',
+                      }}
+                    >
+                      <CheckCircle2 size={16} color="#10B981" style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <span style={{ fontSize: '0.84rem', color: '#E2E8F0', lineHeight: 1.45 }}>
+                        {item}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Day-of-Event Timeline / Schedule */}
+            {rich?.schedule && (
+              <div className="glass-widget-card" style={{ padding: '2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                  <Clock size={18} color="#A78BFA" />
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                    Event Day Schedule & Itinerary
+                  </h3>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'relative' }}>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: '20px',
+                      top: '10px',
+                      bottom: '20px',
+                      width: '2px',
+                      background: 'rgba(139, 92, 246, 0.3)',
+                    }}
+                  />
+                  {rich.schedule.map((item, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '1.25rem',
+                        position: 'relative',
+                        zIndex: 1,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '42px',
+                          height: '42px',
+                          borderRadius: '50%',
+                          background: 'rgba(20, 18, 34, 1)',
+                          border: '2px solid #8B5CF6',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#A78BFA',
+                          fontSize: '0.7rem',
+                          fontWeight: 900,
+                          flexShrink: 0,
+                          boxShadow: '0 0 10px rgba(139, 92, 246, 0.3)',
+                        }}
+                      >
+                        {idx + 1}
+                      </div>
+
+                      <div
+                        style={{
+                          flex: 1,
+                          padding: '0.85rem 1.15rem',
+                          borderRadius: '14px',
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF' }}>
+                            {item.title}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: '0.75rem',
+                              fontWeight: 800,
+                              color: '#A78BFA',
+                              background: 'rgba(139, 92, 246, 0.15)',
+                              padding: '0.15rem 0.55rem',
+                              borderRadius: 'var(--radius-pill)',
+                            }}
+                          >
+                            {item.time}
+                          </span>
+                        </div>
+                        <p style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.35rem', lineHeight: 1.4 }}>
+                          {item.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Venue Amenities & Location Map Information */}
+            <div className="glass-widget-card" style={{ padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+                <MapPin size={18} color="#A78BFA" />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                  Venue Facilities & Amenities
+                </h3>
+              </div>
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                  gap: '0.75rem',
+                  marginBottom: '1.5rem',
+                }}
+              >
+                {VENUE_AMENITIES.map((amenity, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '10px',
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      border: '1px solid rgba(255, 255, 255, 0.06)',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      color: '#CBD5E1',
+                    }}
+                  >
+                    <CheckCircle2 size={14} color="#A78BFA" />
+                    <span>{amenity.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  padding: '1rem',
+                  borderRadius: '14px',
+                  background: 'rgba(139, 92, 246, 0.08)',
+                  border: '1px solid rgba(139, 92, 246, 0.25)',
+                  fontSize: '0.82rem',
+                  color: '#CBD5E1',
+                  lineHeight: 1.5,
+                }}
+              >
+                <strong style={{ color: '#FFFFFF' }}>Directions:</strong> Located at{' '}
+                {event.venue?.address || 'Main City Complex'}, {event.city}. Accessible via city metro transit, ride-hailing cabs, and dedicated multi-tier parking.
+              </div>
+            </div>
+
+            {/* Important Attendee Guidelines & Policies */}
+            <div className="glass-widget-card" style={{ padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                <FileText size={18} color="#A78BFA" />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                  Important Guidelines & Policies
+                </h3>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.82rem', color: '#94A3B8', lineHeight: 1.5 }}>
+                <p>• <strong>Photo Identification:</strong> Attendees must present a valid government-issued photo ID (Aadhaar, Passport, Driver's License) matching their booking name at gate entry.</p>
+                <p>• <strong>Instant Digital E-Ticket:</strong> No physical printing required. You will receive an instant QR pass in your profile and via email.</p>
+                <p>• <strong>Atomic Seat Allocation:</strong> Seats reserved during checkout are locked exclusively to your user account to guarantee zero double bookings.</p>
+                <p>• <strong>Cancellation Policy:</strong> Free cancellation is supported up to 24 hours prior to event doors open time under your account dashboard.</p>
               </div>
             </div>
           </div>
@@ -470,6 +826,32 @@ export default function EventDetails() {
                   })}
                 </div>
               </div>
+
+              {/* Selected Pass Perks & Inclusions */}
+              {selectedTier && (
+                <div
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '14px',
+                    padding: '1rem',
+                    marginBottom: '1.25rem',
+                  }}
+                >
+                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <Award size={14} color="#A78BFA" />
+                    <span>{selectedTier.category} Pass Inclusions:</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    {(TIER_PERKS_MAP[selectedTier.category] || TIER_PERKS_MAP.General).map((perk, pIdx) => (
+                      <div key={pIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.78rem', color: '#CBD5E1', lineHeight: 1.4 }}>
+                        <CheckCircle2 size={13} color="#10B981" style={{ flexShrink: 0, marginTop: '2px' }} />
+                        <span>{perk}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Direct Booking CTA */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>

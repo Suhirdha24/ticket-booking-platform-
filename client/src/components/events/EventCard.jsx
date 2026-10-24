@@ -19,6 +19,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { getEventImage, getCategoryTheme } from '../../utils/categoryImages.js';
+import { getRichEventDetails } from '../../utils/eventDetailsHelper.js';
 
 const ICON_MAP = {
   Music,
@@ -38,6 +39,7 @@ const ICON_MAP = {
 export default function EventCard({ event }) {
   if (!event) return null;
 
+  const rich = getRichEventDetails(event);
   const eventDate = event.startDate ? new Date(event.startDate) : event.date ? new Date(event.date) : new Date();
   const formattedDate = eventDate.toLocaleDateString('en-US', {
     day: 'numeric',
@@ -202,7 +204,7 @@ export default function EventCard({ event }) {
               fontWeight: 900,
               color: '#FFFFFF',
               lineHeight: 1.3,
-              marginBottom: '0.5rem',
+              marginBottom: '0.45rem',
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
@@ -211,6 +213,59 @@ export default function EventCard({ event }) {
           >
             {event.title}
           </h3>
+
+          {/* Genre / Subgenre & Happening Details Badges */}
+          {rich && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.4rem',
+                marginBottom: '0.65rem',
+              }}
+            >
+              <span
+                style={{
+                  background: 'rgba(139, 92, 246, 0.15)',
+                  border: '1px solid rgba(139, 92, 246, 0.35)',
+                  color: '#C4B5FD',
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: 'var(--radius-pill)',
+                }}
+              >
+                ✦ {rich.subgenre}
+              </span>
+              <span
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: '#94A3B8',
+                  fontSize: '0.68rem',
+                  fontWeight: 700,
+                  padding: '0.15rem 0.45rem',
+                  borderRadius: 'var(--radius-pill)',
+                }}
+              >
+                ⏱ {rich.duration}
+              </span>
+              <span
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: '#94A3B8',
+                  fontSize: '0.68rem',
+                  fontWeight: 700,
+                  padding: '0.15rem 0.45rem',
+                  borderRadius: 'var(--radius-pill)',
+                }}
+              >
+                🌐 {rich.language}
+              </span>
+            </div>
+          )}
 
           {/* Short description */}
           <p

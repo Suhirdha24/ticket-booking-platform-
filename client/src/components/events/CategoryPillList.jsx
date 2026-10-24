@@ -1,16 +1,7 @@
 import React from 'react';
+import { ALL_GENRES } from '../../utils/eventDetailsHelper.js';
 
-export const CATEGORIES_LIST = [
-  { id: '', name: 'All Events', emoji: '🎟️' },
-  { id: 'Concert', name: 'Concert & Live Music', emoji: '🎸' },
-  { id: 'Festival', name: 'Festivals', emoji: '🎪' },
-  { id: 'Nightlife', name: 'DJ & Nightlife', emoji: '🍸' },
-  { id: 'Comedy', name: 'Stand-up Comedy', emoji: '🎤' },
-  { id: 'Sports', name: 'Sports & Matches', emoji: '🏆' },
-  { id: 'Conference', name: 'Tech & Summits', emoji: '💻' },
-  { id: 'Workshop', name: 'Masterclasses', emoji: '🎨' },
-  { id: 'Theatre', name: 'Theatre & Plays', emoji: '🎭' },
-];
+export const CATEGORIES_LIST = ALL_GENRES;
 
 export default function CategoryPillList({ activeCategory, onSelectCategory }) {
   return (

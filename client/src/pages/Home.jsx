@@ -21,18 +21,9 @@ import {
   Plus,
   X,
 } from 'lucide-react';
+import { ALL_GENRES } from '../utils/eventDetailsHelper.js';
 
-const CATEGORIES = [
-  'All',
-  'Concert',
-  'Festival',
-  'Comedy',
-  'Sports',
-  'Conference',
-  'Theatre',
-  'Workshop',
-  'Nightlife',
-];
+const CATEGORIES = ALL_GENRES.map((g) => g.id || 'All');
 
 export default function Home() {
   const navigate = useNavigate();
@@ -325,7 +316,93 @@ export default function Home() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 🎪 2. CURATED EVENT DISCOVERY & CATEGORY EXPLORER */}
+      {/* 🌟 2. ALL HAPPENING GENRES SHOWCASE */}
+      {/* ========================================================================= */}
+      <section style={{ padding: '2.5rem 0 1.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+        <div className="container">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                Browse by Category
+              </div>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#FFFFFF', marginTop: '0.2rem' }}>
+                All Happening Genres
+              </h2>
+            </div>
+            <Link
+              to="/events"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                color: '#A78BFA',
+                fontSize: '0.86rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+              }}
+            >
+              <span>View Full Catalog</span>
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div
+            className="no-scrollbar"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+              gap: '0.85rem',
+              paddingBottom: '0.5rem',
+            }}
+          >
+            {ALL_GENRES.filter((g) => g.id).map((g) => {
+              const isSelected = selectedCategory === g.id;
+              return (
+                <button
+                  key={g.id}
+                  type="button"
+                  onClick={() => setSelectedCategory(g.id)}
+                  style={{
+                    background: isSelected ? 'rgba(139, 92, 246, 0.25)' : 'rgba(255, 255, 255, 0.03)',
+                    border: isSelected ? '1.5px solid #8B5CF6' : '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '16px',
+                    padding: '1rem 0.85rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    gap: '0.45rem',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: isSelected ? '0 0 20px rgba(139, 92, 246, 0.3)' : 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#8B5CF6';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = isSelected ? '#8B5CF6' : 'rgba(255, 255, 255, 0.08)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <span style={{ fontSize: '1.6rem' }}>{g.emoji}</span>
+                  <div>
+                    <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.2 }}>
+                      {g.name}
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+                      {g.count} Events
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 🎪 3. CURATED EVENT DISCOVERY & CATEGORY EXPLORER */}
       {/* ========================================================================= */}
       <section style={{ padding: '3.5rem 0' }}>
         <div className="container">
@@ -439,24 +516,20 @@ export default function Home() {
               marginBottom: '2.5rem',
             }}
           >
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`sonora-filter-chip ${selectedCategory === cat ? 'active' : ''}`}
-              >
-                {cat === 'All' && <span>🎟️</span>}
-                {cat === 'Concert' && <span>🎸</span>}
-                {cat === 'Festival' && <span>🎪</span>}
-                {cat === 'Comedy' && <span>🎤</span>}
-                {cat === 'Sports' && <span>🏆</span>}
-                {cat === 'Conference' && <span>💻</span>}
-                {cat === 'Theatre' && <span>🎭</span>}
-                {cat === 'Workshop' && <span>🎨</span>}
-                {cat === 'Nightlife' && <span>🍸</span>}
-                <span>{cat}</span>
-              </button>
-            ))}
+            {ALL_GENRES.map((g) => {
+              const catKey = g.id || 'All';
+              const isSelected = selectedCategory === catKey;
+              return (
+                <button
+                  key={catKey}
+                  onClick={() => setSelectedCategory(catKey)}
+                  className={`sonora-filter-chip ${isSelected ? 'active' : ''}`}
+                >
+                  {g.emoji && <span>{g.emoji}</span>}
+                  <span>{g.name}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Events Grid */}
