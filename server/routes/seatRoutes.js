@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Seat from '../models/Seat.js';
 import Event from '../models/Event.js';
 import Venue from '../models/Venue.js';
@@ -17,8 +18,8 @@ router.get('/', optionalAuth, async (req, res, next) => {
   try {
     const eventId = req.params.eventId || req.params.id;
 
-    if (!eventId) {
-      return next(new AppError('Event ID is required', 400, 'INVALID_EVENT_ID'));
+    if (!eventId || !mongoose.Types.ObjectId.isValid(eventId)) {
+      return next(new AppError('Valid event ID is required', 400, 'INVALID_EVENT_ID'));
     }
 
     const event = await Event.findById(eventId);

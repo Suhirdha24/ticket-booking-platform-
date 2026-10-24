@@ -230,7 +230,12 @@ router.get('/', async (req, res, next) => {
  */
 router.get('/:id', async (req, res, next) => {
   try {
-    const event = await Event.findById(req.params.id).populate('venue').lean();
+    const { id } = req.params;
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return next(new AppError('Invalid event ID format', 400, 'INVALID_EVENT_ID'));
+    }
+
+    const event = await Event.findById(id).populate('venue').lean();
 
     if (!event) {
       return next(new AppError('Event not found', 404, 'EVENT_NOT_FOUND'));
@@ -246,7 +251,7 @@ router.get('/:id', async (req, res, next) => {
       ],
     });
 
-    const eventObj = event.toObject();
+    const eventObj = typeof event.toObject === 'function' ? event.toObject() : { ...event };
     eventObj.availableSeats = availableCount;
 
     res.status(200).json({
