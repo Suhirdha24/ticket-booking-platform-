@@ -46,7 +46,7 @@ export function BookCardSkeleton() {
       <div
         className="skeleton"
         style={{
-          height: '240px',
+          height: '264px',
           width: '100%',
           borderRadius: 0,
         }}

@@ -51,18 +51,28 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
         border: '1px solid var(--border-medium)',
         overflow: 'hidden',
         position: 'relative',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         height: '100%',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = 'var(--primary)';
-        e.currentTarget.style.transform = 'translateY(-3px)';
+        e.currentTarget.style.transform = 'translateY(-4px)';
         e.currentTarget.style.boxShadow = 'var(--shadow-card-hover)';
+        const bookItem = e.currentTarget.querySelector('.book-3d-item');
+        if (bookItem) {
+          bookItem.style.transform = 'scale(1.08) translateY(-4px)';
+          bookItem.style.boxShadow = 'var(--book-shadow-hover)';
+        }
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = 'var(--border-medium)';
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = 'var(--shadow-card)';
+        const bookItem = e.currentTarget.querySelector('.book-3d-item');
+        if (bookItem) {
+          bookItem.style.transform = 'scale(1) translateY(0)';
+          bookItem.style.boxShadow = 'var(--book-shadow)';
+        }
       }}
     >
       <Link
@@ -79,14 +89,14 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
         <div
           style={{
             position: 'relative',
-            height: '240px',
+            height: '264px',
             width: '100%',
             overflow: 'hidden',
-            backgroundColor: 'var(--bg-subtle)',
+            background: 'radial-gradient(ellipse at 50% 45%, #F8FAFC 0%, #E2E8F0 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '1.25rem',
+            padding: '1rem',
             borderBottom: '1px solid var(--border-subtle)',
           }}
         >
@@ -95,12 +105,13 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
             className="book-3d-item"
             style={{
               position: 'relative',
-              width: '132px',
-              height: '194px',
-              borderRadius: '4px 9px 9px 4px',
+              width: '154px',
+              height: '226px',
+              borderRadius: '4px 10px 10px 4px',
               boxShadow: 'var(--book-shadow)',
               overflow: 'hidden',
               backgroundColor: '#1E293B',
+              transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease',
             }}
           >
             <img
@@ -111,6 +122,7 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
+                display: 'block',
               }}
               onError={(e) => {
                 e.target.onerror = null;

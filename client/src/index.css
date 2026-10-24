@@ -630,7 +630,12 @@ input:-webkit-autofill:active {
 }
 
 .book-3d-container:hover .book-3d-item {
-  transform: perspective(1000px) rotateY(-8deg) translateY(-8px) scale(1.03);
+  transform: perspective(1000px) rotateY(-8deg) translateY(-8px) scale(1.05);
+  box-shadow: var(--book-shadow-hover);
+}
+
+.card-clean:hover .book-3d-item {
+  transform: scale(1.07) translateY(-5px);
   box-shadow: var(--book-shadow-hover);
 }
 
