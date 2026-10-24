@@ -2,6 +2,13 @@ import 'dotenv/config';
 import dns from 'node:dns';
 import mongoose from 'mongoose';
 
+// Ensure reliable DNS resolution for Atlas SRV records on Windows
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch (e) {
+  // Ignore in environments where setServers is restricted
+}
+
 // Ensure IPv4 is prioritized for faster socket connection on Windows
 if (dns.setDefaultResultOrder) {
   try {
@@ -25,7 +32,7 @@ if (!cached) {
  * Direct shard replica set fallback for cluster0 if SRV query fails or is blocked on local network/ISP
  */
 const DIRECT_FALLBACK_URI =
-  'mongodb://suhirdhasivakumar_db_user:6g0n1EIqfWMxmlRa@ac-vtazhux-shard-00-00.aucusac.mongodb.net:27017,ac-vtazhux-shard-00-01.aucusac.mongodb.net:27017,ac-vtazhux-shard-00-02.aucusac.mongodb.net:27017/ticket-booking-platform?ssl=true&authSource=admin&replicaSet=atlas-r08rr6-shard-0&retryWrites=true&w=majority';
+  'mongodb://suhirdhasivakumar_db_user:6V0odgCQworJTyGs@ac-vtazhux-shard-00-00.aucusac.mongodb.net:27017,ac-vtazhux-shard-00-01.aucusac.mongodb.net:27017,ac-vtazhux-shard-00-02.aucusac.mongodb.net:27017/ticket-booking-platform?ssl=true&authSource=admin&replicaSet=atlas-r08rr6-shard-0&retryWrites=true&w=majority';
 
 /**
  * Connect to MongoDB Atlas with connection caching for serverless environments.
