@@ -302,17 +302,7 @@ export default function BookCard({ book, matchPercentage, matchReasons }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.74rem', color: 'var(--text-muted)' }}>
                 <span>{book.pageCount || 320}p</span>
                 <span>•</span>
-                <span
-                  style={{
-                    color: book.language && book.language !== 'English' ? '#B45309' : 'inherit',
-                    fontWeight: book.language && book.language !== 'English' ? 700 : 500,
-                    backgroundColor: book.language && book.language !== 'English' ? '#FEF3C7' : 'transparent',
-                    padding: book.language && book.language !== 'English' ? '0.1rem 0.35rem' : '0',
-                    borderRadius: '4px',
-                  }}
-                >
-                  {book.language || 'English'}
-                </span>
+                <span>{book.language || 'English'}</span>
               </div>
 
               {/* Shelf Dropdown */}
