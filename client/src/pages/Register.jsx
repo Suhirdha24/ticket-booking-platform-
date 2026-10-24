@@ -69,9 +69,7 @@ export default function Register() {
       setCountdown(60);
       showSuccessToast(
         'OTP Sent Successfully',
-        preview
-          ? `6-digit OTP sent to +91 ${cleanPhone.slice(-10)} (Demo Code: ${preview})`
-          : `6-digit OTP sent to +91 ${cleanPhone.slice(-10)}`
+        `6-digit OTP sent to +91 ${cleanPhone.slice(-10)}`
       );
     } catch (err) {
       showErrorToast('Failed to Send OTP', err.message || 'Could not send verification code');
@@ -524,34 +522,11 @@ export default function Register() {
                   </span>
                 </div>
 
-                {otpPreview && (
-                  <div
-                    onClick={() => setOtp(otpPreview)}
-                    style={{
-                      padding: '0.5rem 0.75rem',
-                      borderRadius: '8px',
-                      background: 'rgba(16, 185, 129, 0.15)',
-                      border: '1px dashed rgba(16, 185, 129, 0.4)',
-                      fontSize: '0.8rem',
-                      color: '#34D399',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <span>
-                      ⚡ Demo OTP: <strong>{otpPreview}</strong>
-                    </span>
-                    <span style={{ fontSize: '0.72rem', textDecoration: 'underline' }}>
-                      Click to Auto-fill
-                    </span>
-                  </div>
-                )}
-
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <input
                     type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
                     maxLength={6}
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
