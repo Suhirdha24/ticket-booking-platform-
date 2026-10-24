@@ -45,7 +45,9 @@ export default function EventCard({ event }) {
     year: 'numeric',
   });
 
-  const lowestPrice = event.tiers?.length
+  const lowestPrice = event.pricing?.length
+    ? Math.min(...event.pricing.map((t) => t.price))
+    : event.tiers?.length
     ? Math.min(...event.tiers.map((t) => t.price))
     : event.price || 499;
 
