@@ -28,6 +28,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // If request was canceled/aborted by AbortController, do not wrap in generic server error
+    if (axios.isCancel(error) || error.name === 'CanceledError' || error.code === 'ERR_CANCELED' || error.message === 'canceled') {
+      error.isCanceled = true;
+      return Promise.reject(error);
+    }
+
     const serverError = error.response?.data?.error;
     const message =
       serverError?.message ||

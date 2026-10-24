@@ -73,11 +73,20 @@ export default function Events() {
           res.data?.data?.pagination || res.data?.pagination || { page: 1, pages: 1, total: 0 }
         );
       } catch (err) {
-        if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED') return;
+        if (
+          err.isCanceled ||
+          err.name === 'CanceledError' ||
+          err.code === 'ERR_CANCELED' ||
+          err.message === 'canceled'
+        ) {
+          return;
+        }
         console.error('Failed to load events:', err);
         setError(err.message || 'Could not load events. Please try again.');
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     }
 

@@ -79,10 +79,19 @@ export default function Home() {
         });
         setEvents(res.data?.data?.events || res.data?.events || []);
       } catch (err) {
-        if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED') return;
+        if (
+          err.isCanceled ||
+          err.name === 'CanceledError' ||
+          err.code === 'ERR_CANCELED' ||
+          err.message === 'canceled'
+        ) {
+          return;
+        }
         console.error('Failed to load events', err);
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     };
 

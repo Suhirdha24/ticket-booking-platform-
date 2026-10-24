@@ -17,7 +17,13 @@ export const useAuthStore = create((set, get) => ({
         portal: options.portal,
         requiredRole: options.requiredRole,
       });
-      const { user, token } = res.data.data;
+      const data = res.data?.data || res.data || {};
+      const user = data.user;
+      const token = data.token;
+
+      if (!user || !token) {
+        throw new Error('Invalid response from authentication server.');
+      }
 
       if (options.requiredRole === 'admin' && user.role !== 'admin') {
         throw new Error('Access denied: This portal is exclusively for administrators.');
@@ -36,7 +42,14 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const res = await api.post('/auth/register', payload);
-      const { user, token } = res.data.data;
+      const data = res.data?.data || res.data || {};
+      const user = data.user;
+      const token = data.token;
+
+      if (!user || !token) {
+        throw new Error('Invalid response from registration server.');
+      }
+
       localStorage.setItem('token', token);
       set({ user, token, isAuthenticated: true, isLoading: false });
       return user;
@@ -51,10 +64,17 @@ export const useAuthStore = create((set, get) => ({
     if (!token) return null;
     try {
       const res = await api.get('/auth/me');
-      const user = res.data.data.user;
-      set({ user, isAuthenticated: true });
-      return user;
+      const user = res.data?.data?.user || res.data?.user;
+      if (user) {
+        set({ user, isAuthenticated: true });
+        return user;
+      }
+      return null;
     } catch (err) {
+      // Do not clear token if the request was simply canceled/aborted during navigation
+      if (err.isCanceled || err.name === 'CanceledError' || err.code === 'ERR_CANCELED' || err.message === 'canceled') {
+        return null;
+      }
       localStorage.removeItem('token');
       set({ user: null, token: null, isAuthenticated: false });
       return null;
