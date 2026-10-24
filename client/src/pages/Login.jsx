@@ -279,6 +279,7 @@ export default function Login() {
           {/* Form Fields */}
           <form
             onSubmit={handleLogin}
+            autoComplete="off"
             style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
           >
             <div>
@@ -292,7 +293,8 @@ export default function Login() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. user@example.com"
+                  placeholder="sudhep@gmail.com"
+                  autoComplete="off"
                   className="form-input"
                   style={{ paddingLeft: '2.75rem' }}
                 />
@@ -310,7 +312,8 @@ export default function Login() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder="•••••••••"
+                  autoComplete="new-password"
                   className="form-input"
                   style={{ paddingLeft: '2.75rem', paddingRight: '2.75rem' }}
                 />

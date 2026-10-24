@@ -567,6 +567,22 @@ button, input, select, textarea {
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
 }
 
+.form-input::placeholder {
+  color: #64748B;
+  opacity: 0.85;
+}
+
+/* Prevent browser autofill from turning inputs light blue with black text */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover, 
+.form-input:-webkit-autofill:focus,
+.form-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px rgba(22, 20, 36, 0.98) inset !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  caret-color: #FFFFFF !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Avatar Group */
 .avatar-group {
   display: flex;
