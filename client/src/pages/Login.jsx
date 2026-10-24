@@ -21,8 +21,7 @@ const SPOTLIGHT_BOOKS = [
     genre: 'Literary Fiction',
     rating: 4.9,
     reviews: '14.2k',
-    cover:
-      'https://images.unsplash.com/photo-1532012164546-f432f2e3777a?w=600&auto=format&fit=crop&q=80',
+    cover: 'https://covers.openlibrary.org/b/isbn/9780593321201-L.jpg',
     tag: "Reader's Choice",
   },
   {
@@ -31,8 +30,7 @@ const SPOTLIGHT_BOOKS = [
     genre: 'Sci-Fi Odyssey',
     rating: 4.9,
     reviews: '28.1k',
-    cover:
-      'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80',
+    cover: 'https://covers.openlibrary.org/b/isbn/9780593135204-L.jpg',
     tag: 'Trending Vibe',
   },
   {
@@ -41,8 +39,7 @@ const SPOTLIGHT_BOOKS = [
     genre: 'Philosophical',
     rating: 4.8,
     reviews: '31.5k',
-    cover:
-      'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80',
+    cover: 'https://covers.openlibrary.org/b/isbn/9780525559474-L.jpg',
     tag: 'Staff Favorite',
   },
 ];
@@ -201,6 +198,10 @@ export default function Login() {
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
+                      }}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://covers.openlibrary.org/b/isbn/9780593321201-L.jpg';
                       }}
                     />
                     <div className="book-3d-spine-crease" />

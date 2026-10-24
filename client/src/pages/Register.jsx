@@ -35,8 +35,7 @@ const REGISTER_SPOTLIGHT_BOOKS = [
     genre: 'Sci-Fi Classic',
     rating: 4.9,
     reviews: '34.8k',
-    cover:
-      'https://images.unsplash.com/photo-1618609377864-68609b857e90?w=600&auto=format&fit=crop&q=80',
+    cover: 'https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg',
     tag: 'Masterpiece',
   },
   {
@@ -45,8 +44,7 @@ const REGISTER_SPOTLIGHT_BOOKS = [
     genre: 'Mythological Fantasy',
     rating: 4.8,
     reviews: '19.4k',
-    cover:
-      'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600&auto=format&fit=crop&q=80',
+    cover: 'https://covers.openlibrary.org/b/isbn/9780316556347-L.jpg',
     tag: 'Staff Pick',
   },
   {
@@ -55,8 +53,7 @@ const REGISTER_SPOTLIGHT_BOOKS = [
     genre: 'Self-Growth',
     rating: 4.9,
     reviews: '52.3k',
-    cover:
-      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80',
+    cover: 'https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg',
     tag: 'Bestseller',
   },
 ];
@@ -223,6 +220,10 @@ export default function Register() {
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
+                      }}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg';
                       }}
                     />
                     <div className="book-3d-spine-crease" />
